@@ -1,0 +1,31 @@
+{
+  "auth" : "github:p6-xml",
+  "authors" : [
+    "David Warring"
+  ],
+  "build-depends" : [
+    "LibraryMake",
+    "Pod::To::Markdown"
+  ],
+    "depends" : [ "LibXML", "Method::Also" ],
+  "description" : "Perl 6 bindings to the libxslt native library",
+  "license" : "Artistic-2.0",
+  "name" : "LibXSLT",
+  "perl" : "6",
+  "provides" : {
+    "LibXSLT" : "lib/LibXSLT.pm6",
+    "LibXSLT::Native" : "lib/LibXSLT/Native.pm6",
+    "LibXSLT::Native::Defs" : "lib/LibXSLT/Native/Defs.pm6",
+    "LibXSLT::Stylesheet" : "lib/LibXSLT/Stylesheet.pm6",
+    "LibXSLT::TransformContext" : "lib/LibXSLT/TransformContext.pm6"
+  },
+  "resources" : [
+    "libraries/xslt6"
+  ],
+  "source-url" : "https://github.com/p6-xml/LibXSLT-p6",
+  "tags" : [
+    "xml", "xslt"
+  ],
+  "test-depends" : [ ],
+  "version" : "0.0.1"
+}
