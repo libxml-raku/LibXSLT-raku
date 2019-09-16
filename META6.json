@@ -8,7 +8,7 @@
     "Pod::To::Markdown"
   ],
     "depends" : [ "LibXML", "Method::Also" ],
-  "description" : "Perl 6 bindings to the libxslt native library",
+  "description" : "LibXSLT - Interface to the GNOME libxslt library",
   "license" : "Artistic-2.0",
   "name" : "LibXSLT",
   "perl" : "6",

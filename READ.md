@@ -1,4 +1,4 @@
-LibXSLT- XML Stylesheets
+LibXSLT - Interface to the GNOME libxslt library
 ------------------------
 
 * under construction *
