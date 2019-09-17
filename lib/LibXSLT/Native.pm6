@@ -113,3 +113,5 @@ class xsltStylesheet is repr('CStruct') is export {
     method ApplyUser(xmlDoc $doc, Pointer $params, Str $output, Pointer $profile, xsltTransformContext $userCtxt --> xmlDoc) is native(XSLT) is symbol('xsltApplyStylesheetUser') {*};
     method Free is symbol('xsltFreeStylesheet') is native(XSLT) {*}
 }
+
+sub xsltSaveResultToString(Pointer[uint8] $out is rw, int32 $len is rw, xmlDoc $result, xsltStylesheet $style --> int32) is native(XSLT) is export {*};

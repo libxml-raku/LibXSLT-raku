@@ -3,6 +3,7 @@ use Test;
 plan 6;
 
 use LibXSLT;
+use LibXSLT::Document;
 use LibXML;
 
 my LibXML $parser .= new();
@@ -78,15 +79,14 @@ warn;
 # TEST
 ok($stylesheet.defined && $stylesheet.native.defined, ' TODO : Add test name');
 
-my $results = $stylesheet.transform(:$doc);
+my LibXSLT::Document $results = $stylesheet.transform(:$doc);
 
 # TEST
 ok($results, ' TODO : Add test name');
 
-skip('todo: output-string');
-##my $output = $stylesheet.output-string($results);
+my $output = $results.Str;
 
 # TEST
-##ok($output, ' TODO : Add test name');
+ok($output, ' TODO : Add test name');
 
 # warn "Results:\n", $output, "\n";
