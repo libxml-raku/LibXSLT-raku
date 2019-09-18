@@ -82,7 +82,7 @@ my LibXSLT::Document $results = $stylesheet.transform(:$doc);
 # TEST
 ok($results, ' TODO : Add test name');
 
-my $output = $results.Str;
+my $output = $results.Str-xslt;
 
 # TEST
 ok($output, ' TODO : Add test name');

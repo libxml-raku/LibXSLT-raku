@@ -11,8 +11,7 @@ use LibXSLT::Stylesheet;
 has LibXSLT::Stylesheet $.xslt is required;
 use NativeCall;
 
-
-method Blob {
+method Blob-xslt {
     my Pointer[uint8] $ptr .= new;
     my int32 $len;
     my buf8 $buf;
@@ -28,6 +27,9 @@ method Blob {
     $buf;
 }
 
-method Str {
-    self.Blob.decode;
-}
+multi method Blob(:$xslt! where .so) { $.Blob-xslt }
+multi method Blob is default { callsame() }
+
+method Str-xslt { self.Blob-xslt.decode; }
+multi method Str(:$xslt! where .so) { $.Str-xslt }
+multi method Str is default { callsame(); }

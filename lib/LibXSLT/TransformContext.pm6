@@ -10,14 +10,15 @@ method native { $!native }
 has $.input-callbacks;
 has LibXML::ErrorHandler $!errors handles<generic-error flush-errors> .= new;
 
-sub generic-error-cb($ctx, Str $fmt, Pointer $arg) {
+sub generic-error-cb($ctx, Str $fmt, |args) {
     CATCH { default { warn "error handling XSLT error: $_" } }
-    $*XSLT-CONTEXT.generic-error($fmt, $arg);
+    $*XSLT-CONTEXT.generic-error($fmt, |args);
 }
 
 multi submethod TWEAK(:$stylesheet!, LibXML::Document:D :$doc!) {
     $!native = $stylesheet.native.NewTransformContext($doc.native);
-    $!native.SetGenericErrorFunc: &generic-error-cb; 
+    $!native.SetGenericErrorFunc: &generic-error-cb;
+    $!native.set-xinclude(1);
 }
 
 submethod DESTROY {

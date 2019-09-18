@@ -76,7 +76,7 @@ multi method transform(LibXML::Document:D :$doc!, *%params --> LibXML::Document)
     my CArray[Str] $params .= new(|%params.kv, Str);
     my xmlDoc $result;
     $ctx.try: {
-        $result = $!native.ApplyUser($doc.native, $params, Str, Pointer, $ctx.native);
+        $result = $!native.transform($doc.native, $ctx.native, $params);
     }
     (require LibXSLT::Document).new: :native($result), :xslt(self);
 }

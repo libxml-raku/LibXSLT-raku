@@ -23,7 +23,7 @@ my ($out1, $out2);
 my $style_doc = $parser.parse: :file('example/1.xsl');
 my $stylesheet = $xslt.parse-stylesheet($style_doc);
 my $results = $stylesheet.transform(:doc($source));
-$out1 = $results.Str;
+$out1 = $results.Str-xslt;
 # TEST
 ok($out1, ' TODO : Add test name');
 }
@@ -39,7 +39,7 @@ my $results = $stylesheet.transform(:doc($source));
 is($stylesheet.media-type, 'text/html', ' TODO : Add test name');
 # TEST
 is($stylesheet.output-method, 'html', ' Test existence of output method');
-$out2 = $results.Str;
+$out2 = $results.Str-xslt;
 # TEST
 ok($out2, ' TODO : Add test name');
 }
@@ -48,7 +48,7 @@ ok($out2, ' TODO : Add test name');
   my $style_doc = $parser.parse: :file('example/1.xsl');
   my $stylesheet = $xslt.parse-stylesheet($style_doc);
   my $results = $stylesheet.transform: :file('example/1.xml');
-  my $out = $results.Str;
+  my $out = $results.Str-xslt;
   # TEST
   ok ($out, ' TODO : Add test name' );
   # TEST
@@ -59,7 +59,7 @@ ok($out2, ' TODO : Add test name');
   my $style_doc = $parser.parse: :file('example/2.xsl');
   my $stylesheet = $xslt.parse-stylesheet($style_doc);
   my $results = $stylesheet.transform: :file('example/2.xml');
-  my $out = $results.Str;
+  my $out = $results.Str-xslt;
   # TEST
   ok( $out, ' TODO : Add test name' );
   # TEST

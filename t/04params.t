@@ -59,12 +59,12 @@ my $results = $stylesheet.transform(:doc($source),
 ok($results, ' TODO : Add test name');
 
 # TEST
-ok($results.Str, ' TODO : Add test name');
+ok($results.Str-xslt, ' TODO : Add test name');
 
 my %params = LibXSLT::xpath-to-string(empty => Mu);
 $results = $stylesheet.transform(:doc($source), |%params);
 # TEST
 ok($results, ' TODO : Add test name');
 # TEST
-ok($results.Str, ' TODO : Add test name');
+ok($results.Str-xslt, ' TODO : Add test name');
 
