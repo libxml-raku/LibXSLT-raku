@@ -5,7 +5,7 @@ use LibXML::Native::Dict;
 use LibXML::Native::HashTable;
 use LibXML::Native::Defs :Opaque, :xmlCharP;
 
-use LibXSLT::Native::Defs :XSLT;
+use LibXSLT::Native::Defs :XSLT, :BIND-XSLT;
 use NativeCall;
 
 class xsltCompilerCtxt is repr(Opaque) {}
@@ -114,6 +114,8 @@ class xsltStylesheet is repr('CStruct') is export {
     constant FILE = Pointer;
     method ApplyUser(xmlDoc $doc, CArray[Str] $params, Str $output, Pointer $profile, xsltTransformContext $userCtxt --> xmlDoc) is native(XSLT) is symbol('xsltApplyStylesheetUser') {*};
     method Free is symbol('xsltFreeStylesheet') is native(XSLT) {*}
+    method media-type(--> Str) is symbol('xslt6_stylesheet_media_type') is native(BIND-XSLT) {*}
+    method output-method(--> Str) is symbol('xslt6_stylesheet_output_method') is native(BIND-XSLT) {*}
 }
 
 sub xsltSaveResultToString(Pointer[uint8] $out is rw, int32 $len is rw, xmlDoc $result, xsltStylesheet $style --> int32) is native(XSLT) is export {*};

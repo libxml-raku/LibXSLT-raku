@@ -61,7 +61,7 @@ ok($stylesheet, 'stylesheet is OK.');
 #$stylesheet.input-callbacks($icb);
 
 # warn "transforming\n";
-my $results = $stylesheet.transform($doc);
+my $results = $stylesheet.transform: :$doc;
 # results
 # TEST
 ok($results, 'results is OK.');
@@ -80,7 +80,7 @@ $stylesheet = $xslt.parse-stylesheet($parser.parse: :string($stylsheetstring));
 # check if transform throws an exception
 # dying callback test
 try {
-    $stylesheet.transform($doc);
+    $stylesheet.transform: :$doc;
     $*XML-CONTEXT.flush-errors;
 };
 
@@ -167,7 +167,7 @@ $stylesheet = $xslt.parse-stylesheet($parser.parse: :string($stylsheetstring));
 # TEST
 ok($stylesheet, 'stylesheet is OK - 3.');
 
-$results = $stylesheet.transform($doc);
+$results = $stylesheet.transform: :$doc;
 # results
 # TEST
 ok($results, 'results is OK - 3.');

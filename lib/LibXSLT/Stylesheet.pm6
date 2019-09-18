@@ -16,7 +16,7 @@ has $.input-callbacks is rw = config.input-callbacks;
 multi method input-callbacks is rw { $!input-callbacks }
 multi method input-callbacks($!input-callbacks) {}
 
-has xsltStylesheet $!native;
+has xsltStylesheet $!native handles <media-type output-method>;
 method native { $!native }
 
 submethod DESTROY {
@@ -71,9 +71,9 @@ multi method parse-stylesheet(LibXML::Document:D $doc --> LibXSLT::Stylesheet) {
     self.parse-stylesheet: :$doc;
 }
 
-multi method transform(LibXML::Document:D $doc!, *%params --> LibXML::Document) {
+multi method transform(LibXML::Document:D :$doc!, *%params --> LibXML::Document) {
     my LibXSLT::TransformContext $ctx .= new: :$doc, :stylesheet(self), :$!input-callbacks;
-    my CArray[Str] $params .= new |%params.kv, Str;
+    my CArray[Str] $params .= new(|%params.kv, Str);
     my xmlDoc $result;
     $ctx.try: {
         $result = $!native.ApplyUser($doc.native, $params, Str, Pointer, $ctx.native);
@@ -81,3 +81,8 @@ multi method transform(LibXML::Document:D $doc!, *%params --> LibXML::Document) 
     (require LibXSLT::Document).new: :native($result), :xslt(self);
 }
 
+multi method transform(:$file!, |c --> LibXML::Document) {
+    my LibXML::Document:D $doc .= parse: :$file;
+    self.transform: :$doc, |c;
+
+}

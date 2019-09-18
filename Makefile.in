@@ -1,0 +1,42 @@
+SRC=src
+
+all : lib
+
+lib : resources/libraries/%LIB-NAME%
+
+# 'all', with compilation warnings and debug symbols enabled
+debug :
+	%MAKE% "DBG=-Wall -g"  all
+
+resources/libraries/%LIB-NAME% : $(SRC)/xslt6_stylesheet%O%
+	%LD% %LDSHARED% %LDFLAGS% %LDOUT%resources/libraries/%LIB-NAME% \
+        $(SRC)/xslt6_stylesheet%O% \
+        %LIB-LDFLAGS% 
+
+$(SRC)/xslt6_stylesheet%O% : $(SRC)/xslt6_stylesheet.c $(SRC)/xslt6_stylesheet.h
+	%CC% -I $(SRC) -c %CCSHARED% %CCFLAGS% %CCOUT%$(SRC)/xslt6_stylesheet%O% $(SRC)/xslt6_stylesheet.c %LIB-CFLAGS% $(DBG)
+
+test : all
+	@prove -e"perl6 -I ." t
+
+loudtest : all
+	@prove -e"perl6 -I ." -v t
+
+clean :
+	@rm -f $(SRC)/xslt6_*%O% resources/libraries/*%LIB-NAME%
+
+realclean : clean
+	@rm -f Makefile doc/*.md doc/*/*.md
+
+doc : README.md doc/Stylesheet.md
+
+README.md : lib/LibXSLT.pm6
+	(\
+	    echo '[![Build Status](https://travis-ci.org/p6-xml/LibXSLT-p6.svg?branch=master)](https://travis-ci.org/p6-xml/LibXSLT-p6)'; \
+            echo '';\
+            perl6 -I . --doc=Markdown lib/LibXSLT.pm6\
+        ) > README.md
+
+doc/Stylesheet.md : lib/LibXSLT/Stylesheet.pm6
+	perl6 -I . --doc=Markdown lib/LibXSLT/Stylesheet.pm6 > doc/Stylesheet.md
+
