@@ -71,11 +71,12 @@ multi method parse-stylesheet(LibXML::Document:D $doc --> LibXSLT::Stylesheet) {
     self.parse-stylesheet: :$doc;
 }
 
-multi method transform(LibXML::Document:D $doc! --> LibXML::Document) {
+multi method transform(LibXML::Document:D $doc!, *%params --> LibXML::Document) {
     my LibXSLT::TransformContext $ctx .= new: :$doc, :stylesheet(self), :$!input-callbacks;
+    my CArray[Str] $params .= new |%params.kv, Str;
     my xmlDoc $result;
     $ctx.try: {
-        $result = $!native.ApplyUser($doc.native, Pointer, Str, Pointer, $ctx.native);
+        $result = $!native.ApplyUser($doc.native, $params, Str, Pointer, $ctx.native);
     }
     (require LibXSLT::Document).new: :native($result), :xslt(self);
 }

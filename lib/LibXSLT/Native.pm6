@@ -112,7 +112,7 @@ class xsltStylesheet is repr('CStruct') is export {
     sub xsltParseStylesheetFile(xmlCharP $filename --> xsltStylesheet) is native(XSLT) is export {*};
     method NewTransformContext(xmlDoc $doc --> xsltTransformContext) is native(XSLT) is symbol('xsltNewTransformContext') {*};
     constant FILE = Pointer;
-    method ApplyUser(xmlDoc $doc, Pointer $params, Str $output, Pointer $profile, xsltTransformContext $userCtxt --> xmlDoc) is native(XSLT) is symbol('xsltApplyStylesheetUser') {*};
+    method ApplyUser(xmlDoc $doc, CArray[Str] $params, Str $output, Pointer $profile, xsltTransformContext $userCtxt --> xmlDoc) is native(XSLT) is symbol('xsltApplyStylesheetUser') {*};
     method Free is symbol('xsltFreeStylesheet') is native(XSLT) {*}
 }
 
