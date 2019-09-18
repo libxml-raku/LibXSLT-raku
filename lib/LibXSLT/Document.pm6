@@ -4,11 +4,12 @@ use LibXML::Document;
 unit class LibXSLT::Document
     is LibXML::Document;
 
+use LibXML;
 use LibXML::Native::Defs :CLIB;
-use NativeCall;
 use LibXSLT::Native;
 use LibXSLT::Stylesheet;
 has LibXSLT::Stylesheet $.xslt is required;
+use NativeCall;
 
 
 method Blob {

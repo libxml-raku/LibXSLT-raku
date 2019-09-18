@@ -72,14 +72,12 @@ ok($style_doc.defined, ' TODO : Add test name');
 
 # warn "Style_doc = \n", $style_doc->toString, "\n";
 
-warn;
 my $stylesheet = $xslt.parse-stylesheet(doc => $style_doc);
-warn;
 
 # TEST
 ok($stylesheet.defined && $stylesheet.native.defined, ' TODO : Add test name');
 
-my LibXSLT::Document $results = $stylesheet.transform(:$doc);
+my LibXSLT::Document $results = $stylesheet.transform($doc);
 
 # TEST
 ok($results, ' TODO : Add test name');

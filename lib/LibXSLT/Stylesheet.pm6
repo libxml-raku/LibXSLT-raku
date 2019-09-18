@@ -3,11 +3,18 @@ unit class LibXSLT::Stylesheet;
 use LibXSLT::Native;
 use LibXSLT::TransformContext;
 
+use LibXML::Config;
 use LibXML::Document;
 use LibXML::Native;
 use LibXML::Native::Defs :CLIB;
 
 use NativeCall;
+
+constant config = LibXML::Config;
+
+has $.input-callbacks is rw = config.input-callbacks;
+multi method input-callbacks is rw { $!input-callbacks }
+multi method input-callbacks($!input-callbacks) {}
 
 has xsltStylesheet $!native;
 method native { $!native }
@@ -16,25 +23,60 @@ submethod DESTROY {
     .Free with $!native;
 }
 
+sub generic-error-cb($ctx, Str $fmt, |args) {
+    CATCH { default { warn "error handling XSLT error: $_" } }
+    $*XSLT-CONTEXT.generic-error($fmt, |args);
+}
+
+method !try(&action) {
+    my $*XSLT-CONTEXT = LibXML::ErrorHandler.new;
+
+    xsltTransformContext.SetGenericErrorFunc: &generic-error-cb;
+
+    my @input-contexts = .activate()
+        with $.input-callbacks;
+
+    &*chdir(~$*CWD);
+    my $rv := &action();
+
+    .deactivate with $.input-callbacks;
+    .flush-errors for @input-contexts;
+    $*XSLT-CONTEXT.flush-errors;
+
+    $rv;
+}
+
 proto method parse-stylesheet(|c) {
     with self {return {*}} else { self.new.parse-stylesheet(|c) }
 }
 
-multi method parse-stylesheet(LibXML::Document:D :$doc! is copy --> LibXSLT::Stylesheet) {
+multi method parse-stylesheet(LibXML::Document:D :$doc! --> LibXSLT::Stylesheet) {
     .Free with $!native;
-    $!native = xsltParseStylesheetDoc($doc.native.copy: :deep);
+    self!try: {
+        my $doc-copy = $doc.native.copy: :deep;
+        $!native = xsltParseStylesheetDoc($doc-copy);
+    }
     self;
 }
 
-multi method parse-stylesheet(Str:D() :$file! is copy --> LibXSLT::Stylesheet) {
+multi method parse-stylesheet(Str:D() :$file! --> LibXSLT::Stylesheet) {
     .Free with $!native;
-    $!native = xsltParseStylesheetFile($file);
+    self!try: {
+        $!native = xsltParseStylesheetFile($file);
+    }
     self;
 }
 
-multi method transform(LibXML::Document:D :$doc! --> LibXML::Document) {
-    my LibXSLT::TransformContext $ctx .= new: :$doc, :stylesheet(self);
-    my xmlDoc $out-doc = $!native.ApplyUser($doc.native, Pointer, Str, Pointer, $ctx.native);
-    (require LibXSLT::Document).new: :native($out-doc), :xslt(self);
+multi method parse-stylesheet(LibXML::Document:D $doc --> LibXSLT::Stylesheet) {
+    self.parse-stylesheet: :$doc;
+}
+
+multi method transform(LibXML::Document:D $doc! --> LibXML::Document) {
+    my LibXSLT::TransformContext $ctx .= new: :$doc, :stylesheet(self), :$!input-callbacks;
+    my xmlDoc $result;
+    $ctx.try: {
+        $result = $!native.ApplyUser($doc.native, Pointer, Str, Pointer, $ctx.native);
+    }
+    (require LibXSLT::Document).new: :native($result), :xslt(self);
 }
 

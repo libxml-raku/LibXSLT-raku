@@ -16,6 +16,8 @@ class xsltStylePreComp is repr(Opaque) {}
 class xsltTemplate is repr(Opaque) {}
 
 class xsltTransformContext is repr(Opaque) is export {
+
+    method SetGenericErrorFunc(&func (xsltTransformContext $ctx, Str:D $msg, Pointer $arg) ) is native(XSLT) is symbol('xsltSetGenericErrorFunc') is export {*};
     method Free is symbol('xsltFreeTransformContext') is native(XSLT) {*}
 }
 
