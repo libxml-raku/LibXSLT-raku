@@ -5,7 +5,7 @@ use LibXML::Native::Dict;
 use LibXML::Native::HashTable;
 use LibXML::Native::Defs :Opaque, :XML2, :xmlCharP;
 
-use LibXSLT::Native::Defs :XSLT, :BIND-XSLT;
+use LibXSLT::Native::Defs :XSLT, :EXSLT, :BIND-XSLT;
 use NativeCall;
 
 class xsltCompilerCtxt is repr(Opaque) {}
@@ -44,8 +44,13 @@ class xsltStylesheet is repr(Opaque) is export {
 sub xsltSaveResultToString(Pointer[uint8] $out is rw, int32 $len is rw, xmlDoc $result, xsltStylesheet $style --> int32) is native(XSLT) is export {*};
 sub xsltInit() is native(XSLT) is export {*};
 sub xsltSetXIncludeDefault(int32 $) is native(XSLT) is export {*};
+sub xslt6_gbl_have_exslt(--> int32) is native(BIND-XSLT) is export {*};
+sub exsltRegisterAll() is native(EXSLT) is export {*};
 
 INIT {
     xsltInit();
     xsltSetXIncludeDefault(1);
+    if xslt6_gbl_have_exslt() {
+        exsltRegisterAll();
+    }
 }

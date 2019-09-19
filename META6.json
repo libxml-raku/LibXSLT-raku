@@ -14,6 +14,7 @@
   "perl" : "6",
   "provides" : {
     "LibXSLT" : "lib/LibXSLT.pm6",
+    "LibXSLT::Config" : "lib/LibXSLT/Config.pm6",
     "LibXSLT::Document" : "lib/LibXSLT/Document.pm6",
     "LibXSLT::Native" : "lib/LibXSLT/Native.pm6",
     "LibXSLT::Native::Defs" : "lib/LibXSLT/Native/Defs.pm6",
