@@ -20,7 +20,7 @@ EOF
 
 ok($source, ' TODO : Add test name');
 
-my $style_doc = $parser.parse: :string(q:to<EOF>);
+my $style = $parser.parse: :string(q:to<EOF>);
 <?xml version="1.0"?>
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -42,9 +42,9 @@ my $style_doc = $parser.parse: :string(q:to<EOF>);
 EOF
 
 # TEST
-ok($style_doc, ' TODO : Add test name');
+ok($style, ' TODO : Add test name');
 
-my $stylesheet = $xslt.parse-stylesheet($style_doc);
+my $stylesheet = $xslt.parse-stylesheet(doc => $style);
 
 # TEST
 ok($stylesheet, ' TODO : Add test name');

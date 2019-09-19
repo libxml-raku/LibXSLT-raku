@@ -3,7 +3,7 @@ unit module LibXSLT::Native;
 use LibXML::Native;
 use LibXML::Native::Dict;
 use LibXML::Native::HashTable;
-use LibXML::Native::Defs :Opaque, :xmlCharP;
+use LibXML::Native::Defs :Opaque, :XML2, :xmlCharP;
 
 use LibXSLT::Native::Defs :XSLT, :BIND-XSLT;
 use NativeCall;
@@ -18,6 +18,7 @@ class xsltTemplate is repr(Opaque) {}
 class xsltTransformContext is repr(Opaque) is export {
 
     method SetGenericErrorFunc(&func (xsltTransformContext $ctx, Str:D $msg, Pointer, Pointer, Pointer) ) is native(XSLT) is symbol('xsltSetGenericErrorFunc') is export {*};
+    method SetStructuredErrorFunc( &error-func (xsltTransformContext $, xmlError $)) is native(XML2) is symbol('xmlSetStructuredErrorFunc') {*};
     method set-xinclude(int32) is symbol('xslt6_transform_ctx_set_xinclude') is native(BIND-XSLT) {*}
 
     method Free is symbol('xsltFreeTransformContext') is native(XSLT) {*}

@@ -2,6 +2,7 @@ use v6;
 use Test;
 plan 20;
 use LibXML;
+use LibXML::InputCallback;
 use LibXSLT;
 
 my LibXML $parser .= new();
@@ -53,7 +54,7 @@ $icb.register-callbacks( [ &match_cb, &open_cb,
 
 $xslt.input-callbacks($icb);
 
-my $stylesheet = $xslt.parse-stylesheet($parser.parse: :string($stylsheetstring));
+my $stylesheet = $xslt.parse-stylesheet: doc => $parser.parse: :string($stylsheetstring);
 # stylesheet
 # TEST
 ok($stylesheet, 'stylesheet is OK.');
@@ -76,7 +77,7 @@ ok($output, 'output is OK.');
 $icb .= new;
 $icb.register-callbacks( &match_cb, &dying_open_cb, &read_cb, &close_cb );
 $xslt.input-callbacks($icb);
-$stylesheet = $xslt.parse-stylesheet($parser.parse: :string($stylsheetstring));
+$stylesheet = $xslt.parse-stylesheet: doc => $parser.parse: :string($stylsheetstring);
 # check if transform throws an exception
 # dying callback test
 try {
@@ -127,7 +128,7 @@ $stylsheetstring = q:to<EOT>;
 </xsl:stylesheet>
 EOT
 
-$stylesheet = $xslt.parse-stylesheet($parser.parse: :string($stylsheetstring));
+$stylesheet = $xslt.parse-stylesheet: doc => $parser.parse: :string($stylsheetstring);
 # stylesheet
 # TEST
 ok($stylesheet, 'stylesheet is OK - 2.');
@@ -162,7 +163,7 @@ $stylsheetstring = q:to<EOT>;;
 </xsl:stylesheet>
 EOT
 
-$stylesheet = $xslt.parse-stylesheet($parser.parse: :string($stylsheetstring));
+$stylesheet = $xslt.parse-stylesheet: doc => $parser.parse: :string($stylsheetstring);
 # stylesheet
 # TEST
 ok($stylesheet, 'stylesheet is OK - 3.');

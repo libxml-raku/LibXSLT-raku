@@ -10,7 +10,7 @@ my $xslt = LibXSLT.new();
 
 my $source = $parser.parse: :string(qq{<?xml version="1.0" encoding="UTF-8"?>
 <root>foo</root>});
-my $style_doc = $parser.parse: :string('<?xml version="1.0" encoding="ISO-8859-1"?>
+my $style = $parser.parse: :string('<?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE stylesheet [
 <!ENTITY ouml   "&#246;">
 ]>
@@ -28,7 +28,7 @@ my $style_doc = $parser.parse: :string('<?xml version="1.0" encoding="ISO-8859-1
 ');
 
 
-my $stylesheet = $xslt.parse-stylesheet($style_doc);
+my $stylesheet = $xslt.parse-stylesheet(doc => $style);
 
 my $results = $stylesheet.transform(doc => $source);
 

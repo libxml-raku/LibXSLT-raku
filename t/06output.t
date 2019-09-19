@@ -150,11 +150,11 @@ EOF
 while (@style_docs) {
     my ($media_type, $style_str) = splice(@style_docs, 0, 2);
 
-    my $style_doc = $parser.parse: :string($style_str);
+    my $style = $parser.parse: :string($style_str);
     # TEST*$num_style_docs
-    ok($style_doc, ' TODO : Add test name');
+    ok($style, ' TODO : Add test name');
 
-    my $stylesheet = $xslt.parse-stylesheet($style_doc);
+    my $stylesheet = $xslt.parse-stylesheet(doc => $style);
     # TEST*$num_style_docs
     ok($stylesheet, ' TODO : Add test name');
 
