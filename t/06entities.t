@@ -36,6 +36,6 @@ my $tostring = $results.Str;
 # TEST
 like($tostring, /fooöbar/, '.Str matches entity.');
 
-my $content = $results.Str-xslt;
-like($content, /fooöbar/, '.Str-xslt matches entity.');
+my $content = $results.Xslt.Str;
+like($content, /fooöbar/, 'xslt.Str matches entity.');
 

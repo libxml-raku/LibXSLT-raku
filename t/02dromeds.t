@@ -77,12 +77,12 @@ my $stylesheet = $xslt.parse-stylesheet(doc => $style_doc);
 # TEST
 ok($stylesheet.defined && $stylesheet.native.defined, ' TODO : Add test name');
 
-my LibXSLT::Document $results = $stylesheet.transform(:$doc);
+my LibXSLT::Document::Xslt $results = $stylesheet.transform(:$doc).Xslt;
 
 # TEST
 ok($results, ' TODO : Add test name');
 
-my $output = $results.Str-xslt;
+my $output = $results.Str;
 
 # TEST
 ok($output, ' TODO : Add test name');

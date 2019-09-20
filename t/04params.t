@@ -53,18 +53,18 @@ my $results = $stylesheet.transform(:doc($source),
         incoming => "'INCOMINGTEXT'",
 #        'incoming' => "'INCOMINGTEXT2'",
         outgoing => "'OUTGOINGTEXT'",
-        );
+        ).Xslt;
 
 # TEST
 ok($results, ' TODO : Add test name');
 
 # TEST
-ok($results.Str-xslt, ' TODO : Add test name');
+ok($results.Str, ' TODO : Add test name');
 
 my %params = LibXSLT::xpath-to-string(empty => Mu);
-$results = $stylesheet.transform(:doc($source), |%params);
+$results = $stylesheet.transform(:doc($source), |%params).Xslt;
 # TEST
 ok($results, ' TODO : Add test name');
 # TEST
-ok($results.Str-xslt, ' TODO : Add test name');
+ok($results.Str, ' TODO : Add test name');
 

@@ -56,12 +56,12 @@ my $stylesheet = $xslt.parse-stylesheet(doc => $style_doc);
 # TEST
 ok($stylesheet, '$stylesheet is true.');
 
-my $results = $stylesheet.transform(:$doc);
+my $results = $stylesheet.transform(:$doc).Xslt;
 
 # TEST
 ok($results, '$results is true.');
 
-my $output = $results.Str-xslt;
+my $output = $results.Str;
 
 # TEST
 ok($output, '$output is true.');

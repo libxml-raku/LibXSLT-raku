@@ -5,11 +5,12 @@ use LibXML::Native;
 use LibXSLT::Native;
 use NativeCall;
 use LibXML::ErrorHandler :&structured-error-cb, :&generic-error-cb;
+use LibXML::XPath::Context;
 
 has xsltTransformContext $!native;
 method native { $!native }
 has $.input-callbacks;
-has LibXML::ErrorHandler $!errors handles<structured-error generic-error flush-errors> .= new;
+has LibXML::XPath::Context $!ctx handles<structured-error generic-error flush-errors park> .= new;
 
 multi submethod TWEAK(:$stylesheet!, LibXML::Document:D :$doc!) {
     $!native = $stylesheet.native.NewTransformContext($doc.native);
@@ -18,6 +19,11 @@ multi submethod TWEAK(:$stylesheet!, LibXML::Document:D :$doc!) {
 
 submethod DESTROY {
     .Free with $!native;
+}
+
+sub park($v) {
+    warn "parking stub...";
+    $v;
 }
 
 method try(&action) {

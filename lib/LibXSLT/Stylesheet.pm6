@@ -71,7 +71,7 @@ multi method transform(LibXML::Document:D :$doc!, *%params --> LibXML::Document)
     $ctx.try: {
         $result = $!native.transform($doc.native, $ctx.native, $params);
     }
-    (require LibXSLT::Document).new: :native($result), :xslt(self);
+    (require LibXSLT::Document).new: :native($result), :stylesheet(self);
 }
 
 multi method transform(:$file!, |c --> LibXML::Document) {

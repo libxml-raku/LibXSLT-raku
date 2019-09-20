@@ -45,6 +45,8 @@ sub xsltSaveResultToString(Pointer[uint8] $out is rw, int32 $len is rw, xmlDoc $
 sub xsltInit() is native(XSLT) is export {*};
 sub xsltSetXIncludeDefault(int32 $) is native(XSLT) is export {*};
 sub xslt6_gbl_have_exslt(--> int32) is native(BIND-XSLT) is export {*};
+sub xsltRegisterExtModuleFunction(xmlCharP $name, xmlCharP $URI, &func2 (xmlXPathParserContext, int32 --> xmlXPathObject) --> int32) is native(XSLT) is export {*};
+
 sub exsltRegisterAll() is native(EXSLT) is export {*};
 
 INIT {
