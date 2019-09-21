@@ -64,6 +64,10 @@ multi method parse-stylesheet(Str:D() :$file! --> LibXSLT::Stylesheet) {
     self;
 }
 
+multi method parse-stylesheet(LibXML::Document:D $doc) {
+    self.parse-stylesheet: :$doc;
+}
+
 multi method transform(LibXML::Document:D :$doc!, *%params --> LibXML::Document) {
     my LibXSLT::TransformContext $ctx .= new: :$doc, :stylesheet(self), :$!input-callbacks;
     my CArray[Str] $params .= new(|%params.kv, Str);
@@ -77,5 +81,8 @@ multi method transform(LibXML::Document:D :$doc!, *%params --> LibXML::Document)
 multi method transform(:$file!, |c --> LibXML::Document) {
     my LibXML::Document:D $doc .= parse: :$file;
     self.transform: :$doc, |c;
+}
 
+multi method transform(LibXML::Document:D $doc, |c) {
+    self.transform: :$doc, |c;
 }

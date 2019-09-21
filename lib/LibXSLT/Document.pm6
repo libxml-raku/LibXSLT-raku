@@ -29,6 +29,7 @@ our role Xslt {
     }
 
     method Str { self.Blob.decode; }
+    method serialize { $.Str }
 }
 
 method Xslt {

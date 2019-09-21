@@ -28,8 +28,7 @@ use LibXSLT;
   $xslt.register-function('urn:foo', 'test3', sub (*@a) {
           # TEST*2
           is(+@a, 0, 'No arguments were received.');
-warn 'todo: handle undef return value';
-          return '';
+          return;
       }
   );
 
@@ -76,19 +75,17 @@ EOT
   # TEST
   like($results.Str, /'Node::Set'/, 'Matches Node::Set');
 
-}; skip "port remaining tests", 25;
-=begin TODO
-  $xslt.register_function('urn:foo' => 'get_list', \&get_nodelist );
+  $xslt.register-function('urn:foo', 'get_list', &get_nodelist );
 
   our @words = <one two three>;
 
   sub get_nodelist {
-    my $nl = LibXML::Node::List.new();
+    my $nl = LibXML::Node::Set.new();
     $nl.push(LibXML::Text.new($_)) for @words;
     return $nl;
   }
 
-  $style = $parser.parse_string(q:to<EOT>);
+  $style = $parser.parse: :string(q:to<EOT>);
 <xsl:stylesheet version="1.0"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:foo="urn:foo">
@@ -105,21 +102,21 @@ EOT
   # TEST
   ok($style, '$style is true - 2');
 
-  $stylesheet = $xslt.parse_stylesheet($style);
+  $stylesheet = $xslt.parse-stylesheet(doc => $style);
   # TEST:$n=5;
   for 1..5 -> $n {
-    $results = $stylesheet.transform($source).Xslt;
+    $results = $stylesheet.transform(doc => $source).Xslt;
 
     # TEST*$n
     ok($results, '$results is true - 2 (' ~ $n ~ ')');
     # TEST*$n
-    like($stylesheet.Str,
+    like($results.Str,
         /'<li>one</li>'/,
         'Matches li-one - ' ~ $n
     );
     # TEST*$n
     like(
-        $stylesheet.Str,
+        $results.Str,
         /'<li>one</li><li>two</li><li>three</li>'/,
         'Output matches multiple lis - ' ~ $n
     );
@@ -131,10 +128,10 @@ EOT
   my $parser   = LibXML.new;
   my $xsltproc = LibXSLT.new;
 
-  my $xml  = $parser.parse_string( q:to<XML> );
+  my $xml  = $parser.parse: :string( q:to<XML> );
 <html><head/></html>
 XML
-  my $xslt = $parser.parse_string( q:to<XSLT> );
+  my $xslt = $parser.parse: :string( q:to<XSLT> );
 <xsl:stylesheet
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:foo="http://foo"
@@ -160,29 +157,29 @@ XSLT
 </bar>
 XML
   {
-    LibXSLT.register_function(
-      ('http://foo', 'custom') => sub { $parser.parse: :string( $aux ).findnodes('//y') }
+    LibXSLT.register-function(
+      'http://foo', 'custom', sub { $parser.parse(:string( $aux )).findnodes('//y') }
      );
-    my $stylesheet = $xsltproc.parse-stylesheet($xslt);
-    my $result = $stylesheet.transform($xml);
+    my $stylesheet = $xsltproc.parse-stylesheet(doc => $xslt);
+    my LibXSLT::Document::Xslt $result = $stylesheet.transform(doc => $xml).Xslt;
     # the behavior has changed in some version of libxslt
-    my $expect = qq{<html xmlns:foo="http://foo"><head><foo>1st</foo><foo>2nd</foo></head></html>\n};
+    my $expect = qq{'<html xmlns:foo="http://foo">'<head><foo>1st</foo><foo>2nd</foo></head></html>\n};
     # TEST
-    like ($result.serialize,
-        /['<?xml version="1.0"?>'\n]? $expect/,
+    like($result.serialize,
+        /'<html xmlns:foo="http://foo"><head>' .* '<foo>1st</foo><foo>2nd</foo>' .* '</head></html>'/,
         'Results serialize matches text.'
     );
   }
   {
-    LibXSLT.register_function(
-      ('http://foo', 'custom') => sub { $parser.parse: :string( $aux ).findnodes('//y').[0]; });
-    my $stylesheet = $xsltproc.parse: :stylesheet($xslt);
-    my $result = $stylesheet.transform($xml);
+    LibXSLT.register-function(
+      'http://foo', 'custom', sub { $parser.parse(:string( $aux )).findnodes('//y').[0]; });
+    my $stylesheet = $xsltproc.parse-stylesheet($xslt);
+    my $result = $stylesheet.transform($xml).Xslt;
     my $expect = qq{<html xmlns:foo="http://foo"><head><foo>1st</foo></head></html>\n};
     # TEST
-    like (
+    like(
         $result.serialize,
-        qr{(\Q<?xml version="1.0"?>\n\E)?\Q$expect\E},
+        /'<html xmlns:foo="http://foo"><head>' .* '<foo>1st</foo>' .* '</head></html>'/,
         'Results serialize matches text - 2.'
     );
   }
@@ -204,16 +201,16 @@ XML
 </xsl:stylesheet>
 XSLT
   $xsltproc.register-function(
-    "http://x/x", 'test', sub($nodes) { $nodes[0].findnodes('//b[parent::a]') }
+    "http://x/x", 'test', sub ($nodes) { $nodes[0].findnodes('//b[parent::a]') }
    );
-  my $stylesheet = $xsltproc.parse: :stylesheet($xslt);
-  my $result = $stylesheet.transform($parser.parse_string( q:to<XML> ));
+  my $stylesheet = $xsltproc.parse-stylesheet($xslt);
+  my $result = $stylesheet.transform($parser.parse: :string( q:to<XML> )).Xslt;
 <a><b><b/></b><b><c/></b></a>
 XML
   # TEST
-  is ($result.serialize,
-      qq{<?xml version="1.0"?>\n<out><b><b/></b><b><c/></b></out>\n},
-      'result is right.'
+  is($result.serialize,
+     qq{<?xml version="1.0"?>\n<out><b><b/></b><b><c/></b></out>\n},
+     'result is right.'
   );
 }
 
@@ -237,7 +234,7 @@ XML
     }
    );
 
-  my $xsltdoc = $p.parse_string(q:to<EOF>);
+  my $xsltdoc = $p.parse: :string(q:to<EOF>);
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0"
      xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -276,29 +273,29 @@ EOF
 <root format="foo">bar<?baz bak?><y>zzz</y></root>
 EOF
 
-  my $stylesheet = $xsltproc.parse_stylesheet($xsltdoc);
+  my $stylesheet = $xsltproc.parse-stylesheet($xsltdoc);
   my $result = $stylesheet.transform($doc).Xslt;
   my $val = $result.findvalue("/root");
   # TEST
   ok ($val, 'val is true.');
   # TEST
-  is ($val, "foo,barzzz,bak,bar;foo,barzzz,bak,bar;barbakzzz",
+  is($val, "foo,barzzz,bak,bar;foo,barzzz,bak,bar;barbakzzz",
       'val has the right value.')
     or print $result.Str;
 
 }
 
 {
-  my $ns = "http://foo";
+  my $NS = "http://foo";
 
   my $p = LibXML.new;
   my $xsltproc = LibXSLT.new;
 
-  my $xsltdoc = $p.parse: :string(q:to<EOF>);
+  my $xsltdoc = $p.parse: :string(qq:to<EOF>);
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0"
      xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-     xmlns:foo="$ns"
+     xmlns:foo="$NS"
 >
 
 <xsl:template match="root">
@@ -315,24 +312,24 @@ EOF
 EOF
 
   my $stylesheet = $xsltproc.parse-stylesheet($xsltdoc);
-  $stylesheet.register-function($ns, "bar", sub ($_) { return $_ * 2 });
-  my $result = $stylesheet.transform($doc);
+  $stylesheet.register-function($NS, "bar", sub ($_) { return $_ * 2 });
+  my $result = $stylesheet.transform($doc).Xslt;
   my $val = $result.findvalue("/root");
   # TEST
-  is ($val, 20, "contextual register_function" );
+  is($val, 20, "contextual register_function" );
 }
 
 {
-  my $ns = "http://foo";
+  my $NS = "http://foo";
 
   my $p = LibXML.new;
   my $xsltproc = LibXSLT.new;
 
-  my $xsltdoc = $p.parse: :string(q:to<EOF>);
+  my $xsltdoc = $p.parse: :string(qq:to<EOF>);
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0"
      xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-     xmlns:foo="$ns"
+     xmlns:foo="$NS"
 	 extension-element-prefixes="foo"
 >
 
@@ -349,20 +346,23 @@ EOF
 <root></root>
 EOF
 
+}; skip "port remaining tests", 3;
+=begin TODO
+
   my $stylesheet = $xsltproc.parse-stylesheet($xsltdoc);
-  $stylesheet.register-element($ns, "bar", sub (*@a) {
+  $stylesheet.register-element($NS, "bar", sub (*@a) {
 	  return LibXML::Text.new( @a[2].getAttribute( "value" ) );
   });
-  my $result = $stylesheet.transform($doc);
+  my $result = $stylesheet.transform($doc).Xslt;
   my $val = $result.findvalue("/root");
   # TEST
-  is ($val, 10, "contextual register_element");
+  is($val, 10, "contextual register_element");
 }
 
 {
     # GNOME Bugzilla bug #562302
-    my $parser = new LibXML;
-    my $xslt = new LibXSLT;
+    my $parser = LibXML.new;
+    my $xslt = LibXSLT.new;
 
     # registering function
     LibXSLT.register-function("urn:perl", 'cfg', sub {
@@ -402,12 +402,12 @@ EOF
     my $results = $stylesheet.transform($source).Xslt;
 
     my $string = $results.Str;
-    my $expected = <<'EOF';
+    my $expected = q:to<EOF>;
 <?xml version="1.0"?>
 <result><xml_storage/></result>
 EOF
     # TEST
-    is ($string, $expected, 'GNOME Bugzilla bug #562302');
+    is($string, $expected, 'GNOME Bugzilla bug #562302');
 }
 
 # TEST

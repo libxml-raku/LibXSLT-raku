@@ -23,7 +23,7 @@ method register-function(Str $url, QName:D $name, &func, |c) {
             CATCH { default { warn $_; $*XML-CONTEXT.callback-error: X::LibXML::XPath::AdHoc.new: :error($_) } }
             my @params;
             @params.unshift: get-value($ctxt.valuePop) for 0 ..^ $n;
-            my $ret = &func(|@params, |c);
+            my $ret = &func(|@params, |c) // '';
             my xmlXPathObject:D $out := xmlXPathObject.coerce: $*XML-CONTEXT.park($ret, :$ctxt);
             $ctxt.valuePush($_) for $out;
         }

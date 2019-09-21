@@ -10,7 +10,7 @@ use LibXML::XPath::Context;
 has xsltTransformContext $!native;
 method native { $!native }
 has $.input-callbacks;
-has LibXML::XPath::Context $!ctx handles<structured-error generic-error flush-errors park> .= new;
+has LibXML::XPath::Context $!ctx handles<structured-error generic-error callback-error flush-errors park> .= new;
 
 multi submethod TWEAK(:$stylesheet!, LibXML::Document:D :$doc!) {
     $!native = $stylesheet.native.NewTransformContext($doc.native);
@@ -19,11 +19,6 @@ multi submethod TWEAK(:$stylesheet!, LibXML::Document:D :$doc!) {
 
 submethod DESTROY {
     .Free with $!native;
-}
-
-sub park($v) {
-    warn "parking stub...";
-    $v;
 }
 
 method try(&action) {
