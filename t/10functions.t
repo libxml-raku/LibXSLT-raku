@@ -346,12 +346,11 @@ EOF
 <root></root>
 EOF
 
-}; skip "port remaining tests", 3;
-=begin TODO
-
   my $stylesheet = $xsltproc.parse-stylesheet($xsltdoc);
-  $stylesheet.register-element($NS, "bar", sub (*@a) {
-	  return LibXML::Text.new( @a[2].getAttribute( "value" ) );
+  $stylesheet.register-transform('element', $NS, "bar", sub ($ctx) {
+      my LibXML::Node $style = $ctx.style-node;
+      my LibXML::Node $insert = $ctx.insert-node;
+      $insert.addChild: LibXML::Text.new( $style<@value> );
   });
   my $result = $stylesheet.transform($doc).Xslt;
   my $val = $result.findvalue("/root");
@@ -412,4 +411,4 @@ EOF
 
 # TEST
 ok(1, 'Reached here.');
-=end TODO
+

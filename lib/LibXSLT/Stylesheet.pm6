@@ -18,7 +18,12 @@ multi method input-callbacks is rw { $!input-callbacks }
 multi method input-callbacks($!input-callbacks) {}
 
 has xsltStylesheet $!native handles <media-type output-method>;
+has Hash %!extensions;
 method native { $!native }
+
+method register-transform('element', $URI, $name, &element) {
+    %!extensions{$URI//''}{$name} = :&element;
+}
 
 submethod DESTROY {
     .Free with $!native;
@@ -69,7 +74,7 @@ multi method parse-stylesheet(LibXML::Document:D $doc) {
 }
 
 multi method transform(LibXML::Document:D :$doc!, *%params --> LibXML::Document) {
-    my LibXSLT::TransformContext $ctx .= new: :$doc, :stylesheet(self), :$!input-callbacks;
+    my LibXSLT::TransformContext $ctx .= new: :$doc, :stylesheet(self), :$!input-callbacks, :%!extensions;
     my CArray[Str] $params .= new(|%params.kv, Str);
     my xmlDoc $result;
     $ctx.try: {

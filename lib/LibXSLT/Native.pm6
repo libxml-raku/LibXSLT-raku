@@ -8,18 +8,36 @@ use LibXML::Native::Defs :Opaque, :XML2, :xmlCharP;
 use LibXSLT::Native::Defs :XSLT, :EXSLT, :BIND-XSLT;
 use NativeCall;
 
-class xsltCompilerCtxt is repr(Opaque) {}
 class xsltDecimalFormat is repr(Opaque) {}
-class xsltElemPreComp is repr(Opaque) {}
+class xsltCompilerCtxt is repr(Opaque) {}
 class xsltPrincipalStylesheetData is repr(Opaque) {}
 class xsltStylePreComp is repr(Opaque) {}
 class xsltTemplate is repr(Opaque) {}
+
+class xsltElemPreComp is repr(Opaque) is export {
+    has xsltElemPreComp $.next; # next item in the global chained list held by xsltStylesheet.
+    my constant xsltStyleType = int32;
+    has xsltStyleType $.type; # type of the element
+    constant xsltTransformFunction = Pointer;
+    has xsltTransformFunction $.func; # handling function
+    has anyNode $.inst; # the node in the stylesheet's tree corresponding to this item end of common part
+    constant xsltElemPreCompDeallocator = Pointer;
+    has xsltElemPreCompDeallocator $.free; # the deallocator
+}
 
 class xsltTransformContext is repr(Opaque) is export {
 
     method SetGenericErrorFunc(&func (xsltTransformContext $ctx, Str:D $msg, Pointer, Pointer, Pointer) ) is native(XSLT) is symbol('xsltSetGenericErrorFunc') is export {*};
     method SetStructuredErrorFunc( &error-func (xsltTransformContext $, xmlError $)) is native(XML2) is symbol('xmlSetStructuredErrorFunc') {*};
+    method RegisterExtElement(xmlCharP $name, xmlCharP $URI, &func (
+                                  xsltTransformContext,
+	                          anyNode $this-node,
+				  anyNode $style-node,
+			          xsltElemPreComp $com) --> int32)
+        is symbol('xsltRegisterExtElement')
+        is native(XSLT) {*};
     method set-xinclude(int32) is symbol('xslt6_transform_ctx_set_xinclude') is native(BIND-XSLT) {*}
+    method get-insert-node(--> anyNode) is symbol('xslt6_transform_ctx_get_insert_node') is native(BIND-XSLT) {*}
 
     method Free is symbol('xsltFreeTransformContext') is native(XSLT) {*}
 }
