@@ -33,7 +33,7 @@ method !try(&action) {
     my $*XML-CONTEXT = LibXML::ErrorHandler.new;
 
     xsltTransformContext.SetGenericErrorFunc: &generic-error-cb;
-    xsltTransformContext.SetStructuredErrorFunc: &generic-error-cb;
+    xsltTransformContext.SetStructuredErrorFunc: &structured-error-cb;
 
     my @input-contexts = .activate()
         with $.input-callbacks;
