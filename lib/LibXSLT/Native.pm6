@@ -42,6 +42,21 @@ class xsltTransformContext is repr(Opaque) is export {
     method Free is symbol('xsltFreeTransformContext') is native(XSLT) {*}
 }
 
+class xsltSecurityPrefs is repr(Opaque) is export {
+    sub xsltGetDefaultSecurityPrefs( --> xsltSecurityPrefs) is native(XSLT) is export {*};
+    sub xsltNewSecurityPrefs( --> xsltSecurityPrefs) is native(XSLT) is export {*};
+    method new() { xsltNewSecurityPrefs() }
+    method CheckRead(xsltTransformContext $ctxt, xmlCharP $URL --> int32) is native(XSLT) is symbol('xsltCheckRead') {*};
+    method CheckWrite(xsltTransformContext $ctxt, xmlCharP $URL --> int32) is native(XSLT) is symbol('xsltCheckWrite') {*};
+    method Free() is native(XSLT) is symbol('xsltFreeSecurityPrefs') {*};
+    method Get(int32 $option --> Pointer) is native(XSLT) is symbol('xsltGetSecurityPrefs') {*};
+    method Allow(xsltTransformContext $ctxt, Str $value --> int32) is native(XSLT) is symbol('xsltSecurityAllow') {*};
+    method Forbid(xsltTransformContext $ctxt, Str $value --> int32) is native(XSLT) is symbol('xsltSecurityForbid') {*};
+    method SetCtxt(xsltTransformContext $ctxt --> int32) is native(XSLT) is symbol('xsltSetCtxtSecurityPrefs') {*};
+    method SetDefault() is native(XSLT) is symbol('xsltSetDefaultSecurityPrefs') {*};
+    method Set(int32 $option, &func (xsltSecurityPrefs, xsltTransformContext, Str) --> int32) is native(XSLT) is symbol('xsltSetSecurityPrefs') {*};
+}
+
 class xsltDocument is repr(Opaque) is export {
 }
 

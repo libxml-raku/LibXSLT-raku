@@ -6,15 +6,18 @@ use LibXSLT::Native;
 use NativeCall;
 use LibXML::ErrorHandler :&structured-error-cb, :&generic-error-cb;
 use LibXML::XPath::Context;
+use LibXSLT::Security;
 
 has xsltTransformContext $!native;
 method native { $!native }
 has $.input-callbacks;
 has Hash %!extensions;
 has LibXML::XPath::Context $!ctx handles<structured-error generic-error callback-error flush-errors park> .= new;
+has LibXSLT::Security $.security;
 
-multi submethod TWEAK(:$stylesheet!, LibXML::Document:D :$doc!, :%extensions) {
-    $!native = $stylesheet.native.NewTransformContext($doc.native);
+multi submethod TWEAK(:$stylesheet!, LibXML::Document :$doc, :%extensions) {
+    my xmlDoc $doc-native = .native with $doc;
+    $!native = $stylesheet.native.NewTransformContext($doc-native);
     $!native.set-xinclude(1);
     for %extensions {
         my $uri = .key;
@@ -63,6 +66,11 @@ method register-transform($type, Str $URI, Str:D $name, &func) {
 method try(&action) {
     my $*XML-CONTEXT = self;
     $_ .= new without $*XML-CONTEXT;
+
+    my $*XSLT-SECURITY = $*XML-CONTEXT.security;
+    .native.SetCtxt($*XML-CONTEXT.native)
+        with $*XML-CONTEXT.security;
+
     $*XML-CONTEXT.native.SetGenericErrorFunc: &generic-error-cb;
     $*XML-CONTEXT.native.SetStructuredErrorFunc: &structured-error-cb;
 

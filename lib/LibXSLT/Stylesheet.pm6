@@ -8,8 +8,10 @@ use LibXML::Document;
 use LibXML::Native;
 use LibXML::Native::Defs :CLIB;
 use LibXML::ErrorHandler :&structured-error-cb, :&generic-error-cb;
-
+use LibXSLT::Security;
 use NativeCall;
+
+has LibXSLT::Security $.security is rw;
 
 constant config = LibXML::Config;
 
@@ -31,9 +33,12 @@ submethod DESTROY {
 
 method !try(&action) {
     my $*XML-CONTEXT = LibXML::ErrorHandler.new;
+    my $*XSLT-SECURITY = $!security;
 
     xsltTransformContext.SetGenericErrorFunc: &generic-error-cb;
     xsltTransformContext.SetStructuredErrorFunc: &structured-error-cb;
+    .set-default()
+        with $!security;
 
     my @input-contexts = .activate()
         with $.input-callbacks;
@@ -53,18 +58,22 @@ proto method parse-stylesheet(|c) {
 }
 
 multi method parse-stylesheet(LibXML::Document:D :$doc! --> LibXSLT::Stylesheet) {
-    .Free with $!native;
     self!try: {
         my $doc-copy = $doc.native.copy: :deep;
-        $!native = xsltParseStylesheetDoc($doc-copy);
+        with xsltParseStylesheetDoc($doc-copy) {
+            .Free with $!native;
+            $!native = $_;
+        }
     }
     self;
 }
 
 multi method parse-stylesheet(Str:D() :$file! --> LibXSLT::Stylesheet) {
-    .Free with $!native;
     self!try: {
-        $!native = xsltParseStylesheetFile($file);
+        with xsltParseStylesheetFile($file) {
+            .Free with $!native;
+            $!native = $_;
+        }
     }
     self;
 }
