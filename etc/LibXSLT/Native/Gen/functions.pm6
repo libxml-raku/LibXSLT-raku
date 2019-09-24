@@ -5,7 +5,8 @@ use v6;
 unit module LibXSLT::Native::Gen::functions;
 # interface for the XSLT functions not from XPath:
 #    a set of extra functions coming from XSLT but not in XPath 
-use LibXSLT::Native::Defs :$lib, :xmlCharP;
+use LibXML::Native::Defs :xmlCharP;
+use LibXSLT::Native::Defs :$lib;
 
 sub xsltDocumentFunction(xmlXPathParserContext $ctxt, int32 $nargs) is native(XSLT) is export {*};
 sub xsltElementAvailableFunction(xmlXPathParserContext $ctxt, int32 $nargs) is native(XSLT) is export {*};

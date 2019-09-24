@@ -5,4 +5,5 @@ use v6;
 unit module LibXSLT::Native::Gen::templates;
 # interface for the template processing:
 #    This set of routine encapsulates XPath calls and Attribute Value Templates evaluation. 
-use LibXSLT::Native::Defs :$lib, :xmlCharP;
+use LibXML::Native::Defs :xmlCharP;
+use LibXSLT::Native::Defs :$lib;

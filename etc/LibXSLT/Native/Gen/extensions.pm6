@@ -5,7 +5,8 @@ use v6;
 unit module LibXSLT::Native::Gen::extensions;
 # interface for the extension support:
 #    This provide the API needed for simple and module extension support. 
-use LibXSLT::Native::Defs :$lib, :xmlCharP;
+use LibXML::Native::Defs :xmlCharP;
+use LibXSLT::Native::Defs :$lib;
 
 sub xsltDebugDumpExtensions(FILE * $output) is native(XSLT) is export {*};
 sub xsltExtModuleElementLookup(xmlCharP $name, xmlCharP $URI --> xsltTransformFunction) is native(XSLT) is export {*};

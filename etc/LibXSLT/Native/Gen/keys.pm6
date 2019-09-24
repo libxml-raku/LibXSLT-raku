@@ -5,4 +5,5 @@ use v6;
 unit module LibXSLT::Native::Gen::keys;
 # interface for the key matching used in key() and template matches.:
 #    implementation of the key mechanims. 
-use LibXSLT::Native::Defs :$lib, :xmlCharP;
+use LibXML::Native::Defs :xmlCharP;
+use LibXSLT::Native::Defs :$lib;

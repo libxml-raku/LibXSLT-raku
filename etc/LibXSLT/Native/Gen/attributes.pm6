@@ -5,4 +5,5 @@ use v6;
 unit module LibXSLT::Native::Gen::attributes;
 # interface for the XSLT attribute handling:
 #    this module handles the specificities of attribute and attribute groups processing. 
-use LibXSLT::Native::Defs :$lib, :xmlCharP;
+use LibXML::Native::Defs :xmlCharP;
+use LibXSLT::Native::Defs :$lib;

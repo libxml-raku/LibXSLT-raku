@@ -5,4 +5,5 @@ use v6;
 unit module LibXSLT::Native::Gen::preproc;
 # precomputing stylesheets:
 #    this is the compilation phase, where most of the stylesheet is "compiled" into faster to use data. 
-use LibXSLT::Native::Defs :$lib, :xmlCharP;
+use LibXML::Native::Defs :xmlCharP;
+use LibXSLT::Native::Defs :$lib;

@@ -5,4 +5,5 @@ use v6;
 unit module LibXSLT::Native::Gen::xsltexports;
 # macros for marking symbols as exportable/importable.:
 #    macros for marking symbols as exportable/importable. 
-use LibXSLT::Native::Defs :$lib, :xmlCharP;
+use LibXML::Native::Defs :xmlCharP;
+use LibXSLT::Native::Defs :$lib;

@@ -5,7 +5,8 @@ use v6;
 unit module LibXSLT::Native::Gen::extra;
 # interface for the non-standard features:
 #    implement some extension outside the XSLT namespace but not EXSLT with is in a different library. 
-use LibXSLT::Native::Defs :$lib, :xmlCharP;
+use LibXML::Native::Defs :xmlCharP;
+use LibXSLT::Native::Defs :$lib;
 
 sub xsltFunctionNodeSet(xmlXPathParserContext $ctxt, int32 $nargs) is native(XSLT) is export {*};
 sub xsltRegisterAllExtras() is native(XSLT) is export {*};

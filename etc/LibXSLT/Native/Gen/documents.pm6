@@ -5,7 +5,8 @@ use v6;
 unit module LibXSLT::Native::Gen::documents;
 # interface for the document handling:
 #    implements document loading and cache (multiple document() reference for the same resources must be equal. 
-use LibXSLT::Native::Defs :$lib, :xmlCharP;
+use LibXML::Native::Defs :xmlCharP;
+use LibXSLT::Native::Defs :$lib;
 
 enum xsltLoadType is export (
     XSLT_LOAD_DOCUMENT => 2,

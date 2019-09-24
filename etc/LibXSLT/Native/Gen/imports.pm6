@@ -5,4 +5,5 @@ use v6;
 unit module LibXSLT::Native::Gen::imports;
 # interface for the XSLT import support:
 #    macros and fuctions needed to implement and access the import tree 
-use LibXSLT::Native::Defs :$lib, :xmlCharP;
+use LibXML::Native::Defs :xmlCharP;
+use LibXSLT::Native::Defs :$lib;

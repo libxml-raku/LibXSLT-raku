@@ -5,7 +5,8 @@ use v6;
 unit module LibXSLT::Native::Gen::xslt;
 # Interfaces, constants and types related to the XSLT engine:
 #    Interfaces, constants and types related to the XSLT engine 
-use LibXSLT::Native::Defs :$lib, :xmlCharP;
+use LibXML::Native::Defs :xmlCharP;
+use LibXSLT::Native::Defs :$lib;
 
 sub xsltCleanupGlobals() is native(XSLT) is export {*};
 sub xsltInit() is native(XSLT) is export {*};

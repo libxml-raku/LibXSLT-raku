@@ -5,7 +5,8 @@ use v6;
 unit module LibXSLT::Native::Gen::numbersInternals;
 # Implementation of the XSLT number functions:
 #    Implementation of the XSLT number functions 
-use LibXSLT::Native::Defs :$lib, :xmlCharP;
+use LibXML::Native::Defs :xmlCharP;
+use LibXSLT::Native::Defs :$lib;
 
 class xsltFormatNumberInfo is repr('CStruct') {
     has int32 $.integer_hash; # Number of '#' in integer part

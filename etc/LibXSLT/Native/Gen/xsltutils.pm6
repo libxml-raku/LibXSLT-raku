@@ -5,7 +5,8 @@ use v6;
 unit module LibXSLT::Native::Gen::xsltutils;
 # set of utilities for the XSLT engine:
 #    interfaces for the utilities module of the XSLT engine. things like message handling, profiling, and other generally useful routines. 
-use LibXSLT::Native::Defs :$lib, :xmlCharP;
+use LibXML::Native::Defs :xmlCharP;
+use LibXSLT::Native::Defs :$lib;
 
 enum xsltDebugStatusCodes is export (
     XSLT_DEBUG_CONT => 6,

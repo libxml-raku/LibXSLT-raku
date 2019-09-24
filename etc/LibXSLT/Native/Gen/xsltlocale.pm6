@@ -5,7 +5,8 @@ use v6;
 unit module LibXSLT::Native::Gen::xsltlocale;
 # Locale handling:
 #    Interfaces for locale handling. Needed for language dependent sorting. 
-use LibXSLT::Native::Defs :$lib, :xmlCharP;
+use LibXML::Native::Defs :xmlCharP;
+use LibXSLT::Native::Defs :$lib;
 
 sub xsltFreeLocale(xsltLocale $locale) is native(XSLT) is export {*};
 sub xsltFreeLocales() is native(XSLT) is export {*};

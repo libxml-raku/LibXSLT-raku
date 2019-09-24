@@ -5,4 +5,5 @@ use v6;
 unit module LibXSLT::Native::Gen::namespaces;
 # interface for the XSLT namespace handling:
 #    set of function easing the processing and generation of namespace nodes in XSLT. 
-use LibXSLT::Native::Defs :$lib, :xmlCharP;
+use LibXML::Native::Defs :xmlCharP;
+use LibXSLT::Native::Defs :$lib;
