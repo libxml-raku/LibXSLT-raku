@@ -14,9 +14,8 @@ submethod DESTROY {
 
 method !set-security-pref(Int() $pref, &func) {
     $!native.Set($pref, -> $sec, $ctx, $val --> Int {
-        CATCH { default { warn $_; $*XML-CONTEXT.callback-error($_); return 0} }
-        my Int $rv := &func($*XML-CONTEXT, $val);
-        $rv // 0;
+        CATCH { default { $*XML-CONTEXT.callback-error($_); return -1} }
+        my Int $ = &func($*XML-CONTEXT, $val);
     });
 }
 
@@ -57,3 +56,22 @@ method set-default {
     $!native.SetDefault();
 }
 
+method set-context($ctx) {
+    $!native.SetContext(.native) with $ctx;
+}
+
+method check-read($*XML-CONTEXT, Str $url) {
+    given $!native.CheckRead($*XML-CONTEXT.native, $url) {
+        when 1 { True }
+        when 0 { False }
+        default { fail "check-read failed with status: $_" }
+    }
+}
+
+method check-write($*XML_CONTEXT, Str $url) {
+    given $!native.CheckWrite($*XML-CONTEXT.native, $url) {
+        when 1 { True }
+        when 0 { False }
+        default { fail "check-write failed with status: $_" }
+    }
+}

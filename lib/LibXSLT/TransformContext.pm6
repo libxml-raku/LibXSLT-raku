@@ -68,8 +68,8 @@ method try(&action) {
     $_ .= new without $*XML-CONTEXT;
 
     my $*XSLT-SECURITY = $*XML-CONTEXT.security;
-    .native.SetCtxt($*XML-CONTEXT.native)
-        with $*XML-CONTEXT.security;
+    .set-context($*XML-CONTEXT)
+        with $*XSLT-SECURITY;
 
     $*XML-CONTEXT.native.SetGenericErrorFunc: &generic-error-cb;
     $*XML-CONTEXT.native.SetStructuredErrorFunc: &structured-error-cb;

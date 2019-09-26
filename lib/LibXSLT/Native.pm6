@@ -52,9 +52,9 @@ class xsltSecurityPrefs is repr(Opaque) is export {
     method Get(int32 $option --> Pointer) is native(XSLT) is symbol('xsltGetSecurityPrefs') {*};
     method Allow(xsltTransformContext $ctxt, Str $value --> int32) is native(XSLT) is symbol('xsltSecurityAllow') {*};
     method Forbid(xsltTransformContext $ctxt, Str $value --> int32) is native(XSLT) is symbol('xsltSecurityForbid') {*};
-    method SetCtxt(xsltTransformContext $ctxt --> int32) is native(XSLT) is symbol('xsltSetCtxtSecurityPrefs') {*};
+    method SetContext(xsltTransformContext $ctxt --> int32) is native(XSLT) is symbol('xsltSetCtxtSecurityPrefs') {*};
     method SetDefault() is native(XSLT) is symbol('xsltSetDefaultSecurityPrefs') {*};
-    method Set(int32 $option, &func (xsltSecurityPrefs, xsltTransformContext, Str) --> int32) is native(XSLT) is symbol('xsltSetSecurityPrefs') {*};
+    method Set(int32 $option, &func (xsltSecurityPrefs, xsltTransformContext, Str --> int32) --> int32) is native(XSLT) is symbol('xsltSetSecurityPrefs') {*};
 }
 
 class xsltDocument is repr(Opaque) is export {
