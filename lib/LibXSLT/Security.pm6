@@ -2,7 +2,14 @@ unit class LibXSLT::Security;
 
 use LibXSLT::Native;
 use LibXSLT::Enums;
+use LibXML::ErrorHandler;
+use LibXML::Enums;
+
 has xsltSecurityPrefs $!native;
+
+class X::LibXSLT::AdHoc is X::LibXML::AdHoc {
+    method domain-num {XML_FROM_XSLT}
+}
 
 submethod TWEAK {
     $!native .= new();
@@ -14,8 +21,12 @@ submethod DESTROY {
 
 method !set-security-pref(Int() $pref, &func) {
     $!native.Set($pref, -> $sec, $ctx, $val --> Int {
-        CATCH { default { $*XML-CONTEXT.callback-error($_); return -1} }
-        my Int $ = &func($*XML-CONTEXT, $val);
+        my Int $rv = try { &func($*XML-CONTEXT, $val); } // 0;
+        with $! {
+            $*XML-CONTEXT.callback-error(X::LibXSLT::AdHoc.new(:error($_)));
+            $rv = -1;
+        }
+        $rv;
     });
 }
 

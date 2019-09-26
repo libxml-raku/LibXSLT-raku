@@ -48,7 +48,7 @@ dies-ok { LibXML.parse: :file($bad_xsl2) }, ' TODO : Add test name';
   ok( $parsed, ' TODO : Add test name' );
   try { $parsed.transform: :file( $good_xml ); };
   # TEST
-  is( $!.message, ' error : Non-fatal message.', ' TODO : Add test name' )
+  like( $!.message, /'parser error : Non-fatal message.'/, ' TODO : Add test name' )
       or diag "unexpected error: $!";
 }
 
@@ -126,7 +126,6 @@ my $E = $!;
 ok( $E, ' TODO : Add test name' );
 
 # TEST
-todo "getting: 'untime error: element value-of'", 2;
 like( $E.message,
     rx:i/'unregistered variable foo'|"variable 'foo' has not been declared"/,
     'Exception matches.' );

@@ -1,6 +1,6 @@
 use v6;
 use Test;
-plan 32;
+plan 31;
 use LibXSLT;
 use LibXSLT::Security;
 use LibXSLT::TransformContext;
@@ -255,10 +255,6 @@ my $scb2 = LibXSLT::Security.new();
 $scb2.register-callback( read-file => &read_file_die );
 $stylesheet.security = $scb2;
 
-skip "TODO: port remaining tests", 2;
-
-=begin TODO
-
 # check if transform throws an exception
 $doc = $parser.parse: :string('<file>allow.xml</file>');
 print "# dying callback test\n";
@@ -272,8 +268,6 @@ like($E, /'Test die from security callback'/,
     'Exception Test die from security callback.');
 
 }
-
-=end TODO
 
 done-testing();
 
