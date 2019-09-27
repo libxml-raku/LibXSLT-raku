@@ -1,12 +1,15 @@
 unit class LibXSLT::TransformContext;
 
-use LibXML::Document;
-use LibXML::Native;
 use LibXSLT::Native;
-use NativeCall;
-use LibXML::ErrorHandler :&structured-error-cb, :&generic-error-cb;
-use LibXML::XPath::Context;
 use LibXSLT::Security;
+use LibXSLT::ExtensionContext;
+
+use LibXML::Document;
+use LibXML::ErrorHandler :&structured-error-cb, :&generic-error-cb;
+use LibXML::Native;
+use LibXML::XPath::Context;
+
+use NativeCall;
 
 has xsltTransformContext $!native;
 method native { $!native }
@@ -33,32 +36,13 @@ submethod DESTROY {
     .Free with $!native;
 }
 
-class ExtensionContext {
-    has xsltElemPreComp $!comp;
-
-    has anyNode  $!this-native;
-    has LibXML::Node $!this;
-    method this-node { $!this //= LibXML::Node.box($!this-native); }
-
-    has anyNode  $!style-native;
-    has LibXML::Node $!style;
-    method style-node { $!style //= LibXML::Node.box($!style-native); }
-
-    has anyNode  $!insert-native;
-    has LibXML::Node $!insert;
-    method insert-node { $!insert //= LibXML::Node.box($!insert-native); }
-
-    submethod TWEAK(anyNode :$!this-native!, anyNode :$!insert-native!, xsltElemPreComp:D :$!comp!, :$!style-native) {
-        $!style-native //= $!comp.inst;
-    }
-}
 
 method register-transform($type, Str $URI, Str:D $name, &func) {
     %!extensions{$URI||''}{$name} = $type => &func;
-    $!native.RegisterExtElement($name, $URI, -> xsltTransformContext $ctx, anyNode $this-native, anyNode $style-native, xsltElemPreComp $comp {
+    $!native.RegisterExtElement($name, $URI, -> xsltTransformContext $ctx, anyNode $source-native, anyNode $style-native, xsltElemPreComp $comp {
         CATCH { default { warn $_; $*XML-CONTEXT.callback-error: X::LibXML::XPath::AdHoc.new: :error($_) } }
         my $insert-native = .get-insert-node with $ctx;
-        my ExtensionContext $ext-ctx .= new: :$this-native, :$style-native, :$insert-native, :$comp;
+        my LibXSLT::ExtensionContext $ext-ctx .= new: :$source-native, :$style-native, :$insert-native, :$comp;
         &func($ext-ctx);
     });
 }

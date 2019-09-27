@@ -17,6 +17,7 @@
     "LibXSLT::Config" : "lib/LibXSLT/Config.pm6",
     "LibXSLT::Document" : "lib/LibXSLT/Document.pm6",
     "LibXSLT::Enums" : "lib/LibXSLT/Enums.pm6",
+      "LibXSLT::ExtensionContext" : "lib/LibXSLT/ExtensionContext.pm6",
     "LibXSLT::Native" : "lib/LibXSLT/Native.pm6",
     "LibXSLT::Native::Defs" : "lib/LibXSLT/Native/Defs.pm6",
     "LibXSLT::Security" : "lib/LibXSLT/Security.pm6",

@@ -6,7 +6,7 @@ use LibXSLT;
 my $parser = LibXML.new();
 my $xslt = LibXSLT.new();
 
-# $parser.expand-entities = True;
+$parser.expand-entities = True;
 
 my $source = $parser.parse: :string(qq{<?xml version="1.0" encoding="UTF-8"?>
 <root>foo</root>});
