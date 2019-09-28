@@ -2,7 +2,9 @@ unit class LibXSLT::Config;
 
 use LibXSLT::Native;
 
-method have-exslt { ? xslt6_gbl_have_exslt(); }
+method have-exslt { ? xslt6_config_have_exslt(); }
+method version { Version.new: xslt6_config_lib_version(); }
+
 
 =begin pod
 =head1 NAME

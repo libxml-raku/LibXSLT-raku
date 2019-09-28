@@ -12,7 +12,7 @@ use LibXML::XPath::Context :get-value;
 use LibXML::Types :NCName, :QName;
 use Method::Also;
 
-method config handles<have-exslt> {
+method config handles<have-exslt version> {
     LibXSLT::Config;
 }
 

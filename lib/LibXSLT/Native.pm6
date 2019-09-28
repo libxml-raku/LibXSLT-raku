@@ -77,7 +77,8 @@ class xsltStylesheet is repr(Opaque) is export {
 sub xsltSaveResultToString(Pointer[uint8] $out is rw, int32 $len is rw, xmlDoc $result, xsltStylesheet $style --> int32) is native(XSLT) is export {*};
 sub xsltInit() is native(XSLT) is export {*};
 sub xsltSetXIncludeDefault(int32 $) is native(XSLT) is export {*};
-sub xslt6_gbl_have_exslt(--> int32) is native(BIND-XSLT) is export {*};
+sub xslt6_config_have_exslt(--> int32) is native(BIND-XSLT) is export {*};
+sub xslt6_config_lib_version(--> Str) is native(BIND-XSLT) is export {*};
 sub xsltRegisterExtModuleFunction(xmlCharP $name, xmlCharP $URI, &func2 (xmlXPathParserContext, int32 --> xmlXPathObject) --> int32) is native(XSLT) is export {*};
 
 sub exsltRegisterAll() is native(EXSLT) is export {*};
@@ -85,7 +86,7 @@ sub exsltRegisterAll() is native(EXSLT) is export {*};
 INIT {
     xsltInit();
     xsltSetXIncludeDefault(1);
-    if xslt6_gbl_have_exslt() {
+    if xslt6_config_have_exslt() {
         exsltRegisterAll();
     }
 }
