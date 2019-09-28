@@ -18,6 +18,10 @@ my $version = $p.version;
 ok $version, 'LibXSLT.version is trueish';
 
 diag "Running libxslt version: $version (module {LibXSLT.^ver})";
+with LibXSLT.config-version {
+    diag "***NOTE was configured against libxslt version $_ ***"
+        unless $_ == LibXML.version
+}
 diag "Running libxml version: {LibXML.version} (module {LibXML.^ver})";
 diag "Running libexslt? " ~ ( have-exslt() ?? 'Yes' !! 'No');
 

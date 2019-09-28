@@ -10,7 +10,7 @@ DLLEXPORT int xslt6_config_have_exslt(void) {
 #endif
 }
 
-DLLEXPORT char* xslt6_config_lib_version(void) {
+DLLEXPORT char* xslt6_config_version(void) {
     return LIBXSLT_DOTTED_VERSION;
 }
 
