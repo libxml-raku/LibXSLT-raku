@@ -6,6 +6,10 @@ use LibXML;
 use LibXML::Node::List;
 use LibXSLT;
 
+use LibXSLT::Native::Defs :BIND-XSLT;
+use NativeCall;
+sub have-exslt(--> int32) is native(BIND-XSLT) is symbol('xslt6_config_have_exslt') {*};
+
 {
   my $parser = LibXML.new();
   my $xslt = LibXSLT.new();
@@ -358,7 +362,8 @@ EOF
   is($val, 10, "contextual register_element");
 }
 
-{
+
+if have-exslt() {
     # GNOME Bugzilla bug #562302
     my $parser = LibXML.new;
     my $xslt = LibXSLT.new;
@@ -407,6 +412,9 @@ EOF
 EOF
     # TEST
     is($string, $expected, 'GNOME Bugzilla bug #562302');
+}
+else {
+    skip "test requires libexslt";
 }
 
 # TEST

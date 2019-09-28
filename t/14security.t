@@ -7,7 +7,11 @@ use LibXSLT::TransformContext;
 use LibXML;
 use LibXML::InputCallback;
 
-my $parser = LibXML.new();
+use LibXSLT::Native::Defs :BIND-XSLT;
+use NativeCall;
+sub have-exslt(--> int32) is native(BIND-XSLT) is symbol('xslt6_config_have_exslt') {*};
+
+my LibXML $parser .= new();
 print "# parser\n";
 # TEST
 ok($parser, ' TODO : Add test name');
@@ -20,7 +24,7 @@ ok($xslt, ' TODO : Add test name');
 my $stylsheetstring = q:to<EOT>;
 <xsl:stylesheet version="1.0"
       xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns="http://www.w3.org/1999/xhtml">
       xmlns:exsl="http://exslt.org/common"
       extension-element-prefixes="exsl">
 
@@ -64,6 +68,11 @@ $xslt.input-callbacks($icb);
 my $scb = LibXSLT::Security.new();
 # TEST
 ok($scb, ' TODO : Add test name');
+
+unless have-exslt() {
+    skip-rest "libexslt required for remaining tests";
+    exit;
+}
 
 print "# registering security callbacks\n";
 $scb.register-callback( read-file  => &read_file );
