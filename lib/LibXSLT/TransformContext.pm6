@@ -17,10 +17,11 @@ has $.input-callbacks;
 has Hash %!extensions;
 has LibXML::XPath::Context $!ctx handles<structured-error generic-error callback-error flush-errors park> .= new;
 has LibXSLT::Security $.security;
+has $.stylesheet is required;
 
-multi submethod TWEAK(:$stylesheet!, LibXML::Document :$doc, :%extensions) {
+multi submethod TWEAK(LibXML::Document :$doc, :%extensions) {
     my xmlDoc $doc-native = .native with $doc;
-    $!native = $stylesheet.native.NewTransformContext($doc-native);
+    $!native = $!stylesheet.native.NewTransformContext($doc-native);
     $!native.set-xinclude(1);
     for %extensions {
         my $uri = .key;

@@ -293,8 +293,7 @@ sub read_file($tctxt, $value) {
       isa-ok( $tctxt, "LibXSLT::TransformContext", ' TODO : Add test name' );
       print "# stylesheet from transform context\n";
       # TEST*$read_file
-      skip("todo: implement LibXSLT::StylesheetWrapper?");
-##      ok( $tctxt.stylesheet.isa("LibXSLT::StylesheetWrapper"), ' TODO : Add test name' );
+      isa-ok( $tctxt.stylesheet, "LibXSLT::Stylesheet", ' TODO : Add test name' );
       return 1;
    }
    else {
