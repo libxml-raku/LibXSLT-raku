@@ -76,7 +76,11 @@ class xsltStylesheet is repr(Opaque) is export {
 
 sub xsltSaveResultToString(Pointer[uint8] $out is rw, int32 $len is rw, xmlDoc $result, xsltStylesheet $style --> int32) is native(XSLT) is export {*};
 sub xsltInit() is native(XSLT) is export {*};
-sub xsltSetXIncludeDefault(int32 $) is native(XSLT) is export {*};
+sub xsltSetXIncludeDefault(int32) is native(XSLT) is export {*};
+sub xsltMaxDepth is export { cglobal(XSLT, 'xsltMaxDepth', int32); }
+sub xslt6_gbl_set_max_depth(int32) is native(BIND-XSLT) is export {*};
+sub xsltMaxVars is export { cglobal(XSLT, 'xsltMaxVars', int32); }
+sub xslt6_gbl_set_max_vars(int32) is native(BIND-XSLT) is export {*};
 sub xslt6_config_have_exslt(--> int32) is native(BIND-XSLT) is export {*};
 sub xslt6_config_version(--> Str) is native(BIND-XSLT) is export {*};
 sub xsltLibxsltVersion is export { cglobal(XSLT, 'xsltLibxsltVersion', int32); }

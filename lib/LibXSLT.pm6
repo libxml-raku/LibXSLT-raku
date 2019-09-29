@@ -12,7 +12,7 @@ use LibXML::XPath::Context :get-value;
 use LibXML::Types :NCName, :QName;
 use Method::Also;
 
-method config handles<have-exslt version config-version> {
+method config handles<have-exslt version config-version max-depth max-vars> {
     LibXSLT::Config;
 }
 
@@ -50,22 +50,25 @@ LibXSLT - Interface to the GNOME libxslt library
 =head1 SYNOPSIS
 
   use LibXSLT;
-  use LibXML;
+  use LibXML::Document;
 
+  my LibXML::Document $xml .= parse(location => 'foo.xml');
+  my LibXML::Document $xsl .= parse(location=>'bar.xsl', :!cdata);
+
+  my Str $result = LibXSLT.process: :$xml, :$xsl;
+
+  # OO interface
+  use LibXSLT::Document;
+  use LibXSLT::Stylesheet;
   my LibXSLT $xslt .= new();
 
-  my LibXML $source .= parse(location => 'foo.xml');
-  my LibXML $style-doc .= parse(location=>'bar.xsl', !cdata);
-
-  my LibXSLT::Document::Xslt $stylesheet = $xslt.parse-stylesheet($style_doc).Xslt;
-
-  say $stylesheet.Str;
+  my LibXSLT::Stylesheet $stylesheet = $xslt.parse-stylesheet($xsl);
+  my LibXSLT::Document::Xslt $results = $stylesheet.transform($xml).Xslt;
+  say $results.Str;
 
 =head1 DESCRIPTION
 
-This module is an interface to the GNOME project's libxslt. This is an
-extremely good XSLT engine, highly compliant and also very fast. I have
-tests showing this to be more than twice as fast as Sablotron.
+This module is an interface to the GNOME project's libxslt.
 
 =head1 OPTIONS
 
@@ -429,7 +432,7 @@ Copyright 2001-2009, AxKit.com Ltd.
 
 =head1 CONTRIBUTERS
 
-With thanks to: Matt Sergeant, Shane Corgatelli, Petr Pajas, Shlomi Fish.
+With thanks to: Matt Sergeant, Shane Corgatelli, Petr Pajas, Shlomi Fish, יובל קוג'מן (Yuval Kogman)
 
 =head1 SEE ALSO
 

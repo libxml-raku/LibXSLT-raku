@@ -1,6 +1,6 @@
 use v6;
 use Test;
-plan 3;
+plan 4;
 use LibXSLT;
 use LibXML;
 use LibXSLT::Native::Defs :BIND-XSLT;
@@ -26,5 +26,15 @@ diag "Running libxml version: {LibXML.version} (module {LibXML.^ver})";
 diag "Running libexslt? " ~ ( have-exslt() ?? 'Yes' !! 'No');
 
 ok($version >= Min-LibXSLT-Version, "LibXSLT version is suppported")
-    or diag "sorry this version of libxslt is not supported ($version < {Min-LibXSLT-Version})";
+or diag "sorry this version of libxslt is not supported ($version < {Min-LibXSLT-Version})";
+
+{
+    use LibXML::Document;
+    my LibXML::Document $xml .= parse(location => 'example/1.xml');
+    my LibXML::Document $xsl .= parse(location=>'example/1.xsl', :!cdata);
+
+    my Str:D $result = LibXSLT.process: :$xml, :$xsl;
+    ok $result, 'XSLT .process() sanity';
+}
+
 

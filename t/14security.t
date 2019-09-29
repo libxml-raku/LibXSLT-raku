@@ -1,6 +1,6 @@
 use v6;
 use Test;
-plan 31;
+plan 30;
 use LibXSLT;
 use LibXSLT::Security;
 use LibXSLT::TransformContext;
@@ -228,7 +228,7 @@ print "# net read denied\n";
 
     my $port = 8080;
     my $listener = IO::Socket::Async.listen('127.0.0.1', $port);
-    $listener.tap({ok "read from port"; .print("<blah/>\n"); .close });
+    $listener.tap({.print("<blah/>\n"); .close });
 $file = "http://localhost:{$port}/allow.xml";
 $doc = $parser.parse: :string("<write>{$file}</write>");
 try {

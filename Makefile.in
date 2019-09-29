@@ -8,13 +8,16 @@ lib : resources/libraries/%LIB-NAME%
 debug :
 	%MAKE% "DBG=-Wall -g"  all
 
-resources/libraries/%LIB-NAME% : $(SRC)/xslt6_config%O% $(SRC)/xslt6_stylesheet%O% $(SRC)/xslt6_transform_ctx%O%
+resources/libraries/%LIB-NAME% : $(SRC)/xslt6_config%O% $(SRC)/xslt6_gbl%O% $(SRC)/xslt6_stylesheet%O% $(SRC)/xslt6_transform_ctx%O%
 	%LD% %LDSHARED% %LDFLAGS% %LDOUT%resources/libraries/%LIB-NAME% \
-         $(SRC)/xslt6_config%O% $(SRC)/xslt6_stylesheet%O%  $(SRC)/xslt6_transform_ctx%O%\
+         $(SRC)/xslt6_config%O% $(SRC)/xslt6_gbl%O% $(SRC)/xslt6_stylesheet%O%  $(SRC)/xslt6_transform_ctx%O%\
         %LIB-LDFLAGS% 
 
 $(SRC)/xslt6_config%O% : $(SRC)/xslt6_config.c $(SRC)/xslt6_config.h
 	%CC% -I $(SRC) -c %CCSHARED% %CCFLAGS% %CCOUT%$(SRC)/xslt6_config%O% $(SRC)/xslt6_config.c %LIB-CFLAGS% $(DBG)
+
+$(SRC)/xslt6_gbl%O% : $(SRC)/xslt6_gbl.c $(SRC)/xslt6_gbl.h
+	%CC% -I $(SRC) -c %CCSHARED% %CCFLAGS% %CCOUT%$(SRC)/xslt6_gbl%O% $(SRC)/xslt6_gbl.c %LIB-CFLAGS% $(DBG)
 
 $(SRC)/xslt6_stylesheet%O% : $(SRC)/xslt6_stylesheet.c $(SRC)/xslt6_stylesheet.h
 	%CC% -I $(SRC) -c %CCSHARED% %CCFLAGS% %CCOUT%$(SRC)/xslt6_stylesheet%O% $(SRC)/xslt6_stylesheet.c %LIB-CFLAGS% $(DBG)

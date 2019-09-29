@@ -5,6 +5,22 @@ use LibXSLT::Native;
 method have-exslt { ? xslt6_config_have_exslt(); }
 method config-version { Version.new: xslt6_config_version(); }
 method version { int-to-version(xsltLibxsltVersion) }
+method max-depth is rw {
+    Proxy.new(
+        :FETCH{ xsltMaxDepth() },
+        STORE => -> $, Int:D() $val {
+            xslt6_gbl_set_max_depth($val);
+        }
+    );
+}
+method max-vars is rw {
+    Proxy.new(
+        :FETCH{ xsltMaxVars() },
+        STORE => -> $, Int:D() $val {
+            xslt6_gbl_set_max_vars($val);
+        }
+    );
+}
 
 sub int-to-version(Int $v) {
     Version.new: [$v div 10_000, ($v div 100) % 100,  $v % 100];

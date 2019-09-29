@@ -100,3 +100,9 @@ multi method transform(:$file!, |c --> LibXML::Document) {
 multi method transform(LibXML::Document:D $doc, |c) {
     self.transform: :$doc, |c;
 }
+
+method process(LibXML::Document:D :$xml!, LibXML::Document:D :$xsl!, |c --> Str) {
+    my LibXSLT::Stylesheet $stylesheet = $.parse-stylesheet($xsl);
+    my LibXML::Document $results = $stylesheet.transform($xml, |c).Xslt;
+    $results.Str;
+}
