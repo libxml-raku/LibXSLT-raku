@@ -5,10 +5,12 @@ use LibXSLT::TransformContext;
 
 use LibXML::Config;
 use LibXML::Document;
+use LibXML::PI;
 use LibXML::Native;
 use LibXML::Native::Defs :CLIB;
 use LibXML::ErrorHandler :&structured-error-cb, :&generic-error-cb;
 use LibXSLT::Security;
+use URI;
 use NativeCall;
 
 has LibXSLT::Security $.security is rw;
@@ -101,8 +103,27 @@ multi method transform(LibXML::Document:D $doc, |c) {
     self.transform: :$doc, |c;
 }
 
-method process(LibXML::Document:D :$xml!, LibXML::Document:D :$xsl!, |c --> Str) {
-    my LibXSLT::Stylesheet $stylesheet = $.parse-stylesheet($xsl);
-    my LibXML::Document $results = $stylesheet.transform($xml, |c).Xslt;
+proto method load-stylesheet-pi(|c) {
+    with self {return {*}} else { self.new.load-stylesheet-pi(|c) }
+}
+
+multi method load-stylesheet-pi(LibXML::Document:D :$doc!) {
+    self!try({
+        do with xsltLoadStylesheetPI($doc.native) {
+            .Free with $!native;
+            $!native = $_;
+        }
+    }) // fail "unable to load a stylesheet for this document";
+    self
+}
+
+method process(LibXML::Document:D :$doc!, LibXML::Document :$xsl, |c --> Str) {
+    my LibXSLT::Stylesheet $stylesheet = do with $xsl {
+        $.parse-stylesheet($xsl);
+    }
+    else {
+        self.load-stylesheet-pi(:$doc);
+    }
+    my LibXML::Document $results = $stylesheet.transform(:$doc, |c).Xslt;
     $results.Str;
 }

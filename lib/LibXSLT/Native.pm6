@@ -66,6 +66,7 @@ class xsltStackElem is repr(Opaque) {
 class xsltStylesheet is repr(Opaque) is export {
     sub xsltParseStylesheetDoc(xmlDoc $doc --> xsltStylesheet) is native(XSLT) is export {*};
     sub xsltParseStylesheetFile(xmlCharP $filename --> xsltStylesheet) is native(XSLT) is export {*};
+    sub xsltLoadStylesheetPI(xmlDoc $doc --> xsltStylesheet) is native(XSLT) is export {*};
     method NewTransformContext(xmlDoc $doc --> xsltTransformContext) is native(XSLT) is symbol('xsltNewTransformContext') {*};
     constant FILE = Pointer;
     method transform(xmlDoc $doc, xsltTransformContext $userCtxt, CArray[Str] $params --> xmlDoc) is native(BIND-XSLT) is symbol('xslt6_stylesheet_transform') {*}
@@ -86,6 +87,7 @@ sub xslt6_config_version(--> Str) is native(BIND-XSLT) is export {*};
 sub xsltLibxsltVersion is export { cglobal(XSLT, 'xsltLibxsltVersion', int32); }
 sub xsltLibxxmlVersion is export { cglobal(XSLT, 'xsltLibxxmlVersion', int32); }
 sub xsltRegisterExtModuleFunction(xmlCharP $name, xmlCharP $URI, &func2 (xmlXPathParserContext, int32 --> xmlXPathObject) --> int32) is native(XSLT) is export {*};
+sub xsltSetGenericDebugFunc(Pointer $ctx, &func (Pointer $ctx2, Str $msg, Pointer, Pointer, Pointer)) is native(XSLT) is export {*};
 
 sub exsltRegisterAll() is native(EXSLT) is export {*};
 

@@ -52,18 +52,26 @@ LibXSLT - Interface to the GNOME libxslt library
   use LibXSLT;
   use LibXML::Document;
 
-  my LibXML::Document $xml .= parse(location => 'foo.xml');
-  my LibXML::Document $xsl .= parse(location=>'bar.xsl', :!cdata);
+  # process a document with an internal '<?xml-stylesheet ..>' processing-instruction
+  my LibXML::Document $doc .= parse(location => 'foo.xml');
+  my Str $result = LibXSLT.process: :$doc;  
 
-  my Str $result = LibXSLT.process: :$xml, :$xsl;
+  # supply our own style-sheet
+  my LibXML::Document $xsl .= parse(location=>'bar.xsl', :!cdata);
+  my Str $result = LibXSLT.process: :$doc, :$xsl;
 
   # OO interface
   use LibXSLT::Document;
   use LibXSLT::Stylesheet;
   my LibXSLT $xslt .= new();
 
-  my LibXSLT::Stylesheet $stylesheet = $xslt.parse-stylesheet($xsl);
-  my LibXSLT::Document::Xslt $results = $stylesheet.transform($xml).Xslt;
+  my LibXSLT::Stylesheet $stylesheet;
+  $stylesheet = $xslt.parse-stylesheet($xsl);
+
+  # get the stylesheet from a document's '<?xml-stylesheet ..>' processing-instruction
+  $stylesheet .= load-stylesheet-pi(:$doc);
+
+  my LibXSLT::Document::Xslt $results = $stylesheet.transform(:$doc).Xslt;
   say $results.Str;
 
 =head1 DESCRIPTION
@@ -138,19 +146,20 @@ a nodelist).
 
 =item register-extension
 
-	$stylesheet.register_element($uri, $name, $subref)
+        use LibXSLT::ExtensionContext;
+	$stylesheet.register-extension($uri, $name, &func (LibXSLT::ExtensionContext) )
 
 Registers an XSLT extension element $name mapped to the given URI. For example:
 
   use LibXSLT::ExtensionContext;
-  $stylesheet.register_element("urn:foo", "hello", sub (LibXSLT::ExtensionContext $ctx) {
+  $stylesheet.register-element("urn:foo", "hello", sub (LibXSLT::ExtensionContext $ctx) {
           my LibXML::Node $style = $ctx.style-node;
           my LibXML::Node $insert = $ctx.insert-node;
 	  my $name = $style.getAttribute( "name" );
           $insert.addChild: LibXML::Text.new( "Hello, $name!" );
   });
 
-Will register a C<hello> element in the C<urn:foo> namespace that returns a "Hello, X!" text node. You must define this namespace in your XSLT and include its prefix in the C<extension-element-prefixes> list:
+Will register a C<hello> element in the C<urn:foo> namespace that inserts a "Hello, X!" text node. You must define this namespace in your XSLT and include its prefix in the C<extension-element-prefixes> list:
 
   <xsl:stylesheet version="1.0"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -161,7 +170,7 @@ Will register a C<hello> element in the C<urn:foo> namespace that returns a "Hel
   </xsl:template>
   </xsl:stylesheet>
 
-A C<LibXSLT::ExtensionContext> object is passed, giving details of the input style-node and source-node and the current output insert node.
+A C<LibXSLT::ExtensionContext> object is passed, giving details of the input style-node and source-nodes and the current output insert node.
 
 =back
 
@@ -175,17 +184,17 @@ The following methods are available on the new LibXSLT object:
 
 C<$stylesheet-doc> here is an LibXML::Document object (see L<LibXML>)
 representing an XSLT file. This method will return a
-LibXSLT::Stylesheet object, or undef on failure. If the XSLT is
+LibXSLT::Stylesheet object. If the XSLT is
 invalid, an exception will be thrown, so wrap the call to
 parse_stylesheet in a try{} block to trap this.
 
 IMPORTANT: C<$stylesheet-doc> should not contain CDATA sections,
 otherwise libxslt may misbehave. The best way to assure this is to
-load the stylesheet with no_cdata flag, e.g.
+load the stylesheet with `:!cdata` flag, e.g.
 
-  my $stylesheet_doc = LibXML.load_xml(location=>"some.xsl", !cdata);
+  my LibXML::Document $stylesheet-doc .= parse(location=>"some.xsl", :!cdata);
 
-=item parse_stylesheet-file($filename)
+=item parse-stylesheet(file => $filename)
 
 Exactly the same as the above, but parses the given filename directly.
 
@@ -199,7 +208,7 @@ L<LibXML::InputCallback(3)>.
 
 =over 4
 
-=item input-callbacks($icb)
+=item input-callbacks = $icb
 
 Enable the callbacks in C<$icb> only for this LibXSLT object.
 C<$icb> should be a C<LibXML::InputCallback> object. This will
@@ -226,9 +235,9 @@ happen with one stylesheet without requiring a reparse.
 
 =over
 
-=item transform(doc, %params)
+=item transform(:$doc, %params)
 
-  my $results = $stylesheet.transform($doc, foo => "'bar'");
+  my $results = $stylesheet.transform(:$doc, foo => "'bar'");
   print $results.Xslt.Str;
 
 Transforms the passed in LibXML::Document object, and returns a
@@ -236,9 +245,9 @@ new LibXML::Document. Extra hash entries are used as parameters.
 Be sure to keep in mind the caveat with regard to quotes explained in
 the section on L</"Parameters"> below.
 
-=item transform-file(filename, %params)
+=item transform(file => filename, %params)
 
-  my $results = $stylesheet.transform-file($filename, bar => "'baz'");
+  my $results = $stylesheet.transform(file => $filename, bar => "'baz'");
 
 Note the string parameter caveat, detailed in the section on
 L</"Parameters"> below.
@@ -251,18 +260,6 @@ L</"Parameters"> below.
 Applies a role to serialize the
 LibXML::Document object using the desired output format
 (specified in the xsl:output tag in the stylesheet).
-
-=item output-fh(result, fh)
-
-Outputs the result to the filehandle given in C<$fh>.
-
-=item output-file(result, filename)
-
-Outputs the result to the file named in C<$filename>.
-
-=item output-encoding()
-
-Returns the output encoding of the results. Defaults to "UTF-8".
 
 =item output-method()
 
@@ -360,11 +357,11 @@ options listed above. Then you apply the security preferences to the
 LibXSLT or LibXSLT::Stylesheet object using C<security_callbacks()>.
 
   my $security = LibXSLT::Security.new();
-  $security.register-callback( read-file  => $read-cb );
-  $security.register-callback( write-file => $write-cb );
-  $security.register-callback( create-dir => $create-cb );
-  $security.register-callback( read-net   => $read-net-cb );
-  $security.register-callback( write-net  => $write-net-cb );
+  $security.register-callback( read-file  => &read-cb );
+  $security.register-callback( write-file => &write-cb );
+  $security.register-callback( create-dir => &create-cb );
+  $security.register-callback( read-net   => &read-net-cb );
+  $security.register-callback( write-net  => &write-net-cb );
 
   $xslt.security-callbacks( $security );
    -OR-
@@ -378,9 +375,9 @@ arguments:
 
 =over
 
-=item $tctxt
+=item LibXSLT::TransformContext $tctxt
 
-This is the transform context (LibXSLT::TransformContext). You can use
+This is the transform context. You can use
 this to get the current LibXSLT::Stylesheet object by calling
 C<stylesheet()>.
 
@@ -389,7 +386,7 @@ C<stylesheet()>.
 The stylesheet object can then be used to share contextual information between
 different calls to the security callbacks.
 
-=item $value
+=item Str $value
 
 This is the name of the resource (file or URI) that has been requested.
 
@@ -419,7 +416,7 @@ access for the given option (except for C<create_dir>).
 
 =item LibXSLT.havel-exlt()
 
-Returns 1 if the module was compiled with libexslt, 0 otherwise.
+Returns True if the module was compiled with libexslt, False otherwise.
 
 =back
 

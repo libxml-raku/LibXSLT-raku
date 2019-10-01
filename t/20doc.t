@@ -1,17 +1,17 @@
 use v6;
 use Test;
 
-plan 2;
+plan 4;
 
 subtest 'LibXSLT Synopsis' => {
   plan 1;
   use LibXSLT;
   use LibXML::Document;
 
-  my LibXML::Document $xml .= parse(location => 'example/1.xml');
-  my LibXML::Document $xsl .= parse(location=>'example/1.xsl', :!cdata);
+  my LibXML::Document $doc .= parse(location => 'example/1.xml');
+  my LibXML::Document $xsl .= parse(location => 'example/1.xsl', :!cdata);
 
-  my Str $result = LibXSLT.process: :$xml, :$xsl;
+  my Str $result = LibXSLT.process: :$doc, :$xsl;
 
   # OO interface
   use LibXSLT::Document;
@@ -19,11 +19,11 @@ subtest 'LibXSLT Synopsis' => {
   my LibXSLT $xslt .= new();
 
   my LibXSLT::Stylesheet $stylesheet = $xslt.parse-stylesheet($xsl);
-  my LibXSLT::Document::Xslt $results = $stylesheet.transform($xml).Xslt;
+  my LibXSLT::Document::Xslt $results = $stylesheet.transform(:$doc).Xslt;
   ok $results.Str;
 }
 
-subtest 'LibXSLT Synopsis' => {
+subtest 'LibXSLT Options' => {
   plan 6;
   use LibXSLT;
   ok LibXSLT.max-depth, 'get default max-depth';
@@ -31,8 +31,25 @@ subtest 'LibXSLT Synopsis' => {
   is LibXSLT.max-depth, 42, 'get max-depth';
   ok LibXSLT.max-vars, 'get default max-vars';
   lives-ok { LibXSLT.max-vars = 99}, 'set max-vars';
-  is LibXSLT.max-vars, 99, 'get max-depth';
+  is LibXSLT.max-vars, 99, 'get max-vars';
 }
 
+subtest 'LibXSLT Parse' => {
+    plan 1;
+    use LibXSLT::Stylesheet;
+    use LibXML::Document ;
+    my LibXML::Document $stylesheet-doc .= parse(location=>"example/1.xsl", :!cdata);
+    my LibXSLT::Stylesheet $stylesheet .= parse-stylesheet($stylesheet-doc);
+    pass;
+}
+
+subtest 'LibXSLT Transform' => {
+    plan 1;
+    use LibXSLT::Stylesheet;
+    use LibXML::Document ;
+    my LibXML::Document $stylesheet-doc .= parse(location=>"example/1.xsl", :!cdata);
+    my LibXSLT::Stylesheet $stylesheet .= parse-stylesheet($stylesheet-doc);
+    pass;
+}
 
 done-testing;

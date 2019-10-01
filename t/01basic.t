@@ -1,9 +1,10 @@
 use v6;
 use Test;
-plan 4;
+plan 5;
 use LibXSLT;
-use LibXML;
+use LibXSLT::Native;
 use LibXSLT::Native::Defs :BIND-XSLT;
+use LibXML;
 use NativeCall;
 sub have-exslt(--> int32) is native(BIND-XSLT) is symbol('xslt6_config_have_exslt') {*};
 constant Min-LibXSLT-Version = v1.00.00;
@@ -30,11 +31,16 @@ or diag "sorry this version of libxslt is not supported ($version < {Min-LibXSLT
 
 {
     use LibXML::Document;
-    my LibXML::Document $xml .= parse(location => 'example/1.xml');
-    my LibXML::Document $xsl .= parse(location=>'example/1.xsl', :!cdata);
+    my LibXML::Document $doc .= parse(location => 'example/1.xml');
+    my LibXML::Document $xsl .= parse(location => 'example/1.xsl', :!cdata);
 
-    my Str:D $result = LibXSLT.process: :$xml, :$xsl;
+    my Str:D $result = LibXSLT.process: :$doc, :$xsl;
     ok $result, 'XSLT .process() sanity';
+
+    $doc .= parse: 'example/students.xml';
+    my Str $result = LibXSLT.process: :$doc;
+    warn LibXML::Document.parse($result).keys;
+    is LibXML::Document.parse($result)<html/body/table/tr/th>[0][0], 'Roll No';
 }
 
 
