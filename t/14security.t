@@ -61,8 +61,8 @@ my $icb = LibXML::InputCallback.new();
 ok($icb, ' TODO : Add test name');
 
 print "# registering input callbacks\n";
-$icb.register-callbacks( [ &match_cb, &open_cb,
-                            &read_cb, &close_cb ] );
+$icb.register-callbacks( [ &match-cb, &open-cb,
+                            &read-cb, &close-cb ] );
 $xslt.input-callbacks($icb);
 
 my $scb = LibXSLT::Security.new();
@@ -75,11 +75,11 @@ unless have-exslt() {
 }
 
 print "# registering security callbacks\n";
-$scb.register-callback( read-file  => &read_file );
-$scb.register-callback( write-file => &write_file );
+$scb.register-callback( read-file  => &read-file );
+$scb.register-callback( write-file => &write-file );
 $scb.register-callback( create-dir => &create_dir );
-$scb.register-callback( read-net   => &read_net );
-$scb.register-callback( write-net  => &write_net );
+$scb.register-callback( read-net   => &read-net );
+$scb.register-callback( write-net  => &write-net );
 
 $xslt.security = $scb;
 
@@ -261,7 +261,7 @@ like($E, /'write for '$file' refused'/, 'Exception write refused');
 # the stylesheet interface).
 # ---------------------------------------------------------------------------
 my $scb2 = LibXSLT::Security.new();
-$scb2.register-callback( read-file => &read_file_die );
+$scb2.register-callback( read-file => &read-file-die );
 $stylesheet.security = $scb2;
 
 # check if transform throws an exception
@@ -284,15 +284,15 @@ done-testing();
 #
 # Security preference callbacks
 #
-# TEST:$read_file=1;
-sub read_file($tctxt, $value) {
-   print "# security read_file: $value\n";
+# TEST:$read-file=1;
+sub read-file($tctxt, $value) {
+   print "# security read-file: $value\n";
    if ($value eq 'allow.xml') {
       print "# transform context\n";
-      # TEST*$read_file
+      # TEST*$read-file
       isa-ok( $tctxt, "LibXSLT::TransformContext", ' TODO : Add test name' );
       print "# stylesheet from transform context\n";
-      # TEST*$read_file
+      # TEST*$read-file
       isa-ok( $tctxt.stylesheet, "LibXSLT::Stylesheet", ' TODO : Add test name' );
       return 1;
    }
@@ -301,13 +301,13 @@ sub read_file($tctxt, $value) {
    }
 }
 
-sub read_file_die($tctxt, $value) {
-   print "# security read_file_die: $value\n";
+sub read-file-die($tctxt, $value) {
+   print "# security read-file-die: $value\n";
    die "Test die from security callback";
 }
 
-sub write_file($tctxt, $value) {
-   print "# security write_file: $value\n";
+sub write-file($tctxt, $value) {
+   print "# security write-file: $value\n";
    if ($value ~~ /'allow.xml'|newdir|baddir/) {
       return 1;
    }
@@ -326,8 +326,8 @@ sub create_dir($tctxt, $value) {
    }
 }
 
-sub read_net($tctxt, $value) {
-   print "# security read_net: $value\n";
+sub read-net($tctxt, $value) {
+   print "# security read-net: $value\n";
    if ($value ~~ /'allow.xml'/) {
       return 1;
    }
@@ -336,8 +336,8 @@ sub read_net($tctxt, $value) {
    }
 }
 
-sub write_net($tctxt, $value) {
-   print "# security write_net: $value\n";
+sub write-net($tctxt, $value) {
+   print "# security write-net: $value\n";
    if ($value ~~ /'allow.xml'/) {
       return 1;
    }
@@ -350,25 +350,25 @@ sub write_net($tctxt, $value) {
 #
 # input callback functions (used so we don't have to have an actual file)
 #
-sub match_cb($uri) {
-    # print "# input match_cb: $uri\n";
+sub match-cb($uri) {
+    # print "# input match-cb: $uri\n";
     if ($uri ~~ /[allow|deny]'.xml'/) {
         return 1;
     }
     return 0;
 }
 
-sub open_cb($uri) {
-    # print "# input open_cb: $uri\n";
+sub open-cb($uri) {
+    # print "# input open-cb: $uri\n";
     my $str = "<foo>Text here</foo>";
     return $str.encode;
 }
 
-sub close_cb($) {
-    # print "# input close_cb\n";
+sub close-cb($) {
+    # print "# input close-cb\n";
 }
 
-sub read_cb($buf is rw, $n) {
+sub read-cb($buf is rw, $n) {
     # print "# read $n\n";
     my $rv = $buf.subbuf(0, $n);
     $buf .= subbuf(min($n, $buf.elems));

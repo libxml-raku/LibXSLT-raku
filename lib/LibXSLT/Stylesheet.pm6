@@ -8,6 +8,7 @@ use LibXML::Document;
 use LibXML::PI;
 use LibXML::Native;
 use LibXML::Native::Defs :CLIB;
+use LibXML::XPath::Context;
 use LibXML::ErrorHandler :&structured-error-cb, :&generic-error-cb;
 use LibXSLT::Security;
 use URI;
@@ -34,13 +35,16 @@ submethod DESTROY {
 }
 
 method !try(&action) {
-    my $*XML-CONTEXT = LibXML::ErrorHandler.new;
+    my class Context {
+        has LibXML::XPath::Context $!ctx handles<structured-error generic-error callback-error flush-errors park> .= new;
+        method native { xsltTransformContext }
+    }
+    my $*XML-CONTEXT = Context.new;
     my $*XSLT-SECURITY = $!security;
 
     xsltTransformContext.SetGenericErrorFunc: &generic-error-cb;
     xsltTransformContext.SetStructuredErrorFunc: &structured-error-cb;
-    .set-default()
-        with $!security;
+    $*XSLT-SECURITY.set-default();
 
     my @input-contexts = .activate()
         with $.input-callbacks;

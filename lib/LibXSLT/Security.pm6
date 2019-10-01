@@ -64,7 +64,7 @@ method forbid(Str $thing) {
 }
 
 method set-default {
-    $!native.SetDefault();
+    with self { $!native.SetDefault(); } else { xsltSecurityPrefs.SetDefault(); }
 }
 
 method set-context($ctx) {

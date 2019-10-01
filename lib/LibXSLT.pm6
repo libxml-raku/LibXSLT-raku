@@ -176,9 +176,25 @@ A C<LibXSLT::ExtensionContext> object is passed, giving details of the input sty
 
 =head1 API
 
-The following methods are available on the new LibXSLT object:
+The following methods are available on the LibXSLT class or object:
 
 =over
+
+=item process()
+
+    my Str:D $result = LibXSLT.process: :$doc;
+    my Str:D $result = LibXSLT.process: :$doc, :$xsl;
+
+Processes a document using the document's `<?xml-stylesheet ... ?>` processing instruction
+to locate and load a stylesheet.
+
+Security handlers may be used to intercept access to external documents on the file-system or network (see below).
+
+=item load-stylesheet-pi()
+
+    my LibXSLT::Stylesheet $xslt .= load-stylesheet-pi: :$doc;
+
+Loads, but doesn't execute the stylesheet for the given document.
 
 =item parse-stylesheet($stylesheet-doc)
 
@@ -222,7 +238,7 @@ parsing or transformation.
 To create security preferences for the transformation see
 L<LibXSLT::Security>. Once the security preferences have been defined you
 can apply them to an LibXSLT or LibXSLT::Stylesheet instance using
-the C<security_callbacks()> method.
+the C<security-callbacks()> method.
 
 =head1 LibXSLT::Stylesheet
 

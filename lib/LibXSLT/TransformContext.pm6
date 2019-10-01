@@ -53,8 +53,12 @@ method try(&action) {
     $_ .= new without $*XML-CONTEXT;
 
     my $*XSLT-SECURITY = $*XML-CONTEXT.security;
-    .set-context($*XML-CONTEXT)
-        with $*XSLT-SECURITY;
+    with $*XSLT-SECURITY {
+        .set-context($*XML-CONTEXT);
+    }
+    else {
+        .set-default();
+    }
 
     $*XML-CONTEXT.native.SetGenericErrorFunc: &generic-error-cb;
     $*XML-CONTEXT.native.SetStructuredErrorFunc: &structured-error-cb;
