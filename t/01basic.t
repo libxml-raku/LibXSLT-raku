@@ -38,7 +38,7 @@ or diag "sorry this version of libxslt is not supported ($version < {Min-LibXSLT
     ok $result, 'XSLT .process() sanity';
 
     $doc .= parse: 'example/students.xml';
-    my Str $result = LibXSLT.process: :$doc;
+    $result = LibXSLT.process: :$doc;
     warn LibXML::Document.parse($result).keys;
     is LibXML::Document.parse($result)<html/body/table/tr/th>[0][0], 'Roll No';
 }
