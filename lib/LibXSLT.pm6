@@ -56,7 +56,7 @@ LibXSLT - Interface to the GNOME libxslt library
   my LibXML::Document $doc .= parse(location => 'foo.xml');
   my Str $result = LibXSLT.process: :$doc;  
 
-  # supply our own style-sheet
+  # provide an external style-sheet
   my LibXML::Document $xsl .= parse(location => 'bar.xsl', :!cdata);
   my Str $result = LibXSLT.process: :$doc, :$xsl;
 
@@ -67,7 +67,7 @@ LibXSLT - Interface to the GNOME libxslt library
 
   my LibXSLT::Stylesheet $stylesheet;
   $stylesheet = $xslt.parse-stylesheet($xsl);
-
+  # -OR-
   # get the stylesheet from a document's '<?xml-stylesheet ..>' processing-instruction
   $stylesheet .= load-stylesheet-pi(:$doc);
 
@@ -177,7 +177,14 @@ Will register a C<hello> element in the C<urn:foo> name-space that inserts a "He
   </xsl:template>
   </xsl:stylesheet>
 
-A C<LibXSLT::ExtensionContext> object is passed, giving details of the input style-node and source-nodes and the current output insert node.
+A C<LibXSLT::ExtensionContext> object is passed, with three attributes:
+
+=item2 style-node() - The current input node from the stylesheet document
+
+=item2 source-node() - The current input node from the source document
+
+=item2 insert-node() - The current output node in the transformed document
+
 =end item
 
 
@@ -465,6 +472,19 @@ LibXSLT.have-exlt()
 Returns True if the module was compiled with libexslt, False otherwise.
 
 =end item
+
+=head1 PREREQUISITES
+
+This module requires the libxslt library to be installed. Please follow the instructions below based on your platform:
+
+=head2 Debian Linux
+
+  sudo apt-get install libxslt-dev
+
+=head2 Mac OS X
+
+  brew update
+  brew install libxslt
 
 =head1 LICENSE
 

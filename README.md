@@ -15,7 +15,7 @@ SYNOPSIS
     my LibXML::Document $doc .= parse(location => 'foo.xml');
     my Str $result = LibXSLT.process: :$doc;  
 
-    # supply our own style-sheet
+    # provide an external style-sheet
     my LibXML::Document $xsl .= parse(location => 'bar.xsl', :!cdata);
     my Str $result = LibXSLT.process: :$doc, :$xsl;
 
@@ -26,7 +26,7 @@ SYNOPSIS
 
     my LibXSLT::Stylesheet $stylesheet;
     $stylesheet = $xslt.parse-stylesheet($xsl);
-
+    # -OR-
     # get the stylesheet from a document's '<?xml-stylesheet ..>' processing-instruction
     $stylesheet .= load-stylesheet-pi(:$doc);
 
@@ -117,7 +117,13 @@ Each of the option methods returns its previous value, and can be called without
         </xsl:template>
         </xsl:stylesheet>
 
-    A `LibXSLT::ExtensionContext` object is passed, giving details of the input style-node and source-nodes and the current output insert node.
+    A `LibXSLT::ExtensionContext` object is passed, with three attributes:
+
+        * style-node() - The current input node from the stylesheet document
+
+        * source-node() - The current input node from the source document
+
+        * insert-node() - The current output node in the transformed document
 
 API
 ===
@@ -300,6 +306,22 @@ Interface
   * LibXSLT.have-exlt()
 
     Returns True if the module was compiled with libexslt, False otherwise.
+
+PREREQUISITES
+=============
+
+This module requires the libxslt library to be installed. Please follow the instructions below based on your platform:
+
+Debian Linux
+------------
+
+    sudo apt-get install libxslt-dev
+
+Mac OS X
+--------
+
+    brew update
+    brew install libxslt
 
 LICENSE
 =======
