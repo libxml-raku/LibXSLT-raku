@@ -57,7 +57,7 @@ LibXSLT - Interface to the GNOME libxslt library
   my Str $result = LibXSLT.process: :$doc;  
 
   # supply our own style-sheet
-  my LibXML::Document $xsl .= parse(location=>'bar.xsl', :!cdata);
+  my LibXML::Document $xsl .= parse(location => 'bar.xsl', :!cdata);
   my Str $result = LibXSLT.process: :$doc, :$xsl;
 
   # OO interface
@@ -202,7 +202,7 @@ load-stylesheet-pi()
 
     my LibXSLT::Stylesheet $xslt .= load-stylesheet-pi: :$doc;
 
-Loads, but doesn't execute the stylesheet for the given document.
+Loads, but doesn't execute the stylesheet associated with the given document.
 =end item
 
 =begin item
@@ -218,7 +218,7 @@ IMPORTANT: C<$stylesheet-doc> should not contain CDATA sections,
 otherwise libxslt may misbehave. The best way to assure this is to
 load the stylesheet with `:!cdata` flag, e.g.
 
-  my LibXML::Document $stylesheet-doc .= parse(location=>"some.xsl", :!cdata);
+  my LibXML::Document $stylesheet-doc .= parse(location => "some.xsl", :!cdata);
 =end item
 
 =begin item
@@ -232,13 +232,13 @@ Exactly the same as the above, but parses the given filename directly.
 
 To define LibXSLT or LibXSLT::Stylesheet specific input
 callbacks, reuse the LibXML input callback API as described in
-L<LibXML::InputCallback(3)>.
+L<LibXML::InputCallback>.
 
 =begin item
 input-callbacks = $icb
 
 Enable the callbacks in C<$icb> only for this LibXSLT object.
-C<$icb> should be a C<LibXML::InputCallback> object. This will
+C<$icb> should be a L<LibXML::InputCallback> object. This will
 call C<init_callbacks> and C<cleanup_callbacks> automatically during
 parsing or transformation.
 
@@ -256,7 +256,7 @@ the C<security-callbacks()> method.
 The main API is on the stylesheet, though it is fairly minimal.
 
 One of the main advantages of LibXSLT is that you have a generic
-stylesheet object which you call the transform() method passing in a
+stylesheet object which you call the C<transform()> method passing in a
 document to transform. This allows you to have multiple transformations
 happen with one stylesheet without requiring a reparse.
 
@@ -273,7 +273,7 @@ the section on L</"Parameters"> below.
 =end item
 
 =begin item
-transform(file => filename, %params)
+transform(file => filename, |%params)
 
   my $results = $stylesheet.transform(file => $filename, bar => "'baz'");
 
@@ -446,7 +446,7 @@ Creates a new LibXSLT::Security object.
 =end item
 
 =begin item
-register-callback( $option, $callback )
+register-callback( $option, &callback )
 
 Registers a callback function for the given security option (listed above).
 =end item
@@ -474,6 +474,9 @@ Perl itself.
 Copyright 2001-2009, AxKit.com Ltd.
 
 =head1 CONTRIBUTERS
+
+This Raku module is based on the Perl 5 XML::LibXSLT module. The `process()` method has
+been adapted from the XML::LibXSL::Easy module.
 
 With thanks to: Matt Sergeant, Shane Corgatelli, Petr Pal's, Shlomi Fish, יובל קוג'מן (Yuval Kogman)
 

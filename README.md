@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/p6-xml/LibXSLT-p6.svg?branch=master)](https://travis-ci.org/p6-xml/LibXSLT-p6)
+[![Build Status](https://travis-ci.org/p6-xml/LibXSLT-raku.svg?branch=master)](https://travis-ci.org/p6-xml/LibXSLT-raku)
 
 NAME
 ====
@@ -16,7 +16,7 @@ SYNOPSIS
     my Str $result = LibXSLT.process: :$doc;  
 
     # supply our own style-sheet
-    my LibXML::Document $xsl .= parse(location=>'bar.xsl', :!cdata);
+    my LibXML::Document $xsl .= parse(location => 'bar.xsl', :!cdata);
     my Str $result = LibXSLT.process: :$doc, :$xsl;
 
     # OO interface
@@ -137,7 +137,7 @@ The following methods are available on the LibXSLT class or object:
 
         my LibXSLT::Stylesheet $xslt .= load-stylesheet-pi: :$doc;
 
-    Loads, but doesn't execute the stylesheet for the given document.
+    Loads, but doesn't execute the stylesheet associated with the given document.
 
   * parse-stylesheet($stylesheet-doc)
 
@@ -145,7 +145,7 @@ The following methods are available on the LibXSLT class or object:
 
     IMPORTANT: `$stylesheet-doc` should not contain CDATA sections, otherwise libxslt may misbehave. The best way to assure this is to load the stylesheet with `:!cdata` flag, e.g.
 
-        my LibXML::Document $stylesheet-doc .= parse(location=>"some.xsl", :!cdata);
+        my LibXML::Document $stylesheet-doc .= parse(location => "some.xsl", :!cdata);
 
   * parse-stylesheet(file => $filename)
 
@@ -154,11 +154,11 @@ The following methods are available on the LibXSLT class or object:
 Input Callbacks
 ===============
 
-To define LibXSLT or LibXSLT::Stylesheet specific input callbacks, reuse the LibXML input callback API as described in [LibXML::InputCallback(3)](LibXML::InputCallback(3)).
+To define LibXSLT or LibXSLT::Stylesheet specific input callbacks, reuse the LibXML input callback API as described in [LibXML::InputCallback](LibXML::InputCallback).
 
   * input-callbacks = $icb
 
-    Enable the callbacks in `$icb` only for this LibXSLT object. `$icb` should be a `LibXML::InputCallback` object. This will call `init_callbacks` and `cleanup_callbacks` automatically during parsing or transformation.
+    Enable the callbacks in `$icb` only for this LibXSLT object. `$icb` should be a [LibXML::InputCallback](LibXML::InputCallback) object. This will call `init_callbacks` and `cleanup_callbacks` automatically during parsing or transformation.
 
 Security Callbacks
 ==================
@@ -170,7 +170,7 @@ LibXSLT::Stylesheet
 
 The main API is on the stylesheet, though it is fairly minimal.
 
-One of the main advantages of LibXSLT is that you have a generic stylesheet object which you call the transform() method passing in a document to transform. This allows you to have multiple transformations happen with one stylesheet without requiring a reparse.
+One of the main advantages of LibXSLT is that you have a generic stylesheet object which you call the `transform()` method passing in a document to transform. This allows you to have multiple transformations happen with one stylesheet without requiring a reparse.
 
   * transform(:$doc, %params)
 
@@ -179,7 +179,7 @@ One of the main advantages of LibXSLT is that you have a generic stylesheet obje
 
     Transforms the passed in LibXML::Document object, and returns a new LibXML::Document. Extra hash entries are used as parameters. Be sure to keep in mind the caveat with regard to quotes explained in the section on [/"Parameters"](/"Parameters") below.
 
-  * transform(file => filename, %params)
+  * transform(file => filename, |%params)
 
         my $results = $stylesheet.transform(file => $filename, bar => "'baz'");
 
@@ -289,7 +289,7 @@ Interface
 
     Creates a new LibXSLT::Security object.
 
-  * register-callback( $option, $callback )
+  * register-callback( $option, &callback )
 
     Registers a callback function for the given security option (listed above).
 
@@ -310,6 +310,8 @@ Copyright 2001-2009, AxKit.com Ltd.
 
 CONTRIBUTERS
 ============
+
+This Raku module is based on the Perl 5 XML::LibXSLT module. The `process()` method has been adapted from the XML::LibXSL::Easy module.
 
 With thanks to: Matt Sergeant, Shane Corgatelli, Petr Pal's, Shlomi Fish, יובל קוג'מן (Yuval Kogman)
 
