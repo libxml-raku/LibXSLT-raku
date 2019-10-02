@@ -26,7 +26,6 @@ class Build {
         %vars<LIB-NAME> = ~ $*VM.platform-library-name($libname);
         %vars<LIB-CFLAGS> = '-I/usr/include/libxslt -I/usr/include/libxml2';
         my @libs = <xslt xml2>;
-        warn :$!exslt.perl;
         if $!exslt {
             @libs.unshift: 'exslt';
             %vars<CCFLAGS> ~= ' -DXSLT6_HAVE_EXSLT';

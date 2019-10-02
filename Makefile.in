@@ -35,9 +35,9 @@ clean :
 	@rm -f $(SRC)/xslt6_*%O% resources/libraries/*%LIB-NAME%
 
 realclean : clean
-	@rm -f Makefile doc/*.md doc/*/*.md
+	@rm -f Makefile
 
-doc : README.md doc/Stylesheet.md
+doc : README.md
 
 README.md : lib/LibXSLT.pm6
 	(\
@@ -45,7 +45,4 @@ README.md : lib/LibXSLT.pm6
             echo '';\
             perl6 -I . --doc=Markdown lib/LibXSLT.pm6\
         ) > README.md
-
-doc/Stylesheet.md : lib/LibXSLT/Stylesheet.pm6
-	perl6 -I . --doc=Markdown lib/LibXSLT/Stylesheet.pm6 > doc/Stylesheet.md
 

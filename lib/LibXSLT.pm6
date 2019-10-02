@@ -88,9 +88,8 @@ methods. However either way you call them, it still sets global options.
 Each of the option methods returns its previous value, and can be called
 without a parameter to retrieve the current value.
 
-=over
-
-=item max-depth
+=begin item
+max-depth
 
   LibXSLT.max-depth = 1000;
 
@@ -99,33 +98,39 @@ very end of section 5.4 of the XSLT specification for more details on
 recursion and detecting it. If your stylesheet or XML file requires
 seriously deep recursion, this is the way to set it. Default value is
 250.
+=end item
 
-=item max-vars
+=begin item
+max-vars
 
   LibXSLT.max-vars = 100_000;
 
 This option sets the maximum number of variables for a stylesheet. If your
 stylesheet or XML file requires many variables, this is the way to increase
 their limit. Default value is system-specific and may vary.
+=end item
 
-=item debug-callback
+=begin item
+debug-callback
 
-  LibXSLT.debug-callback($subref);
+  LibXSLT.debug-callback(&func ($fmt, *@args) );
 
 Sets a callback to be used for debug messages. If you don't set this,
 debug messages will be ignored.
+=end item
 
-=item register-function
+=begin item
+register-function
 
-  LibXSLT.register-function($uri, $name, $subref);
-  $stylesheet.register-function($uri, $name, $subref);
+  LibXSLT.register-function($uri, $name, &func (|c) );
+  $stylesheet.register-function($uri, $name, &func (|c) );
 
 Registers an XSLT extension function mapped to the given URI. For example:
 
   LibXSLT.register-function("urn:foo", "date",
     sub { now.Date.Str });
 
-Will register a C<date> function in the C<urn:foo> namespace (which you
+Will register a C<date> function in the C<urn:foo> name-space (which you
 have to define in your XSLT using C<xmlns:...>) that will return the
 current date and time as a string:
 
@@ -137,14 +142,16 @@ current date and time as a string:
   </xsl:template>
   </xsl:stylesheet>
 
-Parameters can be in whatever format you like. If you pass in a nodelist
+Parameters can be in whatever format you like. If you pass in a node-list
 it will be a LibXML::Node::List object in your Perl code, but ordinary
 values (strings, numbers and booleans) may be passed. Return values can
-be a nodelist or a plain value - the code will just do the right thing.
+be a node-list or a plain value - the code will just do the right thing.
 But only a single return value is supported (a list is not converted to
-a nodelist).
+a node-list).
+=end item
 
-=item register-extension
+=begin item
+register-extension
 
         use LibXSLT::ExtensionContext;
 	$stylesheet.register-extension($uri, $name, &func (LibXSLT::ExtensionContext) )
@@ -159,7 +166,7 @@ Registers an XSLT extension element $name mapped to the given URI. For example:
           $insert.addChild: LibXML::Text.new( "Hello, $name!" );
   });
 
-Will register a C<hello> element in the C<urn:foo> namespace that inserts a "Hello, X!" text node. You must define this namespace in your XSLT and include its prefix in the C<extension-element-prefixes> list:
+Will register a C<hello> element in the C<urn:foo> name-space that inserts a "Hello, X!" text node. You must define this name-space in your XSLT and include its prefix in the C<extension-element-prefixes> list:
 
   <xsl:stylesheet version="1.0"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -171,16 +178,15 @@ Will register a C<hello> element in the C<urn:foo> namespace that inserts a "Hel
   </xsl:stylesheet>
 
 A C<LibXSLT::ExtensionContext> object is passed, giving details of the input style-node and source-nodes and the current output insert node.
+=end item
 
-=back
 
 =head1 API
 
 The following methods are available on the LibXSLT class or object:
 
-=over
-
-=item process()
+=begin item
+process()
 
     my Str:D $result = LibXSLT.process: :$doc;
     my Str:D $result = LibXSLT.process: :$doc, :$xsl;
@@ -189,14 +195,18 @@ Processes a document using the document's `<?xml-stylesheet ... ?>` processing i
 to locate and load a stylesheet.
 
 Security handlers may be used to intercept access to external documents on the file-system or network (see below).
+=end item
 
-=item load-stylesheet-pi()
+=begin item
+load-stylesheet-pi()
 
     my LibXSLT::Stylesheet $xslt .= load-stylesheet-pi: :$doc;
 
 Loads, but doesn't execute the stylesheet for the given document.
+=end item
 
-=item parse-stylesheet($stylesheet-doc)
+=begin item
+parse-stylesheet($stylesheet-doc)
 
 C<$stylesheet-doc> here is an LibXML::Document object (see L<LibXML>)
 representing an XSLT file. This method will return a
@@ -209,12 +219,14 @@ otherwise libxslt may misbehave. The best way to assure this is to
 load the stylesheet with `:!cdata` flag, e.g.
 
   my LibXML::Document $stylesheet-doc .= parse(location=>"some.xsl", :!cdata);
+=end item
 
-=item parse-stylesheet(file => $filename)
+=begin item
+parse-stylesheet(file => $filename)
 
 Exactly the same as the above, but parses the given filename directly.
 
-=back
+=end item
 
 =head1 Input Callbacks
 
@@ -222,16 +234,15 @@ To define LibXSLT or LibXSLT::Stylesheet specific input
 callbacks, reuse the LibXML input callback API as described in
 L<LibXML::InputCallback(3)>.
 
-=over 4
-
-=item input-callbacks = $icb
+=begin item
+input-callbacks = $icb
 
 Enable the callbacks in C<$icb> only for this LibXSLT object.
 C<$icb> should be a C<LibXML::InputCallback> object. This will
 call C<init_callbacks> and C<cleanup_callbacks> automatically during
 parsing or transformation.
 
-=back
+=end item
 
 =head1 Security Callbacks
 
@@ -249,9 +260,8 @@ stylesheet object which you call the transform() method passing in a
 document to transform. This allows you to have multiple transformations
 happen with one stylesheet without requiring a reparse.
 
-=over
-
-=item transform(:$doc, %params)
+=begin item
+transform(:$doc, %params)
 
   my $results = $stylesheet.transform(:$doc, foo => "'bar'");
   print $results.Xslt.Str;
@@ -260,24 +270,30 @@ Transforms the passed in LibXML::Document object, and returns a
 new LibXML::Document. Extra hash entries are used as parameters.
 Be sure to keep in mind the caveat with regard to quotes explained in
 the section on L</"Parameters"> below.
+=end item
 
-=item transform(file => filename, %params)
+=begin item
+transform(file => filename, %params)
 
   my $results = $stylesheet.transform(file => $filename, bar => "'baz'");
 
 Note the string parameter caveat, detailed in the section on
 L</"Parameters"> below.
+=end item
 
-=item .Xslt
+=begin item
+.Xslt()
 
-    my LibXSLT::Document::Xslt $results = .Xslt
+    my LibXSLT::Document::Xslt $results = .Xslt()
         given $stylesheet.transform($doc, foo => "'bar'");
 
 Applies a role to serialize the
 LibXML::Document object using the desired output format
 (specified in the xsl:output tag in the stylesheet).
+=end item
 
-=item output-method()
+=begin item
+output-method()
 
 Returns the value of the C<method> attribute from C<xsl:output>
 (usually C<xml>, C<html> or C<text>). If this attribute is
@@ -286,24 +302,26 @@ L<transform> method is used to produce an HTML document, as per the
 L<XSLT spec|http://www.w3.org/TR/xslt#output>, the default value will
 change to C<html>. To override this behavior completely, supply an
 C<xsl:output> element in the stylesheet source document.
+=end item
 
-=item media-type()
+=begin item
+media-type()
 
 Returns the value of the C<media-type> attribute from
 C<xsl:output>. If this attribute is unspecified, the default media
 type is initially C<text/xml>. This default changes to C<text/html>
 under the same conditions as L<output_method>.
+=end item
 
-=item input-callbacks($icb)
+=begin item
+input-callbacks($icb)
 
 Enable the callbacks in C<$icb> only for this stylesheet. C<$icb>
 should be a C<LibXML::InputCallback> object. This will call
 C<init_callbacks> and C<cleanup_callbacks> automatically during
 transformation.
 
-=back
-
-=cut
+=end item
 
 =head1 Parameters
 
@@ -336,34 +354,41 @@ actions that a stylesheet may attempt during a transformation. It may be
 desirable to restrict some of these actions (for example, writing a new file
 using exsl:document). The actions that may be restricted are:
 
-=over
-
-=item read-file
+=begin item
+read-file
 
 Called when the stylesheet attempts to open a local file (ie: when using the
 document() function).
+=end item
 
-=item write-file
+=begin item
+write-file
 
 Called when an attempt is made to write a local file (ie: when using the
 exsl:document element).
+=end item
 
-=item create-dir
+=begin item
+create-dir
 
 Called when a directory needs to be created in order to write a file.
 
 NOTE: By default, create_dir is not allowed. To enable it a callback must be
 registered.
+=end item
 
-=item read-net
+=begin item
+read-net
 
 Called when the stylesheet attempts to read from the network.
+=end item
 
-=item write-net
+=begin item
+write-net
 
 Called when the stylesheet attempts to write to the network.
 
-=back
+=end item
 
 =head2 Using LibXSLT::Security
 
@@ -372,7 +397,7 @@ creating a new instance you may register callbacks for each of the security
 options listed above. Then you apply the security preferences to the
 LibXSLT or LibXSLT::Stylesheet object using C<security_callbacks()>.
 
-  my $security = LibXSLT::Security.new();
+  my LibXSLT::Security $security .= new();
   $security.register-callback( read-file  => &read-cb );
   $security.register-callback( write-file => &write-cb );
   $security.register-callback( create-dir => &create-cb );
@@ -389,9 +414,8 @@ requested. If the access should be allowed the callback should return True, if
 not it should return False. The callback functions should accept the following
 arguments:
 
-=over
-
-=item LibXSLT::TransformContext $tctxt
+=begin item
+LibXSLT::TransformContext $tctxt
 
 This is the transform context. You can use
 this to get the current LibXSLT::Stylesheet object by calling
@@ -401,40 +425,46 @@ C<stylesheet()>.
 
 The stylesheet object can then be used to share contextual information between
 different calls to the security callbacks.
+=end item
 
-=item Str $value
+=begin item
+Str $value
 
 This is the name of the resource (file or URI) that has been requested.
 
-=back
+=end item
 
 If a particular option (except for C<create-dir>) doesn't have a registered
 callback, then the stylesheet will have full access for that action.
 
 =head2 Interface
 
-=over
-
-=item new()
+=begin item
+new()
 
 Creates a new LibXSLT::Security object.
+=end item
 
-=item register-callback( $option, $callback )
+=begin item
+register-callback( $option, $callback )
 
 Registers a callback function for the given security option (listed above).
+=end item
 
-=item unregister-callback( $option )
+=begin item
+unregister-callback( $option )
 
 Removes the callback for the given option. This has the effect of allowing all
 access for the given option (except for C<create_dir>).
+=end item
 
-=back
 
-=item LibXSLT.havel-exlt()
+=begin item
+LibXSLT.have-exlt()
 
 Returns True if the module was compiled with libexslt, False otherwise.
 
-=back
+=end item
 
 =head1 LICENSE
 
@@ -445,7 +475,7 @@ Copyright 2001-2009, AxKit.com Ltd.
 
 =head1 CONTRIBUTERS
 
-With thanks to: Matt Sergeant, Shane Corgatelli, Petr Pajas, Shlomi Fish, יובל קוג'מן (Yuval Kogman)
+With thanks to: Matt Sergeant, Shane Corgatelli, Petr Pal's, Shlomi Fish, יובל קוג'מן (Yuval Kogman)
 
 =head1 SEE ALSO
 
