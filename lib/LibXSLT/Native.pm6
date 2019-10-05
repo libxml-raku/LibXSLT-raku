@@ -27,7 +27,6 @@ class xsltElemPreComp is repr(Opaque) is export {
 
 class xsltTransformContext is repr(Opaque) is export {
 
-    method SetGenericErrorFunc(&func (xsltTransformContext $ctx, Str:D $msg, Pointer, Pointer, Pointer) ) is native(XSLT) is symbol('xsltSetGenericErrorFunc') is export {*};
     method SetStructuredErrorFunc( &error-func (xsltTransformContext $, xmlError $)) is native(XML2) is symbol('xmlSetStructuredErrorFunc') {*};
     method RegisterExtElement(xmlCharP $name, xmlCharP $URI, &func (
                                   xsltTransformContext,
@@ -87,7 +86,7 @@ sub xslt6_config_version(--> Str) is native(BIND-XSLT) is export {*};
 sub xsltLibxsltVersion is export { cglobal(XSLT, 'xsltLibxsltVersion', int32); }
 sub xsltLibxxmlVersion is export { cglobal(XSLT, 'xsltLibxxmlVersion', int32); }
 sub xsltRegisterExtModuleFunction(xmlCharP $name, xmlCharP $URI, &func2 (xmlXPathParserContext, int32 --> xmlXPathObject) --> int32) is native(XSLT) is export {*};
-sub xsltSetGenericDebugFunc(Pointer $ctx, &func (Pointer $ctx2, Str $msg, Pointer, Pointer, Pointer)) is native(XSLT) is export {*};
+sub xsltSetGenericDebugFunc( Pointer, Pointer) is native(XSLT) is export {*}
 
 sub exsltRegisterAll() is native(EXSLT) is export {*};
 

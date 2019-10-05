@@ -42,7 +42,7 @@ method !try(&action) {
     my $*XML-CONTEXT = Context.new;
     my $*XSLT-SECURITY = $!security;
 
-    xsltTransformContext.SetGenericErrorFunc: &generic-error-cb;
+    LibXSLT::TransformContext.SetGenericErrorFunc: &generic-error-cb;
     xsltTransformContext.SetStructuredErrorFunc: &structured-error-cb;
     $*XSLT-SECURITY.set-default();
 

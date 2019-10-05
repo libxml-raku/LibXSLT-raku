@@ -7,10 +7,13 @@ unit class LibXSLT:ver<0.0.1>
 
 use LibXSLT::Config;
 use LibXSLT::Native;
+use LibXSLT::Native::Defs :XSLT;
 use LibXML::Native;
 use LibXML::XPath::Context :get-value;
 use LibXML::Types :NCName, :QName;
+use LibXML::ErrorHandler :MsgArg;
 use Method::Also;
+use NativeCall;
 
 method config handles<have-exslt version config-version max-depth max-vars> {
     LibXSLT::Config;
@@ -27,6 +30,19 @@ method register-function(Str $url, QName:D $name, &func, |c) {
             my xmlXPathObject:D $out := xmlXPathObject.coerce: $*XML-CONTEXT.park($ret, :$ctxt);
             $ctxt.valuePush($_) for $out;
         }
+    );
+}
+
+sub set-debug-handler( &func (Str $fmt, Str $argt, Pointer[MsgArg] $argv), Pointer ) is native(XSLT) is symbol('xsltSetGenericDebugFunc') {*}
+
+method set-debug-callback(&func) {
+    set-debug-handler(
+        -> Str $msg, Str $fmt, Pointer[MsgArg] $argv {
+            CATCH { default { warn $_; $*XML-CONTEXT.callback-error: X::LibXML::XPath::AdHoc.new: :error($_) } }
+            my @args = LibXML::ErrorHandler::cast-var-args($fmt, $argv);
+            &func($msg, @args);
+        },
+        xml6_gbl_message_func
     );
 }
 

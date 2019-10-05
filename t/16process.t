@@ -1,7 +1,12 @@
 use v6;
 use Test;
-plan 4;
+plan 5;
 use LibXSLT;
+
+my $debug;
+# side-test on debugging
+LibXSLT.set-debug-callback(-> $fmt, |args { $debug++ });
+
 
 {
     use LibXML::Document;
@@ -26,6 +31,8 @@ use LibXSLT;
     my Str:D $result = $xslt.process: :$doc;
     pass;
 }
+
+ok $debug++, 'debugging detected';
 
 ########################################################################
 #

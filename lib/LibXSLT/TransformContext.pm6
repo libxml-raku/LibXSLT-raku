@@ -1,11 +1,12 @@
 unit class LibXSLT::TransformContext;
 
 use LibXSLT::Native;
+use LibXSLT::Native::Defs :XSLT;
 use LibXSLT::Security;
 use LibXSLT::ExtensionContext;
 
 use LibXML::Document;
-use LibXML::ErrorHandler :&structured-error-cb, :&generic-error-cb;
+use LibXML::ErrorHandler :&structured-error-cb, :&generic-error-cb, :MsgArg;
 use LibXML::Native;
 use LibXML::XPath::Context;
 
@@ -48,6 +49,19 @@ method register-transform($type, Str $URI, Str:D $name, &func) {
     });
 }
 
+sub _set-generic-error-handler( &func (Str $fmt, Str $argt, Pointer[MsgArg] $argv), Pointer ) is native(XSLT) is symbol('xsltSetGenericErrorFunc') is export {*}
+
+method SetGenericErrorFunc(&handler) {
+    _set-generic-error-handler(
+        -> Str $msg, Str $fmt, Pointer[MsgArg] $argv {
+            CATCH { default { warn $_; $*XML-CONTEXT.callback-error: X::LibXML::XPath::AdHoc.new: :error($_) } }
+            my @args = LibXML::ErrorHandler::cast-var-args($fmt, $argv);
+            &handler($msg, @args);
+        },
+        xml6_gbl_message_func
+    );
+}
+
 method try(&action) {
     my $*XML-CONTEXT = self;
     $_ .= new without $*XML-CONTEXT;
@@ -60,7 +74,7 @@ method try(&action) {
         .set-default();
     }
 
-    $*XML-CONTEXT.native.SetGenericErrorFunc: &generic-error-cb;
+    $*XML-CONTEXT.SetGenericErrorFunc: &generic-error-cb;
     $*XML-CONTEXT.native.SetStructuredErrorFunc: &structured-error-cb;
 
     my @input-contexts = .activate()
