@@ -168,6 +168,7 @@ $stylesheet = $xslt.parse-stylesheet: doc => $parser.parse: :string($stylsheetst
 # TEST
 ok($stylesheet, 'stylesheet is OK - 3.');
 
+$stylesheet.suppress-warnings = True;
 $results = $stylesheet.transform: :$doc;
 # results
 # TEST

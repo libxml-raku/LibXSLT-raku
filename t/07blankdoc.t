@@ -52,6 +52,7 @@ ok($style, '$style is true');
 my $stylesheet = $xslt.parse-stylesheet(doc => $style);
 # my $stylesheet = $xslt.parse_stylesheet_file("example/document.xsl");
 
+$stylesheet.suppress-warnings = True;
 my $results = $stylesheet.transform: :doc($source);
 # TEST
 ok($results, 'Results are true.');

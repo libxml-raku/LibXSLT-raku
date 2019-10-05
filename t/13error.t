@@ -4,6 +4,8 @@ plan 27;
 
 use LibXSLT;
 use LibXML;
+use LibXML::ErrorHandler;
+LibXML::ErrorHandler.SetGenericErrorFunc(sub (|c) {});
 # TEST
 ok(1, ' TODO : Add test name');
 
@@ -120,7 +122,6 @@ ok( $stylesheet, ' TODO : Add test name' );
 my $results;
 try {
 $results = $stylesheet.transform($doc); };
-
 my $E = $!;
 # TEST
 ok( $E, ' TODO : Add test name' );

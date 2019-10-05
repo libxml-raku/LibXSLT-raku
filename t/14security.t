@@ -6,9 +6,9 @@ use LibXSLT::Security;
 use LibXSLT::TransformContext;
 use LibXML;
 use LibXML::InputCallback;
-
 use LibXSLT::Native::Defs :BIND-XSLT;
 use NativeCall;
+
 sub have-exslt(--> int32) is native(BIND-XSLT) is symbol('xslt6_config_have_exslt') {*};
 
 my LibXML $parser .= new();
@@ -85,6 +85,7 @@ $xslt.security = $scb;
 
 my $stylesheet = $xslt.parse-stylesheet($parser.parse: :string($stylsheetstring));
 print "# stylesheet\n";
+
 # TEST
 ok($stylesheet, ' TODO : Add test name');
 
@@ -96,6 +97,7 @@ my $doc = $parser.parse: :string('<file>allow.xml</file>');
     my LibXSLT::TransformContext $ctx .= new: :$doc, :$stylesheet;
     ok $scb.check-read($ctx, 'allow.xml'), '.checkread() # allowed';
     nok $scb.check-read($ctx, 'deny.xml'), '.checkread() # !allowed';
+    try { $ctx.flush-errors }
 }
 
 my $results = $stylesheet.transform($doc).Xslt;

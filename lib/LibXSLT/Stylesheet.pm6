@@ -14,7 +14,12 @@ use LibXSLT::Security;
 use URI;
 use NativeCall;
 
+has LibXML::XPath::Context $!ctx handles<structured-error generic-error callback-error flush-errors park suppress-warnings suppress-errors>;
 has LibXSLT::Security $.security is rw;
+
+method TWEAK(|c) {
+    $!ctx .= new: |c;
+}
 
 constant config = LibXML::Config;
 
@@ -35,12 +40,9 @@ submethod DESTROY {
 }
 
 method !try(&action) {
-    my class Context {
-        has LibXML::XPath::Context $!ctx handles<structured-error generic-error callback-error flush-errors park> .= new;
-        method native { xsltTransformContext }
-    }
-    my $*XML-CONTEXT = Context.new;
-    my $*XSLT-SECURITY = $!security;
+    my $*XML-CONTEXT = self;
+    $_ .= new() without $*XML-CONTEXT;
+    my $*XSLT-SECURITY = $*XML-CONTEXT.security;
 
     LibXSLT::TransformContext.SetGenericErrorFunc: &generic-error-cb;
     xsltTransformContext.SetStructuredErrorFunc: &structured-error-cb;

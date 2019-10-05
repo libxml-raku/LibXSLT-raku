@@ -16,11 +16,10 @@ has xsltTransformContext $!native;
 method native { $!native }
 has $.input-callbacks;
 has Hash %!extensions;
-has LibXML::XPath::Context $!ctx handles<structured-error generic-error callback-error flush-errors park> .= new;
 has LibXSLT::Security $.security;
-has $.stylesheet is required;
+has $.stylesheet is required handles <structured-error generic-error callback-error flush-errors park suppress-warnings suppress-errors>;
 
-multi submethod TWEAK(LibXML::Document :$doc, :%extensions) {
+multi submethod TWEAK(LibXML::Document :$doc, :%extensions, |c) {
     my xmlDoc $doc-native = .native with $doc;
     $!native = $!stylesheet.native.NewTransformContext($doc-native);
     $!native.set-xinclude(1);
