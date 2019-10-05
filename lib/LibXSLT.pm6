@@ -127,9 +127,9 @@ their limit. Default value is system-specific and may vary.
 =end item
 
 =begin item
-debug-callback
+set-debug-callback
 
-  LibXSLT.debug-callback(&func ($fmt, *@args) );
+  LibXSLT.set-debug-callback(&func ($fmt, *@args) );
 
 Sets a callback to be used for debug messages. If you don't set this,
 debug messages will be ignored.

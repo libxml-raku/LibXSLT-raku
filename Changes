@@ -1,5 +1,5 @@
 0.0.2 2019-10-05
     - Implement .set-debug-callback method
-    - Add .suppress-warnings and .suppress-errors options
+    - Add .suppress-warnings and .suppress-errors options; silence tests
 0.0.1 2019-10-02
     Initial release
