@@ -9,9 +9,9 @@ use LibXML::Native::Defs :xmlCharP;
 use LibXSLT::Native::Defs :$lib;
 
 class xsltCompMatch is repr('CPointer') {
-    sub xsltCompilePattern(xmlCharP $pattern, xmlDoc $doc, xmlNode $node, xsltStylesheet $style, xsltTransformContext $runtime --> xsltCompMatch) is native(XSLT) is export {*};
+    our sub xsltCompilePattern(xmlCharP $pattern, xmlDoc $doc, xmlNode $node, xsltStylesheet $style, xsltTransformContext $runtime --> xsltCompMatch) is native(XSLT) is export {*}
 
-    method FreeCompMatchList() is native(XSLT) is symbol('xsltFreeCompMatchList') {*};
+    method FreeCompMatchList() is native(XSLT) is symbol('xsltFreeCompMatchList') {*}
 }
 
-sub xsltNormalizeCompSteps(Pointer $payload, Pointer $data, xmlCharP $name) is native(XSLT) is export {*};
+our sub xsltNormalizeCompSteps(Pointer $payload, Pointer $data, xmlCharP $name) is native(XSLT) is export {*}

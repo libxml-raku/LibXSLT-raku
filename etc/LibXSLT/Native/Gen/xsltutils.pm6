@@ -43,24 +43,24 @@ enum xsltDebugTraceCodes is export (
     XSLT_TRACE_VARIABLES => 65536,
 );
 
-sub xslDropCall() is native(XSLT) is export {*};
-sub xsltCalibrateAdjust(long $delta) is native(XSLT) is export {*};
-sub xsltDebugGetDefaultTrace( --> xsltDebugTraceCodes) is native(XSLT) is export {*};
-sub xsltDebugSetDefaultTrace(xsltDebugTraceCodes $val) is native(XSLT) is export {*};
-sub xsltDocumentSortFunction(xmlNodeSet $list) is native(XSLT) is export {*};
-sub xsltGetDebuggerStatus( --> int32) is native(XSLT) is export {*};
-sub xsltGetNsProp(xmlNode $node, xmlCharP $name, xmlCharP $nameSpace --> xmlCharP) is native(XSLT) is export {*};
-sub xsltGetQNameURI(xmlNode $node, xmlChar ** $name --> xmlCharP) is native(XSLT) is export {*};
-sub xsltGetUTF8Char(const unsigned char * $utf, Pointer[int32] $len --> int32) is native(XSLT) is export {*};
-sub xsltSaveResultTo(xmlOutputBuffer $buf, xmlDoc $result, xsltStylesheet $style --> int32) is native(XSLT) is export {*};
-sub xsltSaveResultToFd(int32 $fd, xmlDoc $result, xsltStylesheet $style --> int32) is native(XSLT) is export {*};
-sub xsltSaveResultToFile(FILE * $file, xmlDoc $result, xsltStylesheet $style --> int32) is native(XSLT) is export {*};
-sub xsltSaveResultToFilename(Str $URL, xmlDoc $result, xsltStylesheet $style, int32 $compression --> int32) is native(XSLT) is export {*};
-sub xsltSaveResultToString(xmlChar ** $doc_txt_ptr, Pointer[int32] $doc_txt_len, xmlDoc $result, xsltStylesheet $style --> int32) is native(XSLT) is export {*};
-sub xsltSetDebuggerCallbacks(int32 $no, Pointer $block --> int32) is native(XSLT) is export {*};
-sub xsltSetDebuggerStatus(int32 $value) is native(XSLT) is export {*};
-sub xsltSetGenericDebugFunc(Pointer $ctx, xmlGenericErrorFunc $handler) is native(XSLT) is export {*};
-sub xsltSetGenericErrorFunc(Pointer $ctx, xmlGenericErrorFunc $handler) is native(XSLT) is export {*};
-sub xsltSetSortFunc(xsltSortFunc $handler) is native(XSLT) is export {*};
-sub xsltSplitQName(xmlDict $dict, xmlCharP $name, const xmlChar ** $prefix --> xmlCharP) is native(XSLT) is export {*};
-sub xsltTimestamp( --> long) is native(XSLT) is export {*};
+our sub xslDropCall() is native(XSLT) is export {*}
+our sub xsltCalibrateAdjust(long $delta) is native(XSLT) is export {*}
+our sub GetDefaultTrace( --> xsltDebugTraceCodes) is native(XSLT) is symbol('xsltDebugGetDefaultTrace') {*}
+our sub xsltDebugSetDefaultTrace(xsltDebugTraceCodes $val) is native(XSLT) is export {*}
+our sub xsltDocumentSortFunction(xmlNodeSet $list) is native(XSLT) is export {*}
+our sub xsltGetDebuggerStatus( --> int32) is native(XSLT) is export {*}
+our sub xsltGetNsProp(xmlNode $node, xmlCharP $name, xmlCharP $nameSpace --> xmlCharP) is native(XSLT) is export {*}
+our sub xsltGetQNameURI(xmlNode $node, xmlChar ** $name --> xmlCharP) is native(XSLT) is export {*}
+our sub xsltGetUTF8Char(const unsigned char * $utf, Pointer[int32] $len --> int32) is native(XSLT) is export {*}
+our sub xsltSaveResultTo(xmlOutputBuffer $buf, xmlDoc $result, xsltStylesheet $style --> int32) is native(XSLT) is export {*}
+our sub xsltSaveResultToFd(int32 $fd, xmlDoc $result, xsltStylesheet $style --> int32) is native(XSLT) is export {*}
+our sub xsltSaveResultToFile(FILE * $file, xmlDoc $result, xsltStylesheet $style --> int32) is native(XSLT) is export {*}
+our sub xsltSaveResultToFilename(Str $URL, xmlDoc $result, xsltStylesheet $style, int32 $compression --> int32) is native(XSLT) is export {*}
+our sub xsltSaveResultToString(xmlChar ** $doc_txt_ptr, Pointer[int32] $doc_txt_len, xmlDoc $result, xsltStylesheet $style --> int32) is native(XSLT) is export {*}
+our sub xsltSetDebuggerCallbacks(int32 $no, Pointer $block --> int32) is native(XSLT) is export {*}
+our sub xsltSetDebuggerStatus(int32 $value) is native(XSLT) is export {*}
+our sub xsltSetGenericDebugFunc(Pointer $ctx, xmlGenericErrorFunc $handler) is native(XSLT) is export {*}
+our sub xsltSetGenericErrorFunc(Pointer $ctx, xmlGenericErrorFunc $handler) is native(XSLT) is export {*}
+our sub xsltSetSortFunc(xsltSortFunc $handler) is native(XSLT) is export {*}
+our sub xsltSplitQName(xmlDict $dict, xmlCharP $name, const xmlChar ** $prefix --> xmlCharP) is native(XSLT) is export {*}
+our sub xsltTimestamp( --> long) is native(XSLT) is export {*}

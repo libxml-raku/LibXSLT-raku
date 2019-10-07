@@ -8,19 +8,19 @@ unit module LibXSLT::Native::Gen::extensions;
 use LibXML::Native::Defs :xmlCharP;
 use LibXSLT::Native::Defs :$lib;
 
-sub xsltDebugDumpExtensions(FILE * $output) is native(XSLT) is export {*};
-sub xsltExtModuleElementLookup(xmlCharP $name, xmlCharP $URI --> xsltTransformFunction) is native(XSLT) is export {*};
-sub xsltExtModuleElementPreComputeLookup(xmlCharP $name, xmlCharP $URI --> xsltPreComputeFunction) is native(XSLT) is export {*};
-sub xsltExtModuleFunctionLookup(xmlCharP $name, xmlCharP $URI --> xmlXPathFunction) is native(XSLT) is export {*};
-sub xsltExtModuleTopLevelLookup(xmlCharP $name, xmlCharP $URI --> xsltTopLevelFunction) is native(XSLT) is export {*};
-sub xsltInitGlobals() is native(XSLT) is export {*};
-sub xsltRegisterExtModule(xmlCharP $URI, xsltExtInitFunction $initFunc, xsltExtShutdownFunction $shutdownFunc --> int32) is native(XSLT) is export {*};
-sub xsltRegisterExtModuleElement(xmlCharP $name, xmlCharP $URI, xsltPreComputeFunction $precomp, xsltTransformFunction $transform --> int32) is native(XSLT) is export {*};
-sub xsltRegisterExtModuleFull(xmlCharP $URI, xsltExtInitFunction $initFunc, xsltExtShutdownFunction $shutdownFunc, xsltStyleExtInitFunction $styleInitFunc, xsltStyleExtShutdownFunction $styleShutdownFunc --> int32) is native(XSLT) is export {*};
-sub xsltRegisterExtModuleFunction(xmlCharP $name, xmlCharP $URI, xmlXPathFunction $function --> int32) is native(XSLT) is export {*};
-sub xsltRegisterExtModuleTopLevel(xmlCharP $name, xmlCharP $URI, xsltTopLevelFunction $function --> int32) is native(XSLT) is export {*};
-sub xsltRegisterTestModule() is native(XSLT) is export {*};
-sub xsltUnregisterExtModule(xmlCharP $URI --> int32) is native(XSLT) is export {*};
-sub xsltUnregisterExtModuleElement(xmlCharP $name, xmlCharP $URI --> int32) is native(XSLT) is export {*};
-sub xsltUnregisterExtModuleFunction(xmlCharP $name, xmlCharP $URI --> int32) is native(XSLT) is export {*};
-sub xsltUnregisterExtModuleTopLevel(xmlCharP $name, xmlCharP $URI --> int32) is native(XSLT) is export {*};
+our sub xsltDebugDumpExtensions(FILE * $output) is native(XSLT) is export {*}
+our sub xsltExtModuleElementLookup(xmlCharP $name, xmlCharP $URI --> xsltTransformFunction) is native(XSLT) is export {*}
+our sub xsltExtModuleElementPreComputeLookup(xmlCharP $name, xmlCharP $URI --> xsltPreComputeFunction) is native(XSLT) is export {*}
+our sub xsltExtModuleFunctionLookup(xmlCharP $name, xmlCharP $URI --> xmlXPathFunction) is native(XSLT) is export {*}
+our sub xsltExtModuleTopLevelLookup(xmlCharP $name, xmlCharP $URI --> xsltTopLevelFunction) is native(XSLT) is export {*}
+our sub xsltInitGlobals() is native(XSLT) is export {*}
+our sub xsltRegisterExtModule(xmlCharP $URI, xsltExtInitFunction $initFunc, xsltExtShutdownFunction $shutdownFunc --> int32) is native(XSLT) is export {*}
+our sub xsltRegisterExtModuleElement(xmlCharP $name, xmlCharP $URI, xsltPreComputeFunction $precomp, xsltTransformFunction $transform --> int32) is native(XSLT) is export {*}
+our sub xsltRegisterExtModuleFull(xmlCharP $URI, xsltExtInitFunction $initFunc, xsltExtShutdownFunction $shutdownFunc, xsltStyleExtInitFunction $styleInitFunc, xsltStyleExtShutdownFunction $styleShutdownFunc --> int32) is native(XSLT) is export {*}
+our sub xsltRegisterExtModuleFunction(xmlCharP $name, xmlCharP $URI, xmlXPathFunction $function --> int32) is native(XSLT) is export {*}
+our sub xsltRegisterExtModuleTopLevel(xmlCharP $name, xmlCharP $URI, xsltTopLevelFunction $function --> int32) is native(XSLT) is export {*}
+our sub xsltRegisterTestModule() is native(XSLT) is export {*}
+our sub xsltUnregisterExtModule(xmlCharP $URI --> int32) is native(XSLT) is export {*}
+our sub xsltUnregisterExtModuleElement(xmlCharP $name, xmlCharP $URI --> int32) is native(XSLT) is export {*}
+our sub xsltUnregisterExtModuleFunction(xmlCharP $name, xmlCharP $URI --> int32) is native(XSLT) is export {*}
+our sub xsltUnregisterExtModuleTopLevel(xmlCharP $name, xmlCharP $URI --> int32) is native(XSLT) is export {*}

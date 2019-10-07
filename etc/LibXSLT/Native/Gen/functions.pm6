@@ -8,13 +8,13 @@ unit module LibXSLT::Native::Gen::functions;
 use LibXML::Native::Defs :xmlCharP;
 use LibXSLT::Native::Defs :$lib;
 
-sub xsltDocumentFunction(xmlXPathParserContext $ctxt, int32 $nargs) is native(XSLT) is export {*};
-sub xsltElementAvailableFunction(xmlXPathParserContext $ctxt, int32 $nargs) is native(XSLT) is export {*};
-sub xsltFormatNumberFunction(xmlXPathParserContext $ctxt, int32 $nargs) is native(XSLT) is export {*};
-sub xsltFunctionAvailableFunction(xmlXPathParserContext $ctxt, int32 $nargs) is native(XSLT) is export {*};
-sub xsltGenerateIdFunction(xmlXPathParserContext $ctxt, int32 $nargs) is native(XSLT) is export {*};
-sub xsltKeyFunction(xmlXPathParserContext $ctxt, int32 $nargs) is native(XSLT) is export {*};
-sub xsltRegisterAllFunctions(xmlXPathContext $ctxt) is native(XSLT) is export {*};
-sub xsltSystemPropertyFunction(xmlXPathParserContext $ctxt, int32 $nargs) is native(XSLT) is export {*};
-sub xsltUnparsedEntityURIFunction(xmlXPathParserContext $ctxt, int32 $nargs) is native(XSLT) is export {*};
-sub xsltXPathFunctionLookup(Pointer $vctxt, xmlCharP $name, xmlCharP $ns_uri --> xmlXPathFunction) is native(XSLT) is export {*};
+our sub xsltDocumentFunction(xmlXPathParserContext $ctxt, int32 $nargs) is native(XSLT) is export {*}
+our sub xsltElementAvailableFunction(xmlXPathParserContext $ctxt, int32 $nargs) is native(XSLT) is export {*}
+our sub xsltFormatNumberFunction(xmlXPathParserContext $ctxt, int32 $nargs) is native(XSLT) is export {*}
+our sub xsltFunctionAvailableFunction(xmlXPathParserContext $ctxt, int32 $nargs) is native(XSLT) is export {*}
+our sub xsltGenerateIdFunction(xmlXPathParserContext $ctxt, int32 $nargs) is native(XSLT) is export {*}
+our sub xsltKeyFunction(xmlXPathParserContext $ctxt, int32 $nargs) is native(XSLT) is export {*}
+our sub xsltRegisterAllFunctions(xmlXPathContext $ctxt) is native(XSLT) is export {*}
+our sub xsltSystemPropertyFunction(xmlXPathParserContext $ctxt, int32 $nargs) is native(XSLT) is export {*}
+our sub xsltUnparsedEntityURIFunction(xmlXPathParserContext $ctxt, int32 $nargs) is native(XSLT) is export {*}
+our sub xsltXPathFunctionLookup(Pointer $vctxt, xmlCharP $name, xmlCharP $ns_uri --> xmlXPathFunction) is native(XSLT) is export {*}

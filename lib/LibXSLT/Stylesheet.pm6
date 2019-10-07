@@ -68,7 +68,7 @@ proto method parse-stylesheet(|c) {
 multi method parse-stylesheet(LibXML::Document:D :$doc! --> LibXSLT::Stylesheet) {
     self!try: {
         my $doc-copy = $doc.native.copy: :deep;
-        with xsltParseStylesheetDoc($doc-copy) {
+        with xsltStylesheet::ParseDoc($doc-copy) {
             .Free with $!native;
             $!native = $_;
         }
@@ -78,7 +78,7 @@ multi method parse-stylesheet(LibXML::Document:D :$doc! --> LibXSLT::Stylesheet)
 
 multi method parse-stylesheet(Str:D() :$file! --> LibXSLT::Stylesheet) {
     self!try: {
-        with xsltParseStylesheetFile($file) {
+        with xslStylesheet::ParseFile($file) {
             .Free with $!native;
             $!native = $_;
         }
@@ -115,7 +115,7 @@ proto method load-stylesheet-pi(|c) {
 
 multi method load-stylesheet-pi(LibXML::Document:D :$doc!) {
     self!try({
-        do with xsltLoadStylesheetPI($doc.native) {
+        do with xsltStylesheet::LoadPI($doc.native) {
             .Free with $!native;
             $!native = $_;
         }

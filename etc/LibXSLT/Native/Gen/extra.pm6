@@ -8,5 +8,5 @@ unit module LibXSLT::Native::Gen::extra;
 use LibXML::Native::Defs :xmlCharP;
 use LibXSLT::Native::Defs :$lib;
 
-sub xsltFunctionNodeSet(xmlXPathParserContext $ctxt, int32 $nargs) is native(XSLT) is export {*};
-sub xsltRegisterAllExtras() is native(XSLT) is export {*};
+our sub xsltFunctionNodeSet(xmlXPathParserContext $ctxt, int32 $nargs) is native(XSLT) is export {*}
+our sub xsltRegisterAllExtras() is native(XSLT) is export {*}

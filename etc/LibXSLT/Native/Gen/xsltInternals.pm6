@@ -81,8 +81,8 @@ class xsltCompilerCtxt is repr('CStruct') {
     has xsltNsAlias $.nsAliases;
     has xsltVarInfo $.ivars; # Storage of local in-scope variables/params.
     has xsltVarInfo $.ivar; # topmost local variable/param.
-    method ParseAnyXSLTElem(xmlNode $elem --> int32) is native(XSLT) is symbol('xsltParseAnyXSLTElem') {*};
-    method ParseSequenceConstructor(xmlNode $cur) is native(XSLT) is symbol('xsltParseSequenceConstructor') {*};
+    method ParseAnyXSLTElem(xmlNode $elem --> int32) is native(XSLT) is symbol('xsltParseAnyXSLTElem') {*}
+    method ParseSequenceConstructor(xmlNode $cur) is native(XSLT) is symbol('xsltParseSequenceConstructor') {*}
 }
 
 class xsltCompilerNodeInfo is repr('CStruct') {
@@ -121,7 +121,7 @@ class xsltDecimalFormat is repr('CStruct') {
     has xmlCharP $.permille;
     has xmlCharP $.zeroDigit;
     has xmlCharP $.nsUri;
-    method FormatNumberConversion(xmlCharP $format, num64 $number, xmlChar ** $result --> xmlXPathError) is native(XSLT) is symbol('xsltFormatNumberConversion') {*};
+    method FormatNumberConversion(xmlCharP $format, num64 $number, xmlChar ** $result --> xmlXPathError) is native(XSLT) is symbol('xsltFormatNumberConversion') {*}
 }
 
 class xsltDocument is repr('CStruct') {
@@ -132,7 +132,7 @@ class xsltDocument is repr('CStruct') {
     has xsltDocument $.includes; # subsidiary includes
     has int32 $.preproc; # pre-processing already done
     has int32 $.nbKeysComputed;
-    method FreeDocumentKeys() is native(XSLT) is symbol('xsltFreeDocumentKeys') {*};
+    method FreeDocumentKeys() is native(XSLT) is symbol('xsltFreeDocumentKeys') {*}
 }
 
 class xsltEffectiveNs is repr('CStruct') {
@@ -149,7 +149,7 @@ class xsltElemPreComp is repr('CStruct') {
     has xsltTransformFunction $.func; # handling function
     has xmlNode $.inst; # the node in the stylesheet's tree corresponding to this item end of common part
     has xsltElemPreCompDeallocator $.free; # the deallocator
-    method Init(xsltStylesheet $style, xmlNode $inst, xsltTransformFunction $function, xsltElemPreCompDeallocator $freeFunc) is native(XSLT) is symbol('xsltInitElemPreComp') {*};
+    method Init(xsltStylesheet $style, xmlNode $inst, xsltTransformFunction $function, xsltElemPreCompDeallocator $freeFunc) is native(XSLT) is symbol('xsltInitElemPreComp') {*}
 }
 
 class xsltKeyDef is repr('CStruct') {
@@ -197,7 +197,7 @@ class xsltNsMap is repr('CStruct') {
     has xmlNs $.ns; # the xmlNs structure holding the XML namespace name
     has xmlCharP $.origNsName; # the original XML namespace name
     has xmlCharP $.newNsName; # the mapped XML namespace name
-    method RestoreDocumentNamespaces(xmlDoc $doc --> int32) is native(XSLT) is symbol('xsltRestoreDocumentNamespaces') {*};
+    method RestoreDocumentNamespaces(xmlDoc $doc --> int32) is native(XSLT) is symbol('xsltRestoreDocumentNamespaces') {*}
 }
 
 class xsltPointerList is repr('CStruct') {
@@ -205,11 +205,11 @@ class xsltPointerList is repr('CStruct') {
     has int32 $.number;
     has int32 $.size;
 
-    sub xsltPointerListCreate(int32 $initialSize --> xsltPointerList) is native(XSLT) is export {*};
+    our sub Create(int32 $initialSize --> xsltPointerList) is native(XSLT) is symbol('xsltPointerListCreate') {*}
 
-    method AddSize(Pointer $item, int32 $initialSize --> int32) is native(XSLT) is symbol('xsltPointerListAddSize') {*};
-    method Clear() is native(XSLT) is symbol('xsltPointerListClear') {*};
-    method Free() is native(XSLT) is symbol('xsltPointerListFree') {*};
+    method AddSize(Pointer $item, int32 $initialSize --> int32) is native(XSLT) is symbol('xsltPointerListAddSize') {*}
+    method Clear() is native(XSLT) is symbol('xsltPointerListClear') {*}
+    method Free() is native(XSLT) is symbol('xsltPointerListFree') {*}
 }
 
 class xsltPrincipalStylesheetData is repr('CStruct') {
@@ -239,7 +239,7 @@ class xsltStackElem is repr('CStruct') {
     has int32 $.level; # the depth in the tree; -1 if persistent (e.g. a given xsl:with-param)
     has xsltTransformContext $.context; # The transformation context; needed to cache the variables
     has int32 $.flags;
-    method FreeStackElemList() is native(XSLT) is symbol('xsltFreeStackElemList') {*};
+    method FreeStackElemList() is native(XSLT) is symbol('xsltFreeStackElemList') {*}
 }
 
 class xsltStyleBasicEmptyItem is repr('CPointer') {
@@ -478,63 +478,63 @@ class xsltStylesheet is repr('CStruct') {
     has xmlHashTable $.namedTemplates; # hash table of named templates
     has xmlXPathContext $.xpathCtxt;
 
-    sub xsltLoadStylesheetPI(xmlDoc $doc --> xsltStylesheet) is native(XSLT) is export {*};
-    sub xsltNewStylesheet( --> xsltStylesheet) is native(XSLT) is export {*};
-    sub xsltParseStylesheetDoc(xmlDoc $doc --> xsltStylesheet) is native(XSLT) is export {*};
-    sub xsltParseStylesheetFile(xmlCharP $filename --> xsltStylesheet) is native(XSLT) is export {*};
-    sub xsltParseStylesheetImportedDoc(xmlDoc $doc, xsltStylesheet $parentStyle --> xsltStylesheet) is native(XSLT) is export {*};
+    our sub xsltLoadStylesheetPI(xmlDoc $doc --> xsltStylesheet) is native(XSLT) is export {*}
+    our sub New( --> xsltStylesheet) is native(XSLT) is symbol('xsltNewStylesheet') {*}
+    our sub xsltParseStylesheetDoc(xmlDoc $doc --> xsltStylesheet) is native(XSLT) is export {*}
+    our sub xsltParseStylesheetFile(xmlCharP $filename --> xsltStylesheet) is native(XSLT) is export {*}
+    our sub xsltParseStylesheetImportedDoc(xmlDoc $doc, xsltStylesheet $parentStyle --> xsltStylesheet) is native(XSLT) is export {*}
 
-    method AddKey(xmlCharP $name, xmlCharP $nameURI, xmlCharP $match, xmlCharP $use, xmlNode $inst --> int32) is native(XSLT) is symbol('xsltAddKey') {*};
-    method AddTemplate(xsltTemplate $cur, xmlCharP $mode, xmlCharP $modeURI --> int32) is native(XSLT) is symbol('xsltAddTemplate') {*};
-    method AllocateExtra( --> int32) is native(XSLT) is symbol('xsltAllocateExtra') {*};
-    method Apply(xmlDoc $doc, const char ** $params --> xmlDoc) is native(XSLT) is symbol('xsltApplyStylesheet') {*};
-    method ApplyStylesheetUser(xmlDoc $doc, const char ** $params, Str $output, FILE * $profile, xsltTransformContext $userCtxt --> xmlDoc) is native(XSLT) is symbol('xsltApplyStylesheetUser') {*};
-    method CheckExtPrefix(xmlCharP $URI --> int32) is native(XSLT) is symbol('xsltCheckExtPrefix') {*};
-    method CheckExtURI(xmlCharP $URI --> int32) is native(XSLT) is symbol('xsltCheckExtURI') {*};
-    method CleanupTemplates() is native(XSLT) is symbol('xsltCleanupTemplates') {*};
-    method CompileAttr(xmlAttr $attr) is native(XSLT) is symbol('xsltCompileAttr') {*};
-    method DecimalFormatGetByName(xmlCharP $name --> xsltDecimalFormat) is native(XSLT) is symbol('xsltDecimalFormatGetByName') {*};
-    method DecimalFormatGetByQName(xmlCharP $nsUri, xmlCharP $name --> xsltDecimalFormat) is native(XSLT) is symbol('xsltDecimalFormatGetByQName') {*};
-    method DocumentComp(xmlNode $inst, xsltTransformFunction $function --> xsltElemPreComp) is native(XSLT) is symbol('xsltDocumentComp') {*};
-    method EvalStaticAttrValueTemplate(xmlNode $inst, xmlCharP $name, xmlCharP $ns, Pointer[int32] $found --> xmlCharP) is native(XSLT) is symbol('xsltEvalStaticAttrValueTemplate') {*};
-    method FreeAttributeSetsHashes() is native(XSLT) is symbol('xsltFreeAttributeSetsHashes') {*};
-    method FreeExts() is native(XSLT) is symbol('xsltFreeExts') {*};
-    method FreeKeys() is native(XSLT) is symbol('xsltFreeKeys') {*};
-    method FreeNamespaceAliasHashes() is native(XSLT) is symbol('xsltFreeNamespaceAliasHashes') {*};
-    method FreeStyleDocuments() is native(XSLT) is symbol('xsltFreeStyleDocuments') {*};
-    method FreeStylePreComps() is native(XSLT) is symbol('xsltFreeStylePreComps') {*};
-    method Free() is native(XSLT) is symbol('xsltFreeStylesheet') {*};
-    method FreeTemplateHashes() is native(XSLT) is symbol('xsltFreeTemplateHashes') {*};
-    method GetCNsProp(xmlNode $node, xmlCharP $name, xmlCharP $nameSpace --> xmlCharP) is native(XSLT) is symbol('xsltGetCNsProp') {*};
-    method GetExtInfo(xmlCharP $URI --> xmlHashTable) is native(XSLT) is symbol('xsltGetExtInfo') {*};
-    method GetQNameURI2(xmlNode $node, const xmlChar ** $name --> xmlCharP) is native(XSLT) is symbol('xsltGetQNameURI2') {*};
-    method LoadStyleDocument(xmlCharP $URI --> xsltDocument) is native(XSLT) is symbol('xsltLoadStyleDocument') {*};
-    method NamespaceAlias(xmlNode $node) is native(XSLT) is symbol('xsltNamespaceAlias') {*};
-    method NewElemPreComp(xmlNode $inst, xsltTransformFunction $function --> xsltElemPreComp) is native(XSLT) is symbol('xsltNewElemPreComp') {*};
-    method NewStyleDocument(xmlDoc $doc --> xsltDocument) is native(XSLT) is symbol('xsltNewStyleDocument') {*};
-    method NewTransformContext(xmlDoc $doc --> xsltTransformContext) is native(XSLT) is symbol('xsltNewTransformContext') {*};
-    method NextImport( --> xsltStylesheet) is native(XSLT) is symbol('xsltNextImport') {*};
-    method ParseGlobalParam(xmlNode $cur) is native(XSLT) is symbol('xsltParseGlobalParam') {*};
-    method ParseGlobalVariable(xmlNode $cur) is native(XSLT) is symbol('xsltParseGlobalVariable') {*};
-    method ParseStylesheetAttributeSet(xmlNode $cur) is native(XSLT) is symbol('xsltParseStylesheetAttributeSet') {*};
-    method ParseStylesheetImport(xmlNode $cur --> int32) is native(XSLT) is symbol('xsltParseStylesheetImport') {*};
-    method ParseStylesheetInclude(xmlNode $cur --> int32) is native(XSLT) is symbol('xsltParseStylesheetInclude') {*};
-    method ParseStylesheetOutput(xmlNode $cur) is native(XSLT) is symbol('xsltParseStylesheetOutput') {*};
-    method ParseStylesheetProcess(xmlDoc $doc --> xsltStylesheet) is native(XSLT) is symbol('xsltParseStylesheetProcess') {*};
-    method ParseStylesheetUser(xmlDoc $doc --> int32) is native(XSLT) is symbol('xsltParseStylesheetUser') {*};
-    method ParseTemplateContent(xmlNode $templ) is native(XSLT) is symbol('xsltParseTemplateContent') {*};
-    method PreComputeExtModuleElement(xmlNode $inst --> xsltElemPreComp) is native(XSLT) is symbol('xsltPreComputeExtModuleElement') {*};
-    method Profile(xmlDoc $doc, const char ** $params, FILE * $output --> xmlDoc) is native(XSLT) is symbol('xsltProfileStylesheet') {*};
-    method RegisterExtPrefix(xmlCharP $prefix, xmlCharP $URI --> int32) is native(XSLT) is symbol('xsltRegisterExtPrefix') {*};
-    method ResolveStylesheetAttributeSet() is native(XSLT) is symbol('xsltResolveStylesheetAttributeSet') {*};
-    method Run(xmlDoc $doc, const char ** $params, Str $output, xmlSAXHandler $SAX, xmlOutputBuffer $IObuf --> int32) is native(XSLT) is symbol('xsltRunStylesheet') {*};
-    method RunStylesheetUser(xmlDoc $doc, const char ** $params, Str $output, xmlSAXHandler $SAX, xmlOutputBuffer $IObuf, FILE * $profile, xsltTransformContext $userCtxt --> int32) is native(XSLT) is symbol('xsltRunStylesheetUser') {*};
-    method ShutdownExts() is native(XSLT) is symbol('xsltShutdownExts') {*};
-    method StyleGetExtData(xmlCharP $URI --> Pointer) is native(XSLT) is symbol('xsltStyleGetExtData') {*};
-    method StylePreCompute(xmlNode $inst) is native(XSLT) is symbol('xsltStylePreCompute') {*};
-    method StyleStylesheetLevelGetExtData(xmlCharP $URI --> Pointer) is native(XSLT) is symbol('xsltStyleStylesheetLevelGetExtData') {*};
-    method XPathCompile(xmlCharP $str --> xmlXPathCompExpr) is native(XSLT) is symbol('xsltXPathCompile') {*};
-    method XPathCompileFlags(xmlCharP $str, int32 $flags --> xmlXPathCompExpr) is native(XSLT) is symbol('xsltXPathCompileFlags') {*};
+    method AddKey(xmlCharP $name, xmlCharP $nameURI, xmlCharP $match, xmlCharP $use, xmlNode $inst --> int32) is native(XSLT) is symbol('xsltAddKey') {*}
+    method AddTemplate(xsltTemplate $cur, xmlCharP $mode, xmlCharP $modeURI --> int32) is native(XSLT) is symbol('xsltAddTemplate') {*}
+    method AllocateExtra( --> int32) is native(XSLT) is symbol('xsltAllocateExtra') {*}
+    method Apply(xmlDoc $doc, const char ** $params --> xmlDoc) is native(XSLT) is symbol('xsltApplyStylesheet') {*}
+    method ApplyStylesheetUser(xmlDoc $doc, const char ** $params, Str $output, FILE * $profile, xsltTransformContext $userCtxt --> xmlDoc) is native(XSLT) is symbol('xsltApplyStylesheetUser') {*}
+    method CheckExtPrefix(xmlCharP $URI --> int32) is native(XSLT) is symbol('xsltCheckExtPrefix') {*}
+    method CheckExtURI(xmlCharP $URI --> int32) is native(XSLT) is symbol('xsltCheckExtURI') {*}
+    method CleanupTemplates() is native(XSLT) is symbol('xsltCleanupTemplates') {*}
+    method CompileAttr(xmlAttr $attr) is native(XSLT) is symbol('xsltCompileAttr') {*}
+    method DecimalFormatGetByName(xmlCharP $name --> xsltDecimalFormat) is native(XSLT) is symbol('xsltDecimalFormatGetByName') {*}
+    method DecimalFormatGetByQName(xmlCharP $nsUri, xmlCharP $name --> xsltDecimalFormat) is native(XSLT) is symbol('xsltDecimalFormatGetByQName') {*}
+    method DocumentComp(xmlNode $inst, xsltTransformFunction $function --> xsltElemPreComp) is native(XSLT) is symbol('xsltDocumentComp') {*}
+    method EvalStaticAttrValueTemplate(xmlNode $inst, xmlCharP $name, xmlCharP $ns, Pointer[int32] $found --> xmlCharP) is native(XSLT) is symbol('xsltEvalStaticAttrValueTemplate') {*}
+    method FreeAttributeSetsHashes() is native(XSLT) is symbol('xsltFreeAttributeSetsHashes') {*}
+    method FreeExts() is native(XSLT) is symbol('xsltFreeExts') {*}
+    method FreeKeys() is native(XSLT) is symbol('xsltFreeKeys') {*}
+    method FreeNamespaceAliasHashes() is native(XSLT) is symbol('xsltFreeNamespaceAliasHashes') {*}
+    method FreeStyleDocuments() is native(XSLT) is symbol('xsltFreeStyleDocuments') {*}
+    method FreeStylePreComps() is native(XSLT) is symbol('xsltFreeStylePreComps') {*}
+    method Free() is native(XSLT) is symbol('xsltFreeStylesheet') {*}
+    method FreeTemplateHashes() is native(XSLT) is symbol('xsltFreeTemplateHashes') {*}
+    method GetCNsProp(xmlNode $node, xmlCharP $name, xmlCharP $nameSpace --> xmlCharP) is native(XSLT) is symbol('xsltGetCNsProp') {*}
+    method GetExtInfo(xmlCharP $URI --> xmlHashTable) is native(XSLT) is symbol('xsltGetExtInfo') {*}
+    method GetQNameURI2(xmlNode $node, const xmlChar ** $name --> xmlCharP) is native(XSLT) is symbol('xsltGetQNameURI2') {*}
+    method LoadStyleDocument(xmlCharP $URI --> xsltDocument) is native(XSLT) is symbol('xsltLoadStyleDocument') {*}
+    method NamespaceAlias(xmlNode $node) is native(XSLT) is symbol('xsltNamespaceAlias') {*}
+    method NewElemPreComp(xmlNode $inst, xsltTransformFunction $function --> xsltElemPreComp) is native(XSLT) is symbol('xsltNewElemPreComp') {*}
+    method NewStyleDocument(xmlDoc $doc --> xsltDocument) is native(XSLT) is symbol('xsltNewStyleDocument') {*}
+    method NewTransformContext(xmlDoc $doc --> xsltTransformContext) is native(XSLT) is symbol('xsltNewTransformContext') {*}
+    method NextImport( --> xsltStylesheet) is native(XSLT) is symbol('xsltNextImport') {*}
+    method ParseGlobalParam(xmlNode $cur) is native(XSLT) is symbol('xsltParseGlobalParam') {*}
+    method ParseGlobalVariable(xmlNode $cur) is native(XSLT) is symbol('xsltParseGlobalVariable') {*}
+    method ParseStylesheetAttributeSet(xmlNode $cur) is native(XSLT) is symbol('xsltParseStylesheetAttributeSet') {*}
+    method ParseStylesheetImport(xmlNode $cur --> int32) is native(XSLT) is symbol('xsltParseStylesheetImport') {*}
+    method ParseStylesheetInclude(xmlNode $cur --> int32) is native(XSLT) is symbol('xsltParseStylesheetInclude') {*}
+    method ParseStylesheetOutput(xmlNode $cur) is native(XSLT) is symbol('xsltParseStylesheetOutput') {*}
+    method ParseStylesheetProcess(xmlDoc $doc --> xsltStylesheet) is native(XSLT) is symbol('xsltParseStylesheetProcess') {*}
+    method ParseStylesheetUser(xmlDoc $doc --> int32) is native(XSLT) is symbol('xsltParseStylesheetUser') {*}
+    method ParseTemplateContent(xmlNode $templ) is native(XSLT) is symbol('xsltParseTemplateContent') {*}
+    method PreComputeExtModuleElement(xmlNode $inst --> xsltElemPreComp) is native(XSLT) is symbol('xsltPreComputeExtModuleElement') {*}
+    method Profile(xmlDoc $doc, const char ** $params, FILE * $output --> xmlDoc) is native(XSLT) is symbol('xsltProfileStylesheet') {*}
+    method RegisterExtPrefix(xmlCharP $prefix, xmlCharP $URI --> int32) is native(XSLT) is symbol('xsltRegisterExtPrefix') {*}
+    method ResolveStylesheetAttributeSet() is native(XSLT) is symbol('xsltResolveStylesheetAttributeSet') {*}
+    method Run(xmlDoc $doc, const char ** $params, Str $output, xmlSAXHandler $SAX, xmlOutputBuffer $IObuf --> int32) is native(XSLT) is symbol('xsltRunStylesheet') {*}
+    method RunStylesheetUser(xmlDoc $doc, const char ** $params, Str $output, xmlSAXHandler $SAX, xmlOutputBuffer $IObuf, FILE * $profile, xsltTransformContext $userCtxt --> int32) is native(XSLT) is symbol('xsltRunStylesheetUser') {*}
+    method ShutdownExts() is native(XSLT) is symbol('xsltShutdownExts') {*}
+    method StyleGetExtData(xmlCharP $URI --> Pointer) is native(XSLT) is symbol('xsltStyleGetExtData') {*}
+    method StylePreCompute(xmlNode $inst) is native(XSLT) is symbol('xsltStylePreCompute') {*}
+    method StyleStylesheetLevelGetExtData(xmlCharP $URI --> Pointer) is native(XSLT) is symbol('xsltStyleStylesheetLevelGetExtData') {*}
+    method XPathCompile(xmlCharP $str --> xmlXPathCompExpr) is native(XSLT) is symbol('xsltXPathCompile') {*}
+    method XPathCompileFlags(xmlCharP $str, int32 $flags --> xmlXPathCompExpr) is native(XSLT) is symbol('xsltXPathCompileFlags') {*}
 }
 
 class xsltTemplate is repr('CStruct') {
@@ -557,7 +557,7 @@ class xsltTemplate is repr('CStruct') {
     has int32 $.templMax; # Size of the templtes stack
     has xsltTemplatePtr * $.templCalledTab; # templates called
     has Pointer[int32] $.templCountTab; # .. and how often
-    method xslAddCall(xmlNode $source --> int32) is native(XSLT) {*};
+    method xslAddCall(xmlNode $source --> int32) is native(XSLT) {*}
 }
 
 class xsltTransformCache is repr('CStruct') {
@@ -642,106 +642,106 @@ class xsltTransformContext is repr('CStruct') {
     has ulong $.opLimit;
     has ulong $.opCount;
 
-    sub xsltXPathGetTransformContext(xmlXPathParserContext $ctxt --> xsltTransformContext) is native(XSLT) is export {*};
+    our sub XPathGet(xmlXPathParserContext $ctxt --> xsltTransformContext) is native(XSLT) is symbol('xsltXPathGetTransformContext') {*}
 
-    method AddStackElemList(xsltStackElem $elems --> int32) is native(XSLT) is symbol('xsltAddStackElemList') {*};
-    method AllocateExtraCtxt( --> int32) is native(XSLT) is symbol('xsltAllocateExtraCtxt') {*};
-    method ApplyAttributeSet(xmlNode $node, xmlNode $inst, xmlCharP $attrSets) is native(XSLT) is symbol('xsltApplyAttributeSet') {*};
-    method ApplyImports(xmlNode $contextNode, xmlNode $inst, xsltElemPreComp $comp) is native(XSLT) is symbol('xsltApplyImports') {*};
-    method ApplyOneTemplate(xmlNode $contextNode, xmlNode $list, xsltTemplate $templ, xsltStackElem $params) is native(XSLT) is symbol('xsltApplyOneTemplate') {*};
-    method ApplyStripSpaces(xmlNode $node) is native(XSLT) is symbol('xsltApplyStripSpaces') {*};
-    method ApplyTemplates(xmlNode $node, xmlNode $inst, xsltElemPreComp $castedComp) is native(XSLT) is symbol('xsltApplyTemplates') {*};
-    method AttrListTemplateProcess(xmlNode $target, xmlAttr $attrs --> xmlAttr) is native(XSLT) is symbol('xsltAttrListTemplateProcess') {*};
-    method AttrTemplateProcess(xmlNode $target, xmlAttr $attr --> xmlAttr) is native(XSLT) is symbol('xsltAttrTemplateProcess') {*};
-    method AttrTemplateValueProcess(xmlCharP $str --> xmlCharP) is native(XSLT) is symbol('xsltAttrTemplateValueProcess') {*};
-    method AttrTemplateValueProcessNode(xmlCharP $str, xmlNode $inst --> xmlCharP) is native(XSLT) is symbol('xsltAttrTemplateValueProcessNode') {*};
-    method Attribute(xmlNode $contextNode, xmlNode $inst, xsltElemPreComp $castedComp) is native(XSLT) is symbol('xsltAttribute') {*};
-    method CallTemplate(xmlNode $node, xmlNode $inst, xsltElemPreComp $castedComp) is native(XSLT) is symbol('xsltCallTemplate') {*};
-    method Choose(xmlNode $contextNode, xmlNode $inst, xsltElemPreComp $comp) is native(XSLT) is symbol('xsltChoose') {*};
-    method Comment(xmlNode $node, xmlNode $inst, xsltElemPreComp $comp) is native(XSLT) is symbol('xsltComment') {*};
-    method ComputeSortResult(xmlNode $sort --> xmlXPathObjectPtr *) is native(XSLT) is symbol('xsltComputeSortResult') {*};
-    method Copy(xmlNode $node, xmlNode $inst, xsltElemPreComp $castedComp) is native(XSLT) is symbol('xsltCopy') {*};
-    method CopyNamespace(xmlNode $elem, xmlNs $ns --> xmlNs) is native(XSLT) is symbol('xsltCopyNamespace') {*};
-    method CopyNamespaceList(xmlNode $node, xmlNs $cur --> xmlNs) is native(XSLT) is symbol('xsltCopyNamespaceList') {*};
-    method CopyOf(xmlNode $node, xmlNode $inst, xsltElemPreComp $castedComp) is native(XSLT) is symbol('xsltCopyOf') {*};
-    method CopyTextString(xmlNode $target, xmlCharP $string, int32 $noescape --> xmlNode) is native(XSLT) is symbol('xsltCopyTextString') {*};
-    method CreateRVT( --> xmlDoc) is native(XSLT) is symbol('xsltCreateRVT') {*};
-    method Debug(xmlNode $node, xmlNode $inst, xsltElemPreComp $comp) is native(XSLT) is symbol('xsltDebug') {*};
-    method DefaultSortFunction(xmlNodePtr * $sorts, int32 $nbsorts) is native(XSLT) is symbol('xsltDefaultSortFunction') {*};
-    method DoSortFunction(xmlNodePtr * $sorts, int32 $nbsorts) is native(XSLT) is symbol('xsltDoSortFunction') {*};
-    method DocumentElem(xmlNode $node, xmlNode $inst, xsltElemPreComp $castedComp) is native(XSLT) is symbol('xsltDocumentElem') {*};
-    method Element(xmlNode $node, xmlNode $inst, xsltElemPreComp $castedComp) is native(XSLT) is symbol('xsltElement') {*};
-    method EvalAVT(Pointer $avt, xmlNode $node --> xmlCharP) is native(XSLT) is symbol('xsltEvalAVT') {*};
-    method EvalAttrValueTemplate(xmlNode $inst, xmlCharP $name, xmlCharP $ns --> xmlCharP) is native(XSLT) is symbol('xsltEvalAttrValueTemplate') {*};
-    method EvalGlobalVariables( --> int32) is native(XSLT) is symbol('xsltEvalGlobalVariables') {*};
-    method EvalOneUserParam(xmlCharP $name, xmlCharP $value --> int32) is native(XSLT) is symbol('xsltEvalOneUserParam') {*};
-    method EvalTemplateString(xmlNode $contextNode, xmlNode $inst --> xmlCharP) is native(XSLT) is symbol('xsltEvalTemplateString') {*};
-    method EvalUserParams(const char ** $params --> int32) is native(XSLT) is symbol('xsltEvalUserParams') {*};
-    method EvalXPathPredicate(xmlXPathCompExpr $comp, xmlNsPtr * $nsList, int32 $nsNr --> int32) is native(XSLT) is symbol('xsltEvalXPathPredicate') {*};
-    method EvalXPathString(xmlXPathCompExpr $comp --> xmlCharP) is native(XSLT) is symbol('xsltEvalXPathString') {*};
-    method EvalXPathStringNs(xmlXPathCompExpr $comp, int32 $nsNr, xmlNsPtr * $nsList --> xmlCharP) is native(XSLT) is symbol('xsltEvalXPathStringNs') {*};
-    method ExtElementLookup(xmlCharP $name, xmlCharP $URI --> xsltTransformFunction) is native(XSLT) is symbol('xsltExtElementLookup') {*};
-    method ExtensionInstructionResultFinalize( --> int32) is native(XSLT) is symbol('xsltExtensionInstructionResultFinalize') {*};
-    method ExtensionInstructionResultRegister(xmlXPathObject $obj --> int32) is native(XSLT) is symbol('xsltExtensionInstructionResultRegister') {*};
-    method FindDocument(xmlDoc $doc --> xsltDocument) is native(XSLT) is symbol('xsltFindDocument') {*};
-    method FindElemSpaceHandling(xmlNode $node --> int32) is native(XSLT) is symbol('xsltFindElemSpaceHandling') {*};
-    method FindTemplate(xmlCharP $name, xmlCharP $nameURI --> xsltTemplate) is native(XSLT) is symbol('xsltFindTemplate') {*};
-    method FlagRVTs(xmlXPathObject $obj, Pointer $val --> int32) is native(XSLT) is symbol('xsltFlagRVTs') {*};
-    method ForEach(xmlNode $contextNode, xmlNode $inst, xsltElemPreComp $castedComp) is native(XSLT) is symbol('xsltForEach') {*};
-    method FreeCtxtExts() is native(XSLT) is symbol('xsltFreeCtxtExts') {*};
-    method FreeDocuments() is native(XSLT) is symbol('xsltFreeDocuments') {*};
-    method FreeGlobalVariables() is native(XSLT) is symbol('xsltFreeGlobalVariables') {*};
-    method FreeRVTs() is native(XSLT) is symbol('xsltFreeRVTs') {*};
-    method Free() is native(XSLT) is symbol('xsltFreeTransformContext') {*};
-    method GetExtData(xmlCharP $URI --> Pointer) is native(XSLT) is symbol('xsltGetExtData') {*};
-    method GetKey(xmlCharP $name, xmlCharP $nameURI, xmlCharP $value --> xmlNodeSet) is native(XSLT) is symbol('xsltGetKey') {*};
-    method GetNamespace(xmlNode $cur, xmlNs $ns, xmlNode $out --> xmlNs) is native(XSLT) is symbol('xsltGetNamespace') {*};
-    method GetPlainNamespace(xmlNode $cur, xmlNs $ns, xmlNode $out --> xmlNs) is native(XSLT) is symbol('xsltGetPlainNamespace') {*};
-    method GetProfileInformation( --> xmlDoc) is native(XSLT) is symbol('xsltGetProfileInformation') {*};
-    method GetSpecialNamespace(xmlNode $invocNode, xmlCharP $nsName, xmlCharP $nsPrefix, xmlNode $target --> xmlNs) is native(XSLT) is symbol('xsltGetSpecialNamespace') {*};
-    method GetTemplate(xmlNode $node, xsltStylesheet $style --> xsltTemplate) is native(XSLT) is symbol('xsltGetTemplate') {*};
-    method If(xmlNode $contextNode, xmlNode $inst, xsltElemPreComp $castedComp) is native(XSLT) is symbol('xsltIf') {*};
-    method InitAllDocKeys( --> int32) is native(XSLT) is symbol('xsltInitAllDocKeys') {*};
-    method InitCtxtExts( --> int32) is native(XSLT) is symbol('xsltInitCtxtExts') {*};
-    method InitCtxtKey(xsltDocument $idoc, xsltKeyDef $keyDef --> int32) is native(XSLT) is symbol('xsltInitCtxtKey') {*};
-    method InitCtxtKeys(xsltDocument $idoc) is native(XSLT) is symbol('xsltInitCtxtKeys') {*};
-    method LoadDocument(xmlCharP $URI --> xsltDocument) is native(XSLT) is symbol('xsltLoadDocument') {*};
-    method LocalVariablePop(int32 $limitNr, int32 $level) is native(XSLT) is symbol('xsltLocalVariablePop') {*};
-    method LocalVariablePush(xsltStackElem $variable, int32 $level --> int32) is native(XSLT) is symbol('xsltLocalVariablePush') {*};
-    method MatchPattern(xmlNode $node, xmlCharP $pattern, xmlDoc $ctxtdoc, xmlNode $ctxtnode --> int32) is native(XSLT) is symbol('xsltMatchPattern') {*};
-    method Message(xmlNode $node, xmlNode $inst) is native(XSLT) is symbol('xsltMessage') {*};
-    method NeedElemSpaceHandling( --> int32) is native(XSLT) is symbol('xsltNeedElemSpaceHandling') {*};
-    method NewDocument(xmlDoc $doc --> xsltDocument) is native(XSLT) is symbol('xsltNewDocument') {*};
-    method Number(xmlNode $node, xmlNode $inst, xsltElemPreComp $castedComp) is native(XSLT) is symbol('xsltNumber') {*};
-    method NumberFormat(xsltNumberData $data, xmlNode $node) is native(XSLT) is symbol('xsltNumberFormat') {*};
-    method ParseStylesheetCallerParam(xmlNode $inst --> xsltStackElem) is native(XSLT) is symbol('xsltParseStylesheetCallerParam') {*};
-    method ParseStylesheetParam(xmlNode $cur) is native(XSLT) is symbol('xsltParseStylesheetParam') {*};
-    method ParseStylesheetVariable(xmlNode $inst) is native(XSLT) is symbol('xsltParseStylesheetVariable') {*};
-    method PrintError(xsltStylesheet $style, xmlNode $node) is native(XSLT) is symbol('xsltPrintErrorContext') {*};
-    method ProcessOneNode(xmlNode $contextNode, xsltStackElem $withParams) is native(XSLT) is symbol('xsltProcessOneNode') {*};
-    method ProcessingInstruction(xmlNode $node, xmlNode $inst, xsltElemPreComp $castedComp) is native(XSLT) is symbol('xsltProcessingInstruction') {*};
-    method QuoteOneUserParam(xmlCharP $name, xmlCharP $value --> int32) is native(XSLT) is symbol('xsltQuoteOneUserParam') {*};
-    method QuoteUserParams(const char ** $params --> int32) is native(XSLT) is symbol('xsltQuoteUserParams') {*};
-    method RegisterAllElement() is native(XSLT) is symbol('xsltRegisterAllElement') {*};
-    method RegisterExtElement(xmlCharP $name, xmlCharP $URI, xsltTransformFunction $function --> int32) is native(XSLT) is symbol('xsltRegisterExtElement') {*};
-    method RegisterExtFunction(xmlCharP $name, xmlCharP $URI, xmlXPathFunction $function --> int32) is native(XSLT) is symbol('xsltRegisterExtFunction') {*};
-    method RegisterExtras() is native(XSLT) is symbol('xsltRegisterExtras') {*};
-    method RegisterLocalRVT(xmlDoc $RVT --> int32) is native(XSLT) is symbol('xsltRegisterLocalRVT') {*};
-    method RegisterPersistRVT(xmlDoc $RVT --> int32) is native(XSLT) is symbol('xsltRegisterPersistRVT') {*};
-    method RegisterTmpRVT(xmlDoc $RVT --> int32) is native(XSLT) is symbol('xsltRegisterTmpRVT') {*};
-    method ReleaseRVT(xmlDoc $RVT) is native(XSLT) is symbol('xsltReleaseRVT') {*};
-    method SaveProfiling(FILE * $output) is native(XSLT) is symbol('xsltSaveProfiling') {*};
-    method SetCtxtParseOptions(int32 $options --> int32) is native(XSLT) is symbol('xsltSetCtxtParseOptions') {*};
-    method SetCtxtSortFunc(xsltSortFunc $handler) is native(XSLT) is symbol('xsltSetCtxtSortFunc') {*};
-    method SetTransformErrorFunc(Pointer $ctx, xmlGenericErrorFunc $handler) is native(XSLT) is symbol('xsltSetTransformErrorFunc') {*};
-    method ShutdownCtxtExts() is native(XSLT) is symbol('xsltShutdownCtxtExts') {*};
-    method Sort(xmlNode $node, xmlNode $inst, xsltElemPreComp $comp) is native(XSLT) is symbol('xsltSort') {*};
-    method TemplateProcess(xmlNode $node --> xmlNodePtr *) is native(XSLT) is symbol('xsltTemplateProcess') {*};
-    method TestCompMatchList(xmlNode $node, xsltCompMatch $comp --> int32) is native(XSLT) is symbol('xsltTestCompMatchList') {*};
-    method Text(xmlNode $node, xmlNode $inst, xsltElemPreComp $comp) is native(XSLT) is symbol('xsltText') {*};
-    method Error(xsltStylesheet $style, xmlNode $node, Str $msg, ... $...) is native(XSLT) is symbol('xsltTransformError') {*};
-    method ValueOf(xmlNode $node, xmlNode $inst, xsltElemPreComp $castedComp) is native(XSLT) is symbol('xsltValueOf') {*};
-    method VariableLookup(xmlCharP $name, xmlCharP $ns_uri --> xmlXPathObject) is native(XSLT) is symbol('xsltVariableLookup') {*};
+    method AddStackElemList(xsltStackElem $elems --> int32) is native(XSLT) is symbol('xsltAddStackElemList') {*}
+    method AllocateExtraCtxt( --> int32) is native(XSLT) is symbol('xsltAllocateExtraCtxt') {*}
+    method ApplyAttributeSet(xmlNode $node, xmlNode $inst, xmlCharP $attrSets) is native(XSLT) is symbol('xsltApplyAttributeSet') {*}
+    method ApplyImports(xmlNode $contextNode, xmlNode $inst, xsltElemPreComp $comp) is native(XSLT) is symbol('xsltApplyImports') {*}
+    method ApplyOneTemplate(xmlNode $contextNode, xmlNode $list, xsltTemplate $templ, xsltStackElem $params) is native(XSLT) is symbol('xsltApplyOneTemplate') {*}
+    method ApplyStripSpaces(xmlNode $node) is native(XSLT) is symbol('xsltApplyStripSpaces') {*}
+    method ApplyTemplates(xmlNode $node, xmlNode $inst, xsltElemPreComp $castedComp) is native(XSLT) is symbol('xsltApplyTemplates') {*}
+    method AttrListTemplateProcess(xmlNode $target, xmlAttr $attrs --> xmlAttr) is native(XSLT) is symbol('xsltAttrListTemplateProcess') {*}
+    method AttrTemplateProcess(xmlNode $target, xmlAttr $attr --> xmlAttr) is native(XSLT) is symbol('xsltAttrTemplateProcess') {*}
+    method AttrTemplateValueProcess(xmlCharP $str --> xmlCharP) is native(XSLT) is symbol('xsltAttrTemplateValueProcess') {*}
+    method AttrTemplateValueProcessNode(xmlCharP $str, xmlNode $inst --> xmlCharP) is native(XSLT) is symbol('xsltAttrTemplateValueProcessNode') {*}
+    method Attribute(xmlNode $contextNode, xmlNode $inst, xsltElemPreComp $castedComp) is native(XSLT) is symbol('xsltAttribute') {*}
+    method CallTemplate(xmlNode $node, xmlNode $inst, xsltElemPreComp $castedComp) is native(XSLT) is symbol('xsltCallTemplate') {*}
+    method Choose(xmlNode $contextNode, xmlNode $inst, xsltElemPreComp $comp) is native(XSLT) is symbol('xsltChoose') {*}
+    method Comment(xmlNode $node, xmlNode $inst, xsltElemPreComp $comp) is native(XSLT) is symbol('xsltComment') {*}
+    method ComputeSortResult(xmlNode $sort --> xmlXPathObjectPtr *) is native(XSLT) is symbol('xsltComputeSortResult') {*}
+    method Copy(xmlNode $node, xmlNode $inst, xsltElemPreComp $castedComp) is native(XSLT) is symbol('xsltCopy') {*}
+    method CopyNamespace(xmlNode $elem, xmlNs $ns --> xmlNs) is native(XSLT) is symbol('xsltCopyNamespace') {*}
+    method CopyNamespaceList(xmlNode $node, xmlNs $cur --> xmlNs) is native(XSLT) is symbol('xsltCopyNamespaceList') {*}
+    method CopyOf(xmlNode $node, xmlNode $inst, xsltElemPreComp $castedComp) is native(XSLT) is symbol('xsltCopyOf') {*}
+    method CopyTextString(xmlNode $target, xmlCharP $string, int32 $noescape --> xmlNode) is native(XSLT) is symbol('xsltCopyTextString') {*}
+    method CreateRVT( --> xmlDoc) is native(XSLT) is symbol('xsltCreateRVT') {*}
+    method Debug(xmlNode $node, xmlNode $inst, xsltElemPreComp $comp) is native(XSLT) is symbol('xsltDebug') {*}
+    method DefaultSortFunction(xmlNodePtr * $sorts, int32 $nbsorts) is native(XSLT) is symbol('xsltDefaultSortFunction') {*}
+    method DoSortFunction(xmlNodePtr * $sorts, int32 $nbsorts) is native(XSLT) is symbol('xsltDoSortFunction') {*}
+    method DocumentElem(xmlNode $node, xmlNode $inst, xsltElemPreComp $castedComp) is native(XSLT) is symbol('xsltDocumentElem') {*}
+    method Element(xmlNode $node, xmlNode $inst, xsltElemPreComp $castedComp) is native(XSLT) is symbol('xsltElement') {*}
+    method EvalAVT(Pointer $avt, xmlNode $node --> xmlCharP) is native(XSLT) is symbol('xsltEvalAVT') {*}
+    method EvalAttrValueTemplate(xmlNode $inst, xmlCharP $name, xmlCharP $ns --> xmlCharP) is native(XSLT) is symbol('xsltEvalAttrValueTemplate') {*}
+    method EvalGlobalVariables( --> int32) is native(XSLT) is symbol('xsltEvalGlobalVariables') {*}
+    method EvalOneUserParam(xmlCharP $name, xmlCharP $value --> int32) is native(XSLT) is symbol('xsltEvalOneUserParam') {*}
+    method EvalTemplateString(xmlNode $contextNode, xmlNode $inst --> xmlCharP) is native(XSLT) is symbol('xsltEvalTemplateString') {*}
+    method EvalUserParams(const char ** $params --> int32) is native(XSLT) is symbol('xsltEvalUserParams') {*}
+    method EvalXPathPredicate(xmlXPathCompExpr $comp, xmlNsPtr * $nsList, int32 $nsNr --> int32) is native(XSLT) is symbol('xsltEvalXPathPredicate') {*}
+    method EvalXPathString(xmlXPathCompExpr $comp --> xmlCharP) is native(XSLT) is symbol('xsltEvalXPathString') {*}
+    method EvalXPathStringNs(xmlXPathCompExpr $comp, int32 $nsNr, xmlNsPtr * $nsList --> xmlCharP) is native(XSLT) is symbol('xsltEvalXPathStringNs') {*}
+    method ExtElementLookup(xmlCharP $name, xmlCharP $URI --> xsltTransformFunction) is native(XSLT) is symbol('xsltExtElementLookup') {*}
+    method ExtensionInstructionResultFinalize( --> int32) is native(XSLT) is symbol('xsltExtensionInstructionResultFinalize') {*}
+    method ExtensionInstructionResultRegister(xmlXPathObject $obj --> int32) is native(XSLT) is symbol('xsltExtensionInstructionResultRegister') {*}
+    method FindDocument(xmlDoc $doc --> xsltDocument) is native(XSLT) is symbol('xsltFindDocument') {*}
+    method FindElemSpaceHandling(xmlNode $node --> int32) is native(XSLT) is symbol('xsltFindElemSpaceHandling') {*}
+    method FindTemplate(xmlCharP $name, xmlCharP $nameURI --> xsltTemplate) is native(XSLT) is symbol('xsltFindTemplate') {*}
+    method FlagRVTs(xmlXPathObject $obj, Pointer $val --> int32) is native(XSLT) is symbol('xsltFlagRVTs') {*}
+    method ForEach(xmlNode $contextNode, xmlNode $inst, xsltElemPreComp $castedComp) is native(XSLT) is symbol('xsltForEach') {*}
+    method FreeCtxtExts() is native(XSLT) is symbol('xsltFreeCtxtExts') {*}
+    method FreeDocuments() is native(XSLT) is symbol('xsltFreeDocuments') {*}
+    method FreeGlobalVariables() is native(XSLT) is symbol('xsltFreeGlobalVariables') {*}
+    method FreeRVTs() is native(XSLT) is symbol('xsltFreeRVTs') {*}
+    method Free() is native(XSLT) is symbol('xsltFreeTransformContext') {*}
+    method GetExtData(xmlCharP $URI --> Pointer) is native(XSLT) is symbol('xsltGetExtData') {*}
+    method GetKey(xmlCharP $name, xmlCharP $nameURI, xmlCharP $value --> xmlNodeSet) is native(XSLT) is symbol('xsltGetKey') {*}
+    method GetNamespace(xmlNode $cur, xmlNs $ns, xmlNode $out --> xmlNs) is native(XSLT) is symbol('xsltGetNamespace') {*}
+    method GetPlainNamespace(xmlNode $cur, xmlNs $ns, xmlNode $out --> xmlNs) is native(XSLT) is symbol('xsltGetPlainNamespace') {*}
+    method GetProfileInformation( --> xmlDoc) is native(XSLT) is symbol('xsltGetProfileInformation') {*}
+    method GetSpecialNamespace(xmlNode $invocNode, xmlCharP $nsName, xmlCharP $nsPrefix, xmlNode $target --> xmlNs) is native(XSLT) is symbol('xsltGetSpecialNamespace') {*}
+    method GetTemplate(xmlNode $node, xsltStylesheet $style --> xsltTemplate) is native(XSLT) is symbol('xsltGetTemplate') {*}
+    method If(xmlNode $contextNode, xmlNode $inst, xsltElemPreComp $castedComp) is native(XSLT) is symbol('xsltIf') {*}
+    method InitAllDocKeys( --> int32) is native(XSLT) is symbol('xsltInitAllDocKeys') {*}
+    method InitCtxtExts( --> int32) is native(XSLT) is symbol('xsltInitCtxtExts') {*}
+    method InitCtxtKey(xsltDocument $idoc, xsltKeyDef $keyDef --> int32) is native(XSLT) is symbol('xsltInitCtxtKey') {*}
+    method InitCtxtKeys(xsltDocument $idoc) is native(XSLT) is symbol('xsltInitCtxtKeys') {*}
+    method LoadDocument(xmlCharP $URI --> xsltDocument) is native(XSLT) is symbol('xsltLoadDocument') {*}
+    method LocalVariablePop(int32 $limitNr, int32 $level) is native(XSLT) is symbol('xsltLocalVariablePop') {*}
+    method LocalVariablePush(xsltStackElem $variable, int32 $level --> int32) is native(XSLT) is symbol('xsltLocalVariablePush') {*}
+    method MatchPattern(xmlNode $node, xmlCharP $pattern, xmlDoc $ctxtdoc, xmlNode $ctxtnode --> int32) is native(XSLT) is symbol('xsltMatchPattern') {*}
+    method Message(xmlNode $node, xmlNode $inst) is native(XSLT) is symbol('xsltMessage') {*}
+    method NeedElemSpaceHandling( --> int32) is native(XSLT) is symbol('xsltNeedElemSpaceHandling') {*}
+    method NewDocument(xmlDoc $doc --> xsltDocument) is native(XSLT) is symbol('xsltNewDocument') {*}
+    method Number(xmlNode $node, xmlNode $inst, xsltElemPreComp $castedComp) is native(XSLT) is symbol('xsltNumber') {*}
+    method NumberFormat(xsltNumberData $data, xmlNode $node) is native(XSLT) is symbol('xsltNumberFormat') {*}
+    method ParseStylesheetCallerParam(xmlNode $inst --> xsltStackElem) is native(XSLT) is symbol('xsltParseStylesheetCallerParam') {*}
+    method ParseStylesheetParam(xmlNode $cur) is native(XSLT) is symbol('xsltParseStylesheetParam') {*}
+    method ParseStylesheetVariable(xmlNode $inst) is native(XSLT) is symbol('xsltParseStylesheetVariable') {*}
+    method PrintError(xsltStylesheet $style, xmlNode $node) is native(XSLT) is symbol('xsltPrintErrorContext') {*}
+    method ProcessOneNode(xmlNode $contextNode, xsltStackElem $withParams) is native(XSLT) is symbol('xsltProcessOneNode') {*}
+    method ProcessingInstruction(xmlNode $node, xmlNode $inst, xsltElemPreComp $castedComp) is native(XSLT) is symbol('xsltProcessingInstruction') {*}
+    method QuoteOneUserParam(xmlCharP $name, xmlCharP $value --> int32) is native(XSLT) is symbol('xsltQuoteOneUserParam') {*}
+    method QuoteUserParams(const char ** $params --> int32) is native(XSLT) is symbol('xsltQuoteUserParams') {*}
+    method RegisterAllElement() is native(XSLT) is symbol('xsltRegisterAllElement') {*}
+    method RegisterExtElement(xmlCharP $name, xmlCharP $URI, xsltTransformFunction $function --> int32) is native(XSLT) is symbol('xsltRegisterExtElement') {*}
+    method RegisterExtFunction(xmlCharP $name, xmlCharP $URI, xmlXPathFunction $function --> int32) is native(XSLT) is symbol('xsltRegisterExtFunction') {*}
+    method RegisterExtras() is native(XSLT) is symbol('xsltRegisterExtras') {*}
+    method RegisterLocalRVT(xmlDoc $RVT --> int32) is native(XSLT) is symbol('xsltRegisterLocalRVT') {*}
+    method RegisterPersistRVT(xmlDoc $RVT --> int32) is native(XSLT) is symbol('xsltRegisterPersistRVT') {*}
+    method RegisterTmpRVT(xmlDoc $RVT --> int32) is native(XSLT) is symbol('xsltRegisterTmpRVT') {*}
+    method ReleaseRVT(xmlDoc $RVT) is native(XSLT) is symbol('xsltReleaseRVT') {*}
+    method SaveProfiling(FILE * $output) is native(XSLT) is symbol('xsltSaveProfiling') {*}
+    method SetCtxtParseOptions(int32 $options --> int32) is native(XSLT) is symbol('xsltSetCtxtParseOptions') {*}
+    method SetCtxtSortFunc(xsltSortFunc $handler) is native(XSLT) is symbol('xsltSetCtxtSortFunc') {*}
+    method SetTransformErrorFunc(Pointer $ctx, xmlGenericErrorFunc $handler) is native(XSLT) is symbol('xsltSetTransformErrorFunc') {*}
+    method ShutdownCtxtExts() is native(XSLT) is symbol('xsltShutdownCtxtExts') {*}
+    method Sort(xmlNode $node, xmlNode $inst, xsltElemPreComp $comp) is native(XSLT) is symbol('xsltSort') {*}
+    method TemplateProcess(xmlNode $node --> xmlNodePtr *) is native(XSLT) is symbol('xsltTemplateProcess') {*}
+    method TestCompMatchList(xmlNode $node, xsltCompMatch $comp --> int32) is native(XSLT) is symbol('xsltTestCompMatchList') {*}
+    method Text(xmlNode $node, xmlNode $inst, xsltElemPreComp $comp) is native(XSLT) is symbol('xsltText') {*}
+    method Error(xsltStylesheet $style, xmlNode $node, Str $msg, ... $...) is native(XSLT) is symbol('xsltTransformError') {*}
+    method ValueOf(xmlNode $node, xmlNode $inst, xsltElemPreComp $castedComp) is native(XSLT) is symbol('xsltValueOf') {*}
+    method VariableLookup(xmlCharP $name, xmlCharP $ns_uri --> xmlXPathObject) is native(XSLT) is symbol('xsltVariableLookup') {*}
 }
 
 class xsltVarInfo is repr('CStruct') {
@@ -752,6 +752,6 @@ class xsltVarInfo is repr('CStruct') {
     has xmlCharP $.nsName;
 }
 
-sub xsltFreeAVTList(Pointer $avt) is native(XSLT) is export {*};
-sub xsltIsBlank(xmlCharP $str --> int32) is native(XSLT) is export {*};
-sub xsltUninit() is native(XSLT) is export {*};
+our sub xsltFreeAVTList(Pointer $avt) is native(XSLT) is export {*}
+our sub xsltIsBlank(xmlCharP $str --> int32) is native(XSLT) is export {*}
+our sub xsltUninit() is native(XSLT) is export {*}

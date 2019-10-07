@@ -8,5 +8,5 @@ unit module LibXSLT::Native::Gen::xslt;
 use LibXML::Native::Defs :xmlCharP;
 use LibXSLT::Native::Defs :$lib;
 
-sub xsltCleanupGlobals() is native(XSLT) is export {*};
-sub xsltInit() is native(XSLT) is export {*};
+our sub xsltCleanupGlobals() is native(XSLT) is export {*}
+our sub xsltInit() is native(XSLT) is export {*}

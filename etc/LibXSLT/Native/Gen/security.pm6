@@ -17,16 +17,16 @@ enum xsltSecurityOption is export (
 );
 
 class xsltSecurityPrefs is repr('CPointer') {
-    sub xsltGetDefaultSecurityPrefs( --> xsltSecurityPrefs) is native(XSLT) is export {*};
-    sub xsltNewSecurityPrefs( --> xsltSecurityPrefs) is native(XSLT) is export {*};
+    our sub GetDefault( --> xsltSecurityPrefs) is native(XSLT) is symbol('xsltGetDefaultSecurityPrefs') {*}
+    our sub New( --> xsltSecurityPrefs) is native(XSLT) is symbol('xsltNewSecurityPrefs') {*}
 
-    method CheckRead(xsltTransformContext $ctxt, xmlCharP $URL --> int32) is native(XSLT) is symbol('xsltCheckRead') {*};
-    method CheckWrite(xsltTransformContext $ctxt, xmlCharP $URL --> int32) is native(XSLT) is symbol('xsltCheckWrite') {*};
-    method Free() is native(XSLT) is symbol('xsltFreeSecurityPrefs') {*};
-    method Get(xsltSecurityOption $option --> xsltSecurityCheck) is native(XSLT) is symbol('xsltGetSecurityPrefs') {*};
-    method Allow(xsltTransformContext $ctxt, Str $value --> int32) is native(XSLT) is symbol('xsltSecurityAllow') {*};
-    method Forbid(xsltTransformContext $ctxt, Str $value --> int32) is native(XSLT) is symbol('xsltSecurityForbid') {*};
-    method SetCtxt(xsltTransformContext $ctxt --> int32) is native(XSLT) is symbol('xsltSetCtxtSecurityPrefs') {*};
-    method SetDefault() is native(XSLT) is symbol('xsltSetDefaultSecurityPrefs') {*};
-    method Set(xsltSecurityOption $option, xsltSecurityCheck $func --> int32) is native(XSLT) is symbol('xsltSetSecurityPrefs') {*};
+    method CheckRead(xsltTransformContext $ctxt, xmlCharP $URL --> int32) is native(XSLT) is symbol('xsltCheckRead') {*}
+    method CheckWrite(xsltTransformContext $ctxt, xmlCharP $URL --> int32) is native(XSLT) is symbol('xsltCheckWrite') {*}
+    method Free() is native(XSLT) is symbol('xsltFreeSecurityPrefs') {*}
+    method Get(xsltSecurityOption $option --> xsltSecurityCheck) is native(XSLT) is symbol('xsltGetSecurityPrefs') {*}
+    method Allow(xsltTransformContext $ctxt, Str $value --> int32) is native(XSLT) is symbol('xsltSecurityAllow') {*}
+    method Forbid(xsltTransformContext $ctxt, Str $value --> int32) is native(XSLT) is symbol('xsltSecurityForbid') {*}
+    method SetCtxt(xsltTransformContext $ctxt --> int32) is native(XSLT) is symbol('xsltSetCtxtSecurityPrefs') {*}
+    method SetDefault() is native(XSLT) is symbol('xsltSetDefaultSecurityPrefs') {*}
+    method Set(xsltSecurityOption $option, xsltSecurityCheck $func --> int32) is native(XSLT) is symbol('xsltSetSecurityPrefs') {*}
 }

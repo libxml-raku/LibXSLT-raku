@@ -14,4 +14,4 @@ enum xsltLoadType is export (
     XSLT_LOAD_STYLESHEET => 1,
 );
 
-sub xsltSetLoaderFunc(xsltDocLoaderFunc $f) is native(XSLT) is export {*};
+our sub xsltSetLoaderFunc(xsltDocLoaderFunc $f) is native(XSLT) is export {*}

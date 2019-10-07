@@ -42,9 +42,9 @@ class xsltTransformContext is repr(Opaque) is export {
 }
 
 class xsltSecurityPrefs is repr(Opaque) is export {
-    sub xsltGetDefaultSecurityPrefs( --> xsltSecurityPrefs) is native(XSLT) is export {*};
-    sub xsltNewSecurityPrefs( --> xsltSecurityPrefs) is native(XSLT) is export {*};
-    method new() { xsltNewSecurityPrefs() }
+    our sub Defaults( --> xsltSecurityPrefs) is native(XSLT) is symbol('xsltGetDefaultSecurityPrefs') {*};
+    our sub New( --> xsltSecurityPrefs) is native(XSLT) is symbol('xsltNewSecurityPrefs') {*};
+    method new() { New() }
     method CheckRead(xsltTransformContext $ctxt, xmlCharP $URL --> int32) is native(XSLT) is symbol('xsltCheckRead') {*};
     method CheckWrite(xsltTransformContext $ctxt, xmlCharP $URL --> int32) is native(XSLT) is symbol('xsltCheckWrite') {*};
     method Free() is native(XSLT) is symbol('xsltFreeSecurityPrefs') {*};
@@ -63,11 +63,10 @@ class xsltStackElem is repr(Opaque) {
 }
 
 class xsltStylesheet is repr(Opaque) is export {
-    sub xsltParseStylesheetDoc(xmlDoc $doc --> xsltStylesheet) is native(XSLT) is export {*};
-    sub xsltParseStylesheetFile(xmlCharP $filename --> xsltStylesheet) is native(XSLT) is export {*};
-    sub xsltLoadStylesheetPI(xmlDoc $doc --> xsltStylesheet) is native(XSLT) is export {*};
+    our sub ParseDoc(xmlDoc $doc --> xsltStylesheet) is native(XSLT) is symbol('xsltParseStylesheetDoc') {*};
+    our sub ParseFile(xmlCharP $filename --> xsltStylesheet) is native(XSLT) is symbol('xsltParseStylesheetFile') {*};
+    our sub LoadPI(xmlDoc $doc --> xsltStylesheet) is native(XSLT) is symbol('xsltLoadStylesheetPI') {*};
     method NewTransformContext(xmlDoc $doc --> xsltTransformContext) is native(XSLT) is symbol('xsltNewTransformContext') {*};
-    constant FILE = Pointer;
     method transform(xmlDoc $doc, xsltTransformContext $userCtxt, CArray[Str] $params --> xmlDoc) is native(BIND-XSLT) is symbol('xslt6_stylesheet_transform') {*}
     method Free is symbol('xsltFreeStylesheet') is native(XSLT) {*}
     method media-type(--> Str) is symbol('xslt6_stylesheet_media_type') is native(BIND-XSLT) {*}

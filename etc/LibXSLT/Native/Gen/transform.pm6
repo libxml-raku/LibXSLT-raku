@@ -8,6 +8,6 @@ unit module LibXSLT::Native::Gen::transform;
 use LibXML::Native::Defs :xmlCharP;
 use LibXSLT::Native::Defs :$lib;
 
-sub xslHandleDebugger(xmlNode $cur, xmlNode $node, xsltTemplate $templ, xsltTransformContext $ctxt) is native(XSLT) is export {*};
-sub xsltGetXIncludeDefault( --> int32) is native(XSLT) is export {*};
-sub xsltSetXIncludeDefault(int32 $xinclude) is native(XSLT) is export {*};
+our sub xslHandleDebugger(xmlNode $cur, xmlNode $node, xsltTemplate $templ, xsltTransformContext $ctxt) is native(XSLT) is export {*}
+our sub xsltGetXIncludeDefault( --> int32) is native(XSLT) is export {*}
+our sub xsltSetXIncludeDefault(int32 $xinclude) is native(XSLT) is export {*}

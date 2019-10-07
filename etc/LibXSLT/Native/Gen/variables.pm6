@@ -8,4 +8,4 @@ unit module LibXSLT::Native::Gen::variables;
 use LibXML::Native::Defs :xmlCharP;
 use LibXSLT::Native::Defs :$lib;
 
-sub xsltXPathVariableLookup(Pointer $ctxt, xmlCharP $name, xmlCharP $ns_uri --> xmlXPathObject) is native(XSLT) is export {*};
+our sub xsltXPathVariableLookup(Pointer $ctxt, xmlCharP $name, xmlCharP $ns_uri --> xmlXPathObject) is native(XSLT) is export {*}
