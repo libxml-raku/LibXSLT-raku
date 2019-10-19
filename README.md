@@ -119,11 +119,11 @@ Each of the option methods returns its previous value, and can be called without
 
     A `LibXSLT::ExtensionContext` object is passed, with three attributes:
 
-        * style-node() - The current input node from the stylesheet document
+      * style-node() - The current input node from the stylesheet document
 
-        * source-node() - The current input node from the source document
+      * source-node() - The current input node from the source document
 
-        * insert-node() - The current output node in the transformed document
+      * insert-node() - The current output node in the transformed document
 
 API
 ===

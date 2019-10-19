@@ -195,11 +195,11 @@ Will register a C<hello> element in the C<urn:foo> name-space that inserts a "He
 
 A C<LibXSLT::ExtensionContext> object is passed, with three attributes:
 
-=item2 style-node() - The current input node from the stylesheet document
+  =item style-node() - The current input node from the stylesheet document
 
-=item2 source-node() - The current input node from the source document
+  =item source-node() - The current input node from the source document
 
-=item2 insert-node() - The current output node in the transformed document
+  =item insert-node() - The current output node in the transformed document
 
 =end item
 
