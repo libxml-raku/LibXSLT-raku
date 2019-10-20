@@ -1,3 +1,6 @@
+0.0.3 2019-10-21
+    - Upgrade to LibXML 0.1.6, which replaces the LibXML::ErrorHandler
+      class with a LibXML::ErrorHandling role
 0.0.2 2019-10-05
     - Implement .set-debug-callback method
     - Add .suppress-warnings and .suppress-errors options; silence tests

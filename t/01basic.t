@@ -39,7 +39,7 @@ or diag "sorry this version of libxslt is not supported ($version < {Min-LibXSLT
 
     $doc .= parse: 'example/students.xml';
     $result = LibXSLT.process: :$doc;
-    is LibXML::Document.parse($result)<html/body/table/tr/th>[0][0], 'Roll No';
+    is LibXML::Document.parse($result)<html/body/table/tr/th>.string-value, 'Roll No';
 }
 
 

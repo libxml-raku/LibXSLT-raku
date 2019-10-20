@@ -6,7 +6,7 @@ use LibXSLT::Security;
 use LibXSLT::ExtensionContext;
 
 use LibXML::Document;
-use LibXML::ErrorHandler :&structured-error-cb, :&generic-error-cb, :MsgArg;
+use LibXML::ErrorHandling :&structured-error-cb, :&generic-error-cb, :unmarshal-varargs, :MsgArg;
 use LibXML::Native;
 use LibXML::XPath::Context;
 
@@ -54,7 +54,7 @@ method SetGenericErrorFunc(&handler) {
     _set-generic-error-handler(
         -> Str $msg, Str $fmt, Pointer[MsgArg] $argv {
             CATCH { default { warn $_; $*XML-CONTEXT.callback-error: X::LibXML::XPath::AdHoc.new: :error($_) } }
-            my @args = LibXML::ErrorHandler::cast-var-args($fmt, $argv);
+            my @args = unmarshal-varargs($fmt, $argv);
             &handler($msg, @args);
         },
         xml6_gbl_message_func

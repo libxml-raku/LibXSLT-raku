@@ -2,7 +2,7 @@ use v6;
 use LibXSLT::Document; # help Rakudo
 
 use LibXSLT::Stylesheet;
-unit class LibXSLT:ver<0.0.2>
+unit class LibXSLT:ver<0.0.3>
     is LibXSLT::Stylesheet;
 
 use LibXSLT::Config;
@@ -11,7 +11,7 @@ use LibXSLT::Native::Defs :XSLT;
 use LibXML::Native;
 use LibXML::XPath::Context :get-value;
 use LibXML::Types :NCName, :QName;
-use LibXML::ErrorHandler :MsgArg;
+use LibXML::ErrorHandling :MsgArg, :&unmarshal-varargs;
 use Method::Also;
 use NativeCall;
 
@@ -39,7 +39,7 @@ method set-debug-callback(&func) {
     set-debug-handler(
         -> Str $msg, Str $fmt, Pointer[MsgArg] $argv {
             CATCH { default { warn $_; $*XML-CONTEXT.callback-error: X::LibXML::XPath::AdHoc.new: :error($_) } }
-            my @args = LibXML::ErrorHandler::cast-var-args($fmt, $argv);
+            my @args = unmarshal-varargs($fmt, $argv);
             &func($msg, @args);
         },
         xml6_gbl_message_func
@@ -501,6 +501,10 @@ This module requires the libxslt library to be installed. Please follow the inst
 
   brew update
   brew install libxslt
+
+=head1 VERSION
+
+0.0.3
 
 =head1 LICENSE
 

@@ -323,6 +323,11 @@ Mac OS X
     brew update
     brew install libxslt
 
+VERSION
+=======
+
+0.0.3
+
 LICENSE
 =======
 

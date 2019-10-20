@@ -9,7 +9,7 @@ use LibXML::PI;
 use LibXML::Native;
 use LibXML::Native::Defs :CLIB;
 use LibXML::XPath::Context;
-use LibXML::ErrorHandler :&structured-error-cb, :&generic-error-cb;
+use LibXML::ErrorHandling :&structured-error-cb, :&generic-error-cb;
 use LibXSLT::Security;
 use URI;
 use NativeCall;

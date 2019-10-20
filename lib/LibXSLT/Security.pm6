@@ -2,7 +2,7 @@ unit class LibXSLT::Security;
 
 use LibXSLT::Native;
 use LibXSLT::Enums;
-use LibXML::ErrorHandler;
+use LibXML::ErrorHandling;
 use LibXML::Enums;
 
 has xsltSecurityPrefs $!native;

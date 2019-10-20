@@ -4,8 +4,8 @@ plan 27;
 
 use LibXSLT;
 use LibXML;
-use LibXML::ErrorHandler;
-LibXML::ErrorHandler.SetGenericErrorFunc(sub (|c) {});
+use LibXML::ErrorHandling;
+LibXML::ErrorHandling.SetGenericErrorFunc(sub (|c) {});
 # TEST
 ok(1, ' TODO : Add test name');
 
