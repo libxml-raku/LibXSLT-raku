@@ -2,12 +2,12 @@ use v6;
 use LibXSLT::Document; # help Rakudo
 
 use LibXSLT::Stylesheet;
-unit class LibXSLT:ver<0.0.3>
+unit class LibXSLT:ver<0.0.4>
     is LibXSLT::Stylesheet;
 
 use LibXSLT::Config;
 use LibXSLT::Native;
-use LibXSLT::Native::Defs :XSLT;
+use LibXSLT::Native::Defs :$XSLT;
 use LibXML::Native;
 use LibXML::XPath::Context :get-value;
 use LibXML::Types :NCName, :QName;
@@ -33,7 +33,7 @@ method register-function(Str $url, QName:D $name, &func, |c) {
     );
 }
 
-sub set-debug-handler( &func (Str $fmt, Str $argt, Pointer[MsgArg] $argv), Pointer ) is native(XSLT) is symbol('xsltSetGenericDebugFunc') {*}
+sub set-debug-handler( &func (Str $fmt, Str $argt, Pointer[MsgArg] $argv), Pointer ) is native($XSLT) is symbol('xsltSetGenericDebugFunc') {*}
 
 method set-debug-callback(&func) {
     set-debug-handler(
@@ -504,7 +504,7 @@ This module requires the libxslt library to be installed. Please follow the inst
 
 =head1 VERSION
 
-0.0.3
+0.0.4
 
 =head1 LICENSE
 

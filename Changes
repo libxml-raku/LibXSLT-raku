@@ -1,3 +1,7 @@
+0.0.4 2019-10-27
+    - Upgrade to LibXML 0.1.7;  Changes to LibXML::Native::Defs
+    - Change LibXSLT::Native::Defs for consistancy. Now returns variables
+      rather than constants. e.g.: use LibXSLT::Native::Defs :$XSLT;
 0.0.3 2019-10-21
     - Upgrade to LibXML 0.1.6, which replaces the LibXML::ErrorHandler
       class with a LibXML::ErrorHandling role

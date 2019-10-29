@@ -2,10 +2,10 @@ use v6;
 use Test;
 plan 6;
 use LibXSLT;
-use LibXSLT::Native::Defs :BIND-XSLT;
+use LibXSLT::Native::Defs :$BIND-XSLT;
 use NativeCall;
 use LibXML;
-sub have-exslt(--> int32) is native(BIND-XSLT) is symbol('xslt6_config_have_exslt') {*};
+sub have-exslt(--> int32) is native($BIND-XSLT) is symbol('xslt6_config_have_exslt') {*};
 ##unless LibXSLT::Config.have-exslt {
 unless have-exslt() {
     skip-rest "libexslt not supported in this libxml2 build";

@@ -5,7 +5,7 @@ unit class LibXSLT::Document
     is LibXML::Document;
 
 use LibXML;
-use LibXML::Native::Defs :CLIB;
+use LibXML::Native::Defs :$CLIB;
 use LibXSLT::Native;
 use LibXSLT::Stylesheet;
 has LibXSLT::Stylesheet $.stylesheet is required;
@@ -16,8 +16,8 @@ our role Xslt {
         my Pointer[uint8] $ptr .= new;
         my int32 $len;
         my buf8 $buf;
-        sub memcpy(Blob, Pointer, size_t) is native(CLIB) {*}
-        sub free(Pointer) is native(CLIB) {*}
+        sub memcpy(Blob, Pointer, size_t) is native($CLIB) {*}
+        sub free(Pointer) is native($CLIB) {*}
 
         with self {
             xsltSaveResultToString($ptr, $len, $.native, $.stylesheet.native);

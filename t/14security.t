@@ -6,10 +6,10 @@ use LibXSLT::Security;
 use LibXSLT::TransformContext;
 use LibXML;
 use LibXML::InputCallback;
-use LibXSLT::Native::Defs :BIND-XSLT;
+use LibXSLT::Native::Defs :$BIND-XSLT;
 use NativeCall;
 
-sub have-exslt(--> int32) is native(BIND-XSLT) is symbol('xslt6_config_have_exslt') {*};
+sub have-exslt(--> int32) is native($BIND-XSLT) is symbol('xslt6_config_have_exslt') {*};
 
 my LibXML $parser .= new();
 print "# parser\n";

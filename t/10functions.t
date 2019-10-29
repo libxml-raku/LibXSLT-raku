@@ -6,9 +6,9 @@ use LibXML;
 use LibXML::Node::List;
 use LibXSLT;
 
-use LibXSLT::Native::Defs :BIND-XSLT;
+use LibXSLT::Native::Defs :$BIND-XSLT;
 use NativeCall;
-sub have-exslt(--> int32) is native(BIND-XSLT) is symbol('xslt6_config_have_exslt') {*};
+sub have-exslt(--> int32) is native($BIND-XSLT) is symbol('xslt6_config_have_exslt') {*};
 
 {
   my $parser = LibXML.new();

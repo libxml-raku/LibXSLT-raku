@@ -1,7 +1,7 @@
 unit class LibXSLT::TransformContext;
 
 use LibXSLT::Native;
-use LibXSLT::Native::Defs :XSLT;
+use LibXSLT::Native::Defs :$XSLT;
 use LibXSLT::Security;
 use LibXSLT::ExtensionContext;
 
@@ -48,7 +48,7 @@ method register-transform($type, Str $URI, Str:D $name, &func) {
     });
 }
 
-sub _set-generic-error-handler( &func (Str $fmt, Str $argt, Pointer[MsgArg] $argv), Pointer ) is native(XSLT) is symbol('xsltSetGenericErrorFunc') is export {*}
+sub _set-generic-error-handler( &func (Str $fmt, Str $argt, Pointer[MsgArg] $argv), Pointer ) is native($XSLT) is symbol('xsltSetGenericErrorFunc') is export {*}
 
 method SetGenericErrorFunc(&handler) {
     _set-generic-error-handler(

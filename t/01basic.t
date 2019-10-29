@@ -3,10 +3,10 @@ use Test;
 plan 5;
 use LibXSLT;
 use LibXSLT::Native;
-use LibXSLT::Native::Defs :BIND-XSLT;
+use LibXSLT::Native::Defs :$BIND-XSLT;
 use LibXML;
 use NativeCall;
-sub have-exslt(--> int32) is native(BIND-XSLT) is symbol('xslt6_config_have_exslt') {*};
+sub have-exslt(--> int32) is native($BIND-XSLT) is symbol('xslt6_config_have_exslt') {*};
 constant Min-LibXSLT-Version = v1.00.00;
 
 # TEST

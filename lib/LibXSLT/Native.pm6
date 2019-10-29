@@ -3,9 +3,9 @@ unit module LibXSLT::Native;
 use LibXML::Native;
 use LibXML::Native::Dict;
 use LibXML::Native::HashTable;
-use LibXML::Native::Defs :Opaque, :XML2, :xmlCharP;
+use LibXML::Native::Defs :Opaque, :xmlCharP, :$XML2;
 
-use LibXSLT::Native::Defs :XSLT, :EXSLT, :BIND-XSLT;
+use LibXSLT::Native::Defs :$XSLT, :$EXSLT, :$BIND-XSLT;
 use NativeCall;
 
 class xsltDecimalFormat is repr(Opaque) {}
@@ -27,33 +27,33 @@ class xsltElemPreComp is repr(Opaque) is export {
 
 class xsltTransformContext is repr(Opaque) is export {
 
-    method SetStructuredErrorFunc( &error-func (xsltTransformContext $, xmlError $)) is native(XML2) is symbol('xmlSetStructuredErrorFunc') {*};
+    method SetStructuredErrorFunc( &error-func (xsltTransformContext $, xmlError $)) is native($XML2) is symbol('xmlSetStructuredErrorFunc') {*};
     method RegisterExtElement(xmlCharP $name, xmlCharP $URI, &func (
                                   xsltTransformContext,
 	                          anyNode $this-node,
 				  anyNode $style-node,
 			          xsltElemPreComp $com) --> int32)
         is symbol('xsltRegisterExtElement')
-        is native(XSLT) {*};
-    method set-xinclude(int32) is symbol('xslt6_transform_ctx_set_xinclude') is native(BIND-XSLT) {*}
-    method get-insert-node(--> anyNode) is symbol('xslt6_transform_ctx_get_insert_node') is native(BIND-XSLT) {*}
+        is native($XSLT) {*};
+    method set-xinclude(int32) is symbol('xslt6_transform_ctx_set_xinclude') is native($BIND-XSLT) {*}
+    method get-insert-node(--> anyNode) is symbol('xslt6_transform_ctx_get_insert_node') is native($BIND-XSLT) {*}
 
-    method Free is symbol('xsltFreeTransformContext') is native(XSLT) {*}
+    method Free is symbol('xsltFreeTransformContext') is native($XSLT) {*}
 }
 
 class xsltSecurityPrefs is repr(Opaque) is export {
-    our sub Defaults( --> xsltSecurityPrefs) is native(XSLT) is symbol('xsltGetDefaultSecurityPrefs') {*};
-    our sub New( --> xsltSecurityPrefs) is native(XSLT) is symbol('xsltNewSecurityPrefs') {*};
+    our sub Defaults( --> xsltSecurityPrefs) is native($XSLT) is symbol('xsltGetDefaultSecurityPrefs') {*};
+    our sub New( --> xsltSecurityPrefs) is native($XSLT) is symbol('xsltNewSecurityPrefs') {*};
     method new() { New() }
-    method CheckRead(xsltTransformContext $ctxt, xmlCharP $URL --> int32) is native(XSLT) is symbol('xsltCheckRead') {*};
-    method CheckWrite(xsltTransformContext $ctxt, xmlCharP $URL --> int32) is native(XSLT) is symbol('xsltCheckWrite') {*};
-    method Free() is native(XSLT) is symbol('xsltFreeSecurityPrefs') {*};
-    method Get(int32 $option --> Pointer) is native(XSLT) is symbol('xsltGetSecurityPrefs') {*};
-    method Allow(xsltTransformContext $ctxt, Str $value --> int32) is native(XSLT) is symbol('xsltSecurityAllow') {*};
-    method Forbid(xsltTransformContext $ctxt, Str $value --> int32) is native(XSLT) is symbol('xsltSecurityForbid') {*};
-    method SetContext(xsltTransformContext $ctxt --> int32) is native(XSLT) is symbol('xsltSetCtxtSecurityPrefs') {*};
-    method SetDefault() is native(XSLT) is symbol('xsltSetDefaultSecurityPrefs') {*};
-    method Set(int32 $option, &func (xsltSecurityPrefs, xsltTransformContext, Str --> int32) --> int32) is native(XSLT) is symbol('xsltSetSecurityPrefs') {*};
+    method CheckRead(xsltTransformContext $ctxt, xmlCharP $URL --> int32) is native($XSLT) is symbol('xsltCheckRead') {*};
+    method CheckWrite(xsltTransformContext $ctxt, xmlCharP $URL --> int32) is native($XSLT) is symbol('xsltCheckWrite') {*};
+    method Free() is native($XSLT) is symbol('xsltFreeSecurityPrefs') {*};
+    method Get(int32 $option --> Pointer) is native($XSLT) is symbol('xsltGetSecurityPrefs') {*};
+    method Allow(xsltTransformContext $ctxt, Str $value --> int32) is native($XSLT) is symbol('xsltSecurityAllow') {*};
+    method Forbid(xsltTransformContext $ctxt, Str $value --> int32) is native($XSLT) is symbol('xsltSecurityForbid') {*};
+    method SetContext(xsltTransformContext $ctxt --> int32) is native($XSLT) is symbol('xsltSetCtxtSecurityPrefs') {*};
+    method SetDefault() is native($XSLT) is symbol('xsltSetDefaultSecurityPrefs') {*};
+    method Set(int32 $option, &func (xsltSecurityPrefs, xsltTransformContext, Str --> int32) --> int32) is native($XSLT) is symbol('xsltSetSecurityPrefs') {*};
 }
 
 class xsltDocument is repr(Opaque) is export {
@@ -63,31 +63,31 @@ class xsltStackElem is repr(Opaque) {
 }
 
 class xsltStylesheet is repr(Opaque) is export {
-    our sub ParseDoc(xmlDoc $doc --> xsltStylesheet) is native(XSLT) is symbol('xsltParseStylesheetDoc') {*};
-    our sub ParseFile(xmlCharP $filename --> xsltStylesheet) is native(XSLT) is symbol('xsltParseStylesheetFile') {*};
-    our sub LoadPI(xmlDoc $doc --> xsltStylesheet) is native(XSLT) is symbol('xsltLoadStylesheetPI') {*};
-    method NewTransformContext(xmlDoc $doc --> xsltTransformContext) is native(XSLT) is symbol('xsltNewTransformContext') {*};
-    method transform(xmlDoc $doc, xsltTransformContext $userCtxt, CArray[Str] $params --> xmlDoc) is native(BIND-XSLT) is symbol('xslt6_stylesheet_transform') {*}
-    method Free is symbol('xsltFreeStylesheet') is native(XSLT) {*}
-    method media-type(--> Str) is symbol('xslt6_stylesheet_media_type') is native(BIND-XSLT) {*}
-    method output-method(--> Str) is symbol('xslt6_stylesheet_output_method') is native(BIND-XSLT) {*}
+    our sub ParseDoc(xmlDoc $doc --> xsltStylesheet) is native($XSLT) is symbol('xsltParseStylesheetDoc') {*};
+    our sub ParseFile(xmlCharP $filename --> xsltStylesheet) is native($XSLT) is symbol('xsltParseStylesheetFile') {*};
+    our sub LoadPI(xmlDoc $doc --> xsltStylesheet) is native($XSLT) is symbol('xsltLoadStylesheetPI') {*};
+    method NewTransformContext(xmlDoc $doc --> xsltTransformContext) is native($XSLT) is symbol('xsltNewTransformContext') {*};
+    method transform(xmlDoc $doc, xsltTransformContext $userCtxt, CArray[Str] $params --> xmlDoc) is native($BIND-XSLT) is symbol('xslt6_stylesheet_transform') {*}
+    method Free is symbol('xsltFreeStylesheet') is native($XSLT) {*}
+    method media-type(--> Str) is symbol('xslt6_stylesheet_media_type') is native($BIND-XSLT) {*}
+    method output-method(--> Str) is symbol('xslt6_stylesheet_output_method') is native($BIND-XSLT) {*}
 }
 
-sub xsltSaveResultToString(Pointer[uint8] $out is rw, int32 $len is rw, xmlDoc $result, xsltStylesheet $style --> int32) is native(XSLT) is export {*};
-sub xsltInit() is native(XSLT) is export {*};
-sub xsltSetXIncludeDefault(int32) is native(XSLT) is export {*};
-sub xsltMaxDepth is export { cglobal(XSLT, 'xsltMaxDepth', int32); }
-sub xslt6_gbl_set_max_depth(int32) is native(BIND-XSLT) is export {*};
-sub xsltMaxVars is export { cglobal(XSLT, 'xsltMaxVars', int32); }
-sub xslt6_gbl_set_max_vars(int32) is native(BIND-XSLT) is export {*};
-sub xslt6_config_have_exslt(--> int32) is native(BIND-XSLT) is export {*};
-sub xslt6_config_version(--> Str) is native(BIND-XSLT) is export {*};
-sub xsltLibxsltVersion is export { cglobal(XSLT, 'xsltLibxsltVersion', int32); }
-sub xsltLibxxmlVersion is export { cglobal(XSLT, 'xsltLibxxmlVersion', int32); }
-sub xsltRegisterExtModuleFunction(xmlCharP $name, xmlCharP $URI, &func2 (xmlXPathParserContext, int32 --> xmlXPathObject) --> int32) is native(XSLT) is export {*};
-sub xsltSetGenericDebugFunc( Pointer, Pointer) is native(XSLT) is export {*}
+sub xsltSaveResultToString(Pointer[uint8] $out is rw, int32 $len is rw, xmlDoc $result, xsltStylesheet $style --> int32) is native($XSLT) is export {*};
+sub xsltInit() is native($XSLT) is export {*};
+sub xsltSetXIncludeDefault(int32) is native($XSLT) is export {*};
+sub xsltMaxDepth is export { cglobal($XSLT, 'xsltMaxDepth', int32); }
+sub xslt6_gbl_set_max_depth(int32) is native($BIND-XSLT) is export {*};
+sub xsltMaxVars is export { cglobal($XSLT, 'xsltMaxVars', int32); }
+sub xslt6_gbl_set_max_vars(int32) is native($BIND-XSLT) is export {*};
+sub xslt6_config_have_exslt(--> int32) is native($BIND-XSLT) is export {*};
+sub xslt6_config_version(--> Str) is native($BIND-XSLT) is export {*};
+sub xsltLibxsltVersion is export { cglobal($XSLT, 'xsltLibxsltVersion', int32); }
+sub xsltLibxxmlVersion is export { cglobal($XSLT, 'xsltLibxxmlVersion', int32); }
+sub xsltRegisterExtModuleFunction(xmlCharP $name, xmlCharP $URI, &func2 (xmlXPathParserContext, int32 --> xmlXPathObject) --> int32) is native($XSLT) is export {*};
+sub xsltSetGenericDebugFunc( Pointer, Pointer) is native($XSLT) is export {*}
 
-sub exsltRegisterAll() is native(EXSLT) is export {*};
+sub exsltRegisterAll() is native($EXSLT) is export {*};
 
 INIT {
     xsltInit();
