@@ -32,12 +32,12 @@ ok($style, '$style is true.');
 my $stylesheet = $xslt.parse-stylesheet(doc => $style);
 
 # TEST
-is($stylesheet.output-method, 'xml',
-    'output method is xml BEFORE processing');
+is($stylesheet.output-method, 'html',
+    'html output method detected');
 
 # TEST
-is($stylesheet.media-type, 'text/xml',
-    'media_type is text/xml BEFORE processing');
+is($stylesheet.media-type, 'text/html',
+    'text/html media-type detected');
 
 my $results = $stylesheet.transform(doc => $source);
 
