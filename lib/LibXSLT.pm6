@@ -46,17 +46,6 @@ method set-debug-callback(&func) {
     );
 }
 
-our sub xpath-to-string(*%xpath) is export(:xpath-to-string) {
-    %xpath.map: {
-        my $key = .key.subst(':', '_', :g);
-        my $value = .value // '';
-        my $string = $value ~~ s:g/\'/', "'", '/
-            ?? "concat('$value')"
-            !! "'{$value}'";
-       $key => $string;
-    }
-}
-
 =begin pod
 
 =head1 NAME
@@ -348,18 +337,15 @@ transformation.
 
 =head1 Parameters
 
-LibXSLT expects parameters in XPath format. That is, if you wish to pass
-a string to the XSLT engine, you actually have to pass it as a quoted
-string:
+Unlike the Perl 5 module, Raku automatically formats keys and parameters for xpath.
 
-  $stylesheet.transform($doc, param => "'string'");
+If you wish to emulate the Perl 5 behavour and/or format arguments yourself, pass :raw
+to the `transform()` method. You can use `xpath-to-string()` function to do the
+formatting:
 
-Note the quotes within quotes there!
-
-Obviously this isn't much fun, so you can make it easy on yourself:
-
-  my @params = LibXSLT::xpath-to-string(param => "string");
-  $stylesheet.transform($doc, |@params);
+  use LibXSLT::Stylesheet :&xpath-to-string;
+  my %params = xpath-to-string(param => "string");
+  $stylesheet.transform($doc, :raw, |%params);
 
 The utility function does the right thing with respect to strings in XPath,
 including when you have quotes already embedded within your string.

@@ -98,8 +98,31 @@ multi method parse-stylesheet(LibXML::Document:D $doc) {
     self.parse-stylesheet: :$doc;
 }
 
-multi method transform(LibXML::Document:D :$doc!, *%params --> LibXML::Document) {
+our sub xpath-to-string(*%xpath) is export(:xpath-to-string) {
+    %xpath.map: {
+        my $key = .key.subst(':', '_', :g);
+        my $arg = do given .value {
+            when Str {
+                my $value = $_ // '';
+                $value ~~ s:g/\'/', "'", '/
+                    ?? "concat('$value')"
+                    !! "'{$value}'";
+            }
+            when .isa(Bool) { $_ ?? 'true()' !! 'false()' }
+            when Numeric { .Str }
+            default {
+                warn "ignoring XPath value: {.perl}" if .defined;
+                "''"
+            }
+       }
+          
+       $key => $arg;
+    }
+}
+
+multi method transform(LibXML::Document:D :$doc!, Bool :$raw, *%params --> LibXML::Document) {
     my LibXSLT::TransformContext $ctx .= new: :$doc, :stylesheet(self), :$!input-callbacks, :%!extensions, :$!security;
+    %params = xpath-to-string(|%params) unless $raw;
     my CArray[Str] $params .= new(|%params.kv, Str);
     my xmlDoc $result;
     $ctx.try: {

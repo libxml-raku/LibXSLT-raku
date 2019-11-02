@@ -1,4 +1,8 @@
 0.0.5 2019-11-03
+    - [LibXML::Stylesheet] changed handling of transform() parameters; which
+      are now automatically processed by default. Pass :raw to get the old
+      (Perl 5) behahviour. Note also that the xpath-to-string() sub has been
+      moved from LibXSLT to LibXSLT::Stylesheet
     - Leave stylesheet `media-type as undefined, when not yet known.
 0.0.4 2019-10-27
     - Upgrade to LibXML 0.1.7;  Changes to LibXML::Native::Defs

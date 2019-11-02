@@ -3,6 +3,7 @@ use Test;
 plan 7;
 
 use LibXSLT;
+use LibXSLT::Stylesheet :&xpath-to-string;
 use LibXML;
 
 my $parser = LibXML.new();
@@ -50,9 +51,8 @@ my $stylesheet = $xslt.parse-stylesheet(doc => $style);
 ok($stylesheet, ' TODO : Add test name');
 
 my $results = $stylesheet.transform(:doc($source),
-        incoming => "'INCOMINGTEXT'",
-#        'incoming' => "'INCOMINGTEXT2'",
-        outgoing => "'OUTGOINGTEXT'",
+        incoming => 'INCOMINGTEXT',
+        outgoing => 'OUTGOINGTEXT',
         ).Xslt;
 
 # TEST
@@ -61,8 +61,8 @@ ok($results, ' TODO : Add test name');
 # TEST
 ok($results.Str, ' TODO : Add test name');
 
-my %params = LibXSLT::xpath-to-string(empty => Mu);
-$results = $stylesheet.transform(:doc($source), |%params).Xslt;
+my %params = xpath-to-string(empty => Mu);
+$results = $stylesheet.transform(:doc($source), :raw, |%params).Xslt;
 # TEST
 ok($results, ' TODO : Add test name');
 # TEST
