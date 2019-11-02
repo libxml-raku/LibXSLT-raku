@@ -1,6 +1,6 @@
 use v6;
 use Test;
-plan 7;
+plan 8;
 
 use LibXSLT;
 use LibXSLT::Stylesheet :&xpath-to-string;
@@ -61,7 +61,9 @@ ok($results, ' TODO : Add test name');
 # TEST
 ok($results.Str, ' TODO : Add test name');
 
-my %params = xpath-to-string(empty => Mu);
+my %params =  xpath-to-string(str => 'TEXT', num => 42, bool => True, empty => Mu);
+is-deeply %params, %(str => "'TEXT'", num => '42', bool => 'true()', empty => "''");
+%params = xpath-to-string(empty => Mu);
 $results = $stylesheet.transform(:doc($source), :raw, |%params).Xslt;
 # TEST
 ok($results, ' TODO : Add test name');
