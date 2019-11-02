@@ -46,7 +46,7 @@ method set-debug-callback(&func) {
     );
 }
 
-our sub xpath-to-string(*%xpath) {
+our sub xpath-to-string(*%xpath) is export(:xpath-to-string) {
     %xpath.map: {
         my $key = .key.subst(':', '_', :g);
         my $value = .value // '';
@@ -358,9 +358,8 @@ Note the quotes within quotes there!
 
 Obviously this isn't much fun, so you can make it easy on yourself:
 
-  $stylesheet.transform($doc, LibXSLT::xpath-to-string(
-        param => "string"
-        ));
+  my @params = LibXSLT::xpath-to-string(param => "string");
+  $stylesheet.transform($doc, |@params);
 
 The utility function does the right thing with respect to strings in XPath,
 including when you have quotes already embedded within your string.
@@ -483,7 +482,7 @@ access for the given option (except for C<create_dir>).
 
 
 =begin item
-LibXSLT.have-exlt()
+LibXSLT.have-exslt()
 
 Returns True if the module was compiled with libexslt, False otherwise.
 
@@ -516,7 +515,7 @@ Copyright 2001-2009, AxKit.com Ltd.
 =head1 CONTRIBUTERS
 
 This Raku module is based on the Perl 5 XML::LibXSLT module. The `process()` method has
-been adapted from the XML::LibXSL::Easy module.
+been adapted from the Perl 5 XML::LibXSL::Easy module.
 
 With thanks to: Matt Sergeant, Shane Corgatelli, Petr Pal's, Shlomi Fish, יובל קוג'מן (Yuval Kogman)
 

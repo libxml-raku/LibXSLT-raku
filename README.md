@@ -221,9 +221,8 @@ Note the quotes within quotes there!
 
 Obviously this isn't much fun, so you can make it easy on yourself:
 
-    $stylesheet.transform($doc, LibXSLT::xpath-to-string(
-          param => "string"
-          ));
+    my @params = LibXSLT::xpath-to-string(param => "string");
+    $stylesheet.transform($doc, |@params);
 
 The utility function does the right thing with respect to strings in XPath, including when you have quotes already embedded within your string.
 
@@ -303,7 +302,7 @@ Interface
 
     Removes the callback for the given option. This has the effect of allowing all access for the given option (except for `create_dir`).
 
-  * LibXSLT.have-exlt()
+  * LibXSLT.have-exslt()
 
     Returns True if the module was compiled with libexslt, False otherwise.
 
