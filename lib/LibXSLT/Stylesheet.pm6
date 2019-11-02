@@ -17,8 +17,6 @@ use NativeCall;
 has LibXML::XPath::Context $!ctx handles<structured-error generic-error callback-error flush-errors park suppress-warnings suppress-errors>;
 has LibXSLT::Security $.security is rw;
 
-has $!default-output-method = 'xml';
-
 method TWEAK(|c) {
     $!ctx .= new: |c;
 }
@@ -29,7 +27,7 @@ has $.input-callbacks is rw = config.input-callbacks;
 multi method input-callbacks is rw { $!input-callbacks }
 multi method input-callbacks($!input-callbacks) {}
 
-has xsltStylesheet $!native;
+has xsltStylesheet $!native handles<output-method>;
 has Hash %!extensions;
 method native { $!native }
 
@@ -67,33 +65,12 @@ proto method parse-stylesheet(|c) {
     with self {return {*}} else { self.new.parse-stylesheet(|c) }
 }
 
-method !set-default-output-method($doc) {
-
-    # from https://www.w3.org/TR/1999/REC-xslt-19991116#output
-    # treat as HTML if
-    # - the root node of the result tree has an element child,
-    # - the expanded-name of the first element child of the root node (i.e. the document element) of the result tree has local part html (in any combination of upper and lower case) and a null namespace URI, and
-
-    # - any text nodes preceding the first element child of the root node of the result tree contain only whitespace characters.
-    my $root = $doc.root;
-    $!default-output-method = do {
-        when $doc ~~ HTML {'html'}
-        when $root .isa(LibXML::Element)
-        &&   $root.localname ~~ /:i'html'/
-        &&   !$root.getNamespaceURI
-        &&   $root.firstNonBlankChild.isa(LibXML::Element) {'html'}
-       default {'xml'}
-    }
-}
-
-method output-method { $!native.output-method // $!default-output-method }
-
 method media-type {
     # this below is rather simplistic, but should work for most cases
-    $!native.media-type // do given $.output-method {
+    $!native.media-type // do with $.output-method {
         when 'xml'|'html' { 'text/' ~ $_ }
         default { 'text/plain' }
-    }
+    } // Str;
 }
 
 multi method parse-stylesheet(LibXML::Document:D :$doc! --> LibXSLT::Stylesheet) {
@@ -103,7 +80,6 @@ multi method parse-stylesheet(LibXML::Document:D :$doc! --> LibXSLT::Stylesheet)
             .Free with $!native;
             $!native = $_;
         }
-        self!set-default-output-method($doc);
     }
     self;
 }

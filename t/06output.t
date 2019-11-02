@@ -72,7 +72,7 @@ EOF
 
 # Default XML
 # TEST:$n++;
-push @style_docs, "text/xml", q:to<EOF>;
+push @style_docs, Str, q:to<EOF>;
 <?xml version="1.0"?>
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -163,5 +163,5 @@ while (@style_docs) {
     ok($results, ' TODO : Add test name');
 
     # TEST*$num_style_docs
-    is($stylesheet.media-type, $media_type, "media type is $media_type");
+    is-deeply($stylesheet.media-type, $media_type, "media type is {$media_type.perl}");
 }

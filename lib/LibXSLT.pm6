@@ -2,7 +2,7 @@ use v6;
 use LibXSLT::Document; # help Rakudo
 
 use LibXSLT::Stylesheet;
-unit class LibXSLT:ver<0.0.4>
+unit class LibXSLT:ver<0.0.5>
     is LibXSLT::Stylesheet;
 
 use LibXSLT::Config;
@@ -320,7 +320,7 @@ output-method()
 
 Returns the value of the C<method> attribute from C<xsl:output>
 (usually C<xml>, C<html> or C<text>). If this attribute is
-unspecified, the default value is initially C<xml>. If the
+unspecified, the default value is initially undefined. If the
 L<transform> method is used to produce an HTML document, as per the
 L<XSLT spec|http://www.w3.org/TR/xslt#output>, the default value will
 change to C<html>. To override this behavior completely, supply an
@@ -332,7 +332,7 @@ media-type()
 
 Returns the value of the C<media-type> attribute from
 C<xsl:output>. If this attribute is unspecified, the default media
-type is initially C<text/xml>. This default changes to C<text/html>
+type is initially undefined. This default changes to C<text/html>
 under the same conditions as L<output_method>.
 =end item
 
@@ -504,7 +504,7 @@ This module requires the libxslt library to be installed. Please follow the inst
 
 =head1 VERSION
 
-0.0.4
+0.0.5
 
 =head1 LICENSE
 

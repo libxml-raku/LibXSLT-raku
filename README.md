@@ -200,11 +200,11 @@ One of the main advantages of LibXSLT is that you have a generic stylesheet obje
 
   * output-method()
 
-    Returns the value of the `method` attribute from `xsl:output` (usually `xml`, `html` or `text`). If this attribute is unspecified, the default value is initially `xml`. If the [transform](transform) method is used to produce an HTML document, as per the [XSLT spec](http://www.w3.org/TR/xslt#output), the default value will change to `html`. To override this behavior completely, supply an `xsl:output` element in the stylesheet source document.
+    Returns the value of the `method` attribute from `xsl:output` (usually `xml`, `html` or `text`). If this attribute is unspecified, the default value is initially undefined. If the [transform](transform) method is used to produce an HTML document, as per the [XSLT spec](http://www.w3.org/TR/xslt#output), the default value will change to `html`. To override this behavior completely, supply an `xsl:output` element in the stylesheet source document.
 
   * media-type()
 
-    Returns the value of the `media-type` attribute from `xsl:output`. If this attribute is unspecified, the default media type is initially `text/xml`. This default changes to `text/html` under the same conditions as [output_method](output_method).
+    Returns the value of the `media-type` attribute from `xsl:output`. If this attribute is unspecified, the default media type is initially undefined. This default changes to `text/html` under the same conditions as [output_method](output_method).
 
   * input-callbacks($icb)
 
@@ -326,7 +326,7 @@ Mac OS X
 VERSION
 =======
 
-0.0.4
+0.0.5
 
 LICENSE
 =======
