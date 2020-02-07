@@ -1,36 +1,41 @@
 {
-  "auth" : "github:p6-xml",
-  "authors" : [
+  "auth": "github:p6-xml",
+  "authors": [
     "David Warring"
   ],
-  "build-depends" : [
+  "build-depends": [
     "LibraryMake",
     "Pod::To::Markdown"
   ],
-  "depends" : [ "LibXML:ver<0.1.7+>", "Method::Also" ],
-  "description" : "LibXSLT - Interface to the GNOME libxslt library",
-  "license" : "Artistic-2.0",
-  "name" : "LibXSLT",
-  "perl" : "6",
-  "provides" : {
-    "LibXSLT" : "lib/LibXSLT.pm6",
-    "LibXSLT::Config" : "lib/LibXSLT/Config.pm6",
-    "LibXSLT::Document" : "lib/LibXSLT/Document.pm6",
-    "LibXSLT::Enums" : "lib/LibXSLT/Enums.pm6",
-    "LibXSLT::ExtensionContext" : "lib/LibXSLT/ExtensionContext.pm6",
-    "LibXSLT::Native" : "lib/LibXSLT/Native.pm6",
-    "LibXSLT::Native::Defs" : "lib/LibXSLT/Native/Defs.pm6",
-    "LibXSLT::Security" : "lib/LibXSLT/Security.pm6",
-    "LibXSLT::Stylesheet" : "lib/LibXSLT/Stylesheet.pm6",
-    "LibXSLT::TransformContext" : "lib/LibXSLT/TransformContext.pm6"
+  "depends": [
+    "LibXML:ver<0.1.7+>",
+    "Method::Also"
+  ],
+  "description": "LibXSLT - Interface to the GNOME libxslt library",
+  "license": "Artistic-2.0",
+  "name": "LibXSLT",
+  "perl": "6",
+  "provides": {
+    "LibXSLT": "lib/LibXSLT.rakumod",
+    "LibXSLT::Config": "lib/LibXSLT/Config.rakumod",
+    "LibXSLT::Document": "lib/LibXSLT/Document.rakumod",
+    "LibXSLT::Enums": "lib/LibXSLT/Enums.rakumod",
+    "LibXSLT::ExtensionContext": "lib/LibXSLT/ExtensionContext.rakumod",
+    "LibXSLT::Native": "lib/LibXSLT/Native.rakumod",
+    "LibXSLT::Native::Defs": "lib/LibXSLT/Native/Defs.rakumod",
+    "LibXSLT::Security": "lib/LibXSLT/Security.rakumod",
+    "LibXSLT::Stylesheet": "lib/LibXSLT/Stylesheet.rakumod",
+    "LibXSLT::TransformContext": "lib/LibXSLT/TransformContext.rakumod"
   },
-  "resources" : [
+  "resources": [
     "libraries/xslt6"
   ],
-  "source-url" : "https://github.com/p6-xml/LibXSLT-raku",
-  "tags" : [
-    "xml", "xslt"
+  "source-url": "https://github.com/p6-xml/LibXSLT-raku",
+  "tags": [
+    "xml",
+    "xslt"
   ],
-  "test-depends" : [ ],
-  "version" : "0.0.5"
+  "test-depends": [
+  ],
+  "version": "0.0.5"
 }

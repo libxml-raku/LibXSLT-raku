@@ -83,7 +83,7 @@ Each of the option methods returns its previous value, and can be called without
         </xsl:template>
         </xsl:stylesheet>
 
-    Parameters can be in whatever format you like. If you pass in a node-list it will be a LibXML::Node::List object in your Perl code, but ordinary values (strings, numbers and booleans) may be passed. Return values can be a node-list or a plain value - the code will just do the right thing. But only a single return value is supported (a list is not converted to a node-list).
+    Parameters can be in whatever format you like. If you pass in a node-list it will be a LibXML::Node::List object in your Raku code, but ordinary values (strings, numbers and booleans) may be passed. Return values can be a node-list or a plain value - the code will just do the right thing. But only a single return value is supported (a list is not converted to a node-list).
 
   * register-extension
 
@@ -213,7 +213,7 @@ One of the main advantages of LibXSLT is that you have a generic stylesheet obje
 Parameters
 ==========
 
-Unlike the Perl 5 module, Raku automatically formats keys and parameters for xpath.
+Unlike the Perl 5 module, this module automatically formats keys and parameters for xpath.
 
 If you wish to emulate the Perl 5 behavour and/or format arguments yourself, pass :raw to the `transform()` method. You can use `xpath-to-string()` function to do the formatting:
 
@@ -331,8 +331,8 @@ This is free software, you may use it and distribute it under the same terms as 
 
 Copyright 2001-2009, AxKit.com Ltd.
 
-CONTRIBUTERS
-============
+ACKNOWLEDGEMENTS
+================
 
 This Raku module is based on the Perl 5 XML::LibXSLT module. The `process()` method has been adapted from the Perl 5 XML::LibXSL::Easy module.
 

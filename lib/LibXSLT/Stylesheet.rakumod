@@ -14,29 +14,29 @@ use LibXSLT::Security;
 use URI;
 use NativeCall;
 
+constant config = LibXML::Config;
+
 has LibXML::XPath::Context $!ctx handles<structured-error generic-error callback-error flush-errors park suppress-warnings suppress-errors>;
 has LibXSLT::Security $.security is rw;
+has $.input-callbacks is rw = config.input-callbacks;
+has xsltStylesheet $!native handles<output-method>;
+has Hash %!extensions;
 
 method TWEAK(|c) {
     $!ctx .= new: |c;
 }
 
-constant config = LibXML::Config;
+submethod DESTROY {
+    .Free with $!native;
+}
 
-has $.input-callbacks is rw = config.input-callbacks;
 multi method input-callbacks is rw { $!input-callbacks }
 multi method input-callbacks($!input-callbacks) {}
 
-has xsltStylesheet $!native handles<output-method>;
-has Hash %!extensions;
 method native { $!native }
 
 method register-transform('element', $URI, $name, &element) {
     %!extensions{$URI//''}{$name} = :&element;
-}
-
-submethod DESTROY {
-    .Free with $!native;
 }
 
 method !try(&action) {

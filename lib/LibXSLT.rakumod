@@ -1,5 +1,5 @@
 use v6;
-use LibXSLT::Document; # help Rakudo
+use LibXSLT::Document; # help older Rakudos
 
 use LibXSLT::Stylesheet;
 unit class LibXSLT:ver<0.0.5>
@@ -148,7 +148,7 @@ current date and time as a string:
   </xsl:stylesheet>
 
 Parameters can be in whatever format you like. If you pass in a node-list
-it will be a LibXML::Node::List object in your Perl code, but ordinary
+it will be a LibXML::Node::List object in your Raku code, but ordinary
 values (strings, numbers and booleans) may be passed. Return values can
 be a node-list or a plain value - the code will just do the right thing.
 But only a single return value is supported (a list is not converted to
@@ -337,7 +337,7 @@ transformation.
 
 =head1 Parameters
 
-Unlike the Perl 5 module, Raku automatically formats keys and parameters for xpath.
+Unlike the Perl 5 module, this module automatically formats keys and parameters for xpath.
 
 If you wish to emulate the Perl 5 behavour and/or format arguments yourself, pass :raw
 to the `transform()` method. You can use `xpath-to-string()` function to do the
@@ -498,7 +498,7 @@ Perl itself.
 
 Copyright 2001-2009, AxKit.com Ltd.
 
-=head1 CONTRIBUTERS
+=head1 ACKNOWLEDGEMENTS
 
 This Raku module is based on the Perl 5 XML::LibXSLT module. The `process()` method has
 been adapted from the Perl 5 XML::LibXSL::Easy module.

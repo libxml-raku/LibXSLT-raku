@@ -39,10 +39,10 @@ realclean : clean
 
 doc : README.md
 
-README.md : lib/LibXSLT.pm6
+README.md : lib/LibXSLT.rakumod
 	(\
 	    echo '[![Build Status](https://travis-ci.org/p6-xml/LibXSLT-raku.svg?branch=master)](https://travis-ci.org/p6-xml/LibXSLT-raku)'; \
             echo '';\
-            perl6 -I . --doc=Markdown lib/LibXSLT.pm6\
+            perl6 -I . --doc=Markdown lib/LibXSLT.rakumod\
         ) > README.md
 
