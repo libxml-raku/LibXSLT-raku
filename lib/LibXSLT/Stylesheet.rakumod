@@ -86,7 +86,7 @@ multi method parse-stylesheet(LibXML::Document:D :$doc! --> LibXSLT::Stylesheet)
 
 multi method parse-stylesheet(Str:D() :$file! --> LibXSLT::Stylesheet) {
     self!try: {
-        with xslStylesheet::ParseFile($file) {
+        with xsltStylesheet::ParseFile($file) {
             .Free with $!native;
             $!native = $_;
         }

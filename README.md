@@ -303,6 +303,13 @@ Interface
 
     Returns True if the module was compiled with libexslt, False otherwise.
 
+SCRIPTS IN THIS DISTRIBUTION
+============================
+
+- `xslt.raku -xsl=<stylesheet> <xml-document>`
+
+Tiny script to run an XSLT transform. e.g. `xslt.raku example/students.xml`
+
 PREREQUISITES
 =============
 
