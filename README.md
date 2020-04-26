@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/p6-xml/LibXSLT-raku.svg?branch=master)](https://travis-ci.org/p6-xml/LibXSLT-raku)
+[![Build Status](https://travis-ci.org/libxml-raku/LibXSLT-raku.svg?branch=master)](https://travis-ci.org/libxml-raku/LibXSLT-raku)
 
 NAME
 ====
@@ -213,9 +213,9 @@ One of the main advantages of LibXSLT is that you have a generic stylesheet obje
 Parameters
 ==========
 
-Unlike the Perl 5 module, this module automatically formats keys and parameters for xpath.
+Unlike the Perl module, this module automatically formats keys and parameters for xpath.
 
-If you wish to emulate the Perl 5 behavour and/or format arguments yourself, pass :raw to the `transform()` method. You can use `xpath-to-string()` function to do the formatting:
+If you wish to emulate the Perl behavour and/or format arguments yourself, pass :raw to the `transform()` method. You can use `xpath-to-string()` function to do the formatting:
 
     use LibXSLT::Stylesheet :&xpath-to-string;
     my %params = xpath-to-string(param => "string");
@@ -341,7 +341,7 @@ Copyright 2001-2009, AxKit.com Ltd.
 ACKNOWLEDGEMENTS
 ================
 
-This Raku module is based on the Perl 5 XML::LibXSLT module. The `process()` method has been adapted from the Perl 5 XML::LibXSLT::Easy module.
+This Raku module is based on the Perl XML::LibXSLT module. The `process()` method has been adapted from the Perl XML::LibXSLT::Easy module.
 
 With thanks to: Matt Sergeant, Shane Corgatelli, Petr Pajas, Shlomi Fish, יובל קוג'מן (Yuval Kogman)
 

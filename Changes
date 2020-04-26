@@ -1,3 +1,5 @@
+0.0.6
+    - Renamed github organisation: p6-xml -> libxml-raku
 0.0.5 2019-11-03
     - [LibXML::Stylesheet] changed handling of transform() parameters; which
       are now automatically processed by default. Pass :raw to get the old
@@ -6,7 +8,7 @@
     - Leave stylesheet `media-type as undefined, when not yet known.
 0.0.4 2019-10-27
     - Upgrade to LibXML 0.1.7;  Changes to LibXML::Native::Defs
-    - Change LibXSLT::Native::Defs for consistancy. Now returns variables
+    - Change LibXSLT::Native::Defs for consistancy with LibXML; return variables
       rather than constants. e.g.: use LibXSLT::Native::Defs :$XSLT;
 0.0.3 2019-10-21
     - Upgrade to LibXML 0.1.6, which replaces the LibXML::ErrorHandler

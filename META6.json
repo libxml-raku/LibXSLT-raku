@@ -1,5 +1,5 @@
 {
-  "auth": "github:p6-xml",
+  "auth": "cpan:WARRINGD",
   "authors": [
     "David Warring"
   ],
@@ -30,12 +30,12 @@
   "resources": [
     "libraries/xslt6"
   ],
-  "source-url": "https://github.com/p6-xml/LibXSLT-raku",
+  "source-url": "https://github.com/libxml-raku/LibXSLT-raku",
   "tags": [
     "xml",
     "xslt"
   ],
   "test-depends": [
   ],
-  "version": "0.0.5"
+  "version": "0.0.6"
 }
