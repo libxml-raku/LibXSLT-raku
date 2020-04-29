@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/libxml-raku/LibXSLT-raku.svg?branch=master)](https://travis-ci.org/libxml-raku/LibXSLT-raku)
+[![Build Status](https://travis-ci.org/p6-xml/LibXSLT-raku.svg?branch=master)](https://travis-ci.org/p6-xml/LibXSLT-raku)
 
 NAME
 ====
@@ -83,7 +83,7 @@ Each of the option methods returns its previous value, and can be called without
         </xsl:template>
         </xsl:stylesheet>
 
-    Parameters can be in whatever format you like. If you pass in a node-list it will be a LibXML::Node::List object in your Raku code, but ordinary values (strings, numbers and booleans) may be passed. Return values can be a node-list or a plain value - the code will just do the right thing. But only a single return value is supported (a list is not converted to a node-list).
+    Parameters can be in whatever format you like. If you pass in a node-list it will be a [LibXML::Node::List](https://libxml-raku.github.io/LibXML-raku/Node/List) object in your Raku code, but ordinary values (strings, numbers and booleans) may be passed. Return values can be a node-list or a plain value - the code will just do the right thing. But only a single return value is supported (a list is not converted to a node-list).
 
   * register-extension
 
@@ -147,7 +147,7 @@ The following methods are available on the LibXSLT class or object:
 
   * parse-stylesheet($stylesheet-doc)
 
-    `$stylesheet-doc` here is an LibXML::Document object (see [LibXML](LibXML)) representing an XSLT file. This method will return a LibXSLT::Stylesheet object. If the XSLT is invalid, an exception will be thrown, so wrap the call to parse_stylesheet in a try{} block to trap this.
+    `$stylesheet-doc` here is an [LibXML::Document](https://libxml-raku.github.io/LibXML-raku/Document) object (see [LibXML](https://libxml-raku.github.io/LibXML-raku)) representing an XSLT file. This method will return a [LibXSLT::Stylesheet](https://libxml-raku.github.io/LibXSLT-raku/Stylesheet) object. If the XSLT is invalid, an exception will be thrown, so wrap the call to parse_stylesheet in a try{} block to trap this.
 
     IMPORTANT: `$stylesheet-doc` should not contain CDATA sections, otherwise libxslt may misbehave. The best way to assure this is to load the stylesheet with `:!cdata` flag, e.g.
 
@@ -160,160 +160,25 @@ The following methods are available on the LibXSLT class or object:
 Input Callbacks
 ===============
 
-To define LibXSLT or LibXSLT::Stylesheet specific input callbacks, reuse the LibXML input callback API as described in [LibXML::InputCallback](LibXML::InputCallback).
+To define LibXSLT or LibXSLT::Stylesheet specific input callbacks, reuse the LibXML input callback API as described in [LibXML::InputCallback](https://libxml-raku.github.io/LibXML-raku/InputCallback).
 
   * input-callbacks = $icb
 
-    Enable the callbacks in `$icb` only for this LibXSLT object. `$icb` should be a [LibXML::InputCallback](LibXML::InputCallback) object. This will call `init_callbacks` and `cleanup_callbacks` automatically during parsing or transformation.
+    Enable the callbacks in `$icb` only for this LibXSLT object. `$icb` should be a [LibXML::InputCallback](https://libxml-raku.github.io/LibXML-raku/InputCallback) object. This will call `init_callbacks` and `cleanup_callbacks` automatically during parsing or transformation.
 
 Security Callbacks
 ==================
 
-To create security preferences for the transformation see [LibXSLT::Security](LibXSLT::Security). Once the security preferences have been defined you can apply them to an LibXSLT or LibXSLT::Stylesheet instance using the `security-callbacks()` method.
-
-LibXSLT::Stylesheet
-===================
-
-The main API is on the stylesheet, though it is fairly minimal.
-
-One of the main advantages of LibXSLT is that you have a generic stylesheet object which you call the `transform()` method passing in a document to transform. This allows you to have multiple transformations happen with one stylesheet without requiring a reparse.
-
-  * transform(:$doc, %params)
-
-        my $results = $stylesheet.transform(:$doc, foo => "'bar'");
-        print $results.Xslt.Str;
-
-    Transforms the passed in LibXML::Document object, and returns a new LibXML::Document. Extra hash entries are used as parameters. Be sure to keep in mind the caveat with regard to quotes explained in the section on [/"Parameters"](/"Parameters") below.
-
-  * transform(file => filename, |%params)
-
-        my $results = $stylesheet.transform(file => $filename, bar => "'baz'");
-
-    Note the string parameter caveat, detailed in the section on [/"Parameters"](/"Parameters") below.
-
-  * .Xslt()
-
-        my LibXSLT::Document::Xslt $results = .Xslt()
-            given $stylesheet.transform($doc, foo => "'bar'");
-
-    Applies a role to serialize the LibXML::Document object using the desired output format (specified in the xsl:output tag in the stylesheet).
-
-  * output-method()
-
-    Returns the value of the `method` attribute from `xsl:output` (usually `xml`, `html` or `text`). If this attribute is unspecified, the default value is initially undefined. If the [transform](transform) method is used to produce an HTML document, as per the [XSLT spec](http://www.w3.org/TR/xslt#output), the default value will change to `html`. To override this behavior completely, supply an `xsl:output` element in the stylesheet source document.
-
-  * media-type()
-
-    Returns the value of the `media-type` attribute from `xsl:output`. If this attribute is unspecified, the default media type is initially undefined. This default changes to `text/html` under the same conditions as [output_method](output_method).
-
-  * input-callbacks($icb)
-
-    Enable the callbacks in `$icb` only for this stylesheet. `$icb` should be a `LibXML::InputCallback` object. This will call `init_callbacks` and `cleanup_callbacks` automatically during transformation.
-
-Parameters
-==========
-
-Unlike the Perl module, this module automatically formats keys and parameters for xpath.
-
-If you wish to emulate the Perl behavour and/or format arguments yourself, pass :raw to the `transform()` method. You can use `xpath-to-string()` function to do the formatting:
-
-    use LibXSLT::Stylesheet :&xpath-to-string;
-    my %params = xpath-to-string(param => "string");
-    $stylesheet.transform($doc, :raw, |%params);
-
-The utility function does the right thing with respect to strings in XPath, including when you have quotes already embedded within your string.
-
-LibXSLT::Security
-=================
-
-Provides an interface to the libxslt security framework by allowing callbacks to be defined that can restrict access to various resources (files or URLs) during a transformation.
-
-The libxslt security framework allows callbacks to be defined for certain actions that a stylesheet may attempt during a transformation. It may be desirable to restrict some of these actions (for example, writing a new file using exsl:document). The actions that may be restricted are:
-
-  * read-file
-
-    Called when the stylesheet attempts to open a local file (ie: when using the document() function).
-
-  * write-file
-
-    Called when an attempt is made to write a local file (ie: when using the exsl:document element).
-
-  * create-dir
-
-    Called when a directory needs to be created in order to write a file.
-
-    NOTE: By default, create_dir is not allowed. To enable it a callback must be registered.
-
-  * read-net
-
-    Called when the stylesheet attempts to read from the network.
-
-  * write-net
-
-    Called when the stylesheet attempts to write to the network.
-
-Using LibXSLT::Security
------------------------
-
-The interface for this module is similar to LibXML::InputCallback. After creating a new instance you may register callbacks for each of the security options listed above. Then you apply the security preferences to the LibXSLT or LibXSLT::Stylesheet object using `security_callbacks()`.
-
-    my LibXSLT::Security $security .= new();
-    $security.register-callback( read-file  => &read-cb );
-    $security.register-callback( write-file => &write-cb );
-    $security.register-callback( create-dir => &create-cb );
-    $security.register-callback( read-net   => &read-net-cb );
-    $security.register-callback( write-net  => &write-net-cb );
-
-    $xslt.security-callbacks( $security );
-     -OR-
-    $stylesheet.security-callbacks( $security );
-
-The registered callback functions are called when access to a resource is requested. If the access should be allowed the callback should return True, if not it should return False. The callback functions should accept the following arguments:
-
-  * LibXSLT::TransformContext $tctxt
-
-    This is the transform context. You can use this to get the current LibXSLT::Stylesheet object by calling `stylesheet()`.
-
-        my $stylesheet = $tctxt.stylesheet();
-
-    The stylesheet object can then be used to share contextual information between different calls to the security callbacks.
-
-  * Str $value
-
-    This is the name of the resource (file or URI) that has been requested.
-
-If a particular option (except for `create-dir`) doesn't have a registered callback, then the stylesheet will have full access for that action.
-
-Interface
----------
-
-  * new()
-
-    Creates a new LibXSLT::Security object.
-
-  * register-callback( $option, &callback )
-
-    Registers a callback function for the given security option (listed above).
-
-  * unregister-callback( $option )
-
-    Removes the callback for the given option. This has the effect of allowing all access for the given option (except for `create_dir`).
+To create security preferences for the transformation see [LibXSLT::Security](https://libxml-raku.github.io/LibXSLT-raku/Security). Once the security preferences have been defined you can apply them to an LibXSLT or LibXSLT::Stylesheet instance using the `security-callbacks()` method.
 
   * LibXSLT.have-exslt()
 
     Returns True if the module was compiled with libexslt, False otherwise.
 
-SCRIPTS IN THIS DISTRIBUTION
-============================
-
-- `xslt.raku -xsl=<stylesheet> <xml-document>`
-
-Tiny script to run an XSLT transform. e.g. `xslt.raku example/students.xml`
-
 PREREQUISITES
 =============
 
-This module requires the libxslt library to be installed. Please follow the instructions below based on your platform:
+This module requires the libxslt native library to be installed. Please follow the instructions below based on your platform:
 
 Debian Linux
 ------------
@@ -341,12 +206,12 @@ Copyright 2001-2009, AxKit.com Ltd.
 ACKNOWLEDGEMENTS
 ================
 
-This Raku module is based on the Perl XML::LibXSLT module. The `process()` method has been adapted from the Perl XML::LibXSLT::Easy module.
+This Raku module is based on the Perl 5 XML::LibXSLT module. The `process()` method has been adapted from the Perl 5 XML::LibXSL::Easy module.
 
-With thanks to: Matt Sergeant, Shane Corgatelli, Petr Pajas, Shlomi Fish, יובל קוג'מן (Yuval Kogman)
+With thanks to: Matt Sergeant, Shane Corgatelli, Petr Pal's, Shlomi Fish, יובל קוג'מן (Yuval Kogman)
 
 SEE ALSO
 ========
 
-LibXML
+[LibXML](https://libxml-raku.github.io/LibXML-raku)
 
