@@ -37,15 +37,15 @@ clean :
 realclean : clean
 	@rm -f Makefile
 
-doc : README.md docs/Security.md docs/Stylesheet.md
+doc : docs/index.md docs/Security.md docs/Stylesheet.md
 
-README.md : lib/LibXSLT.rakumod
+docs/index.md : lib/LibXSLT.rakumod
 	(\
 	    echo '[![Build Status](https://travis-ci.org/p6-xml/LibXSLT-raku.svg?branch=master)](https://travis-ci.org/p6-xml/LibXSLT-raku)'; \
             echo '';\
             perl6 -I . --doc=Markdown lib/LibXSLT.rakumod\
             | raku -p -n etc/resolve-links.raku \
-        ) > README.md
+        ) > docs/index.md
 
 docs/%.md : lib/LibXSLT/%.rakumod
 	raku -I . --doc=Markdown $< \

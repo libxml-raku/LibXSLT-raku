@@ -40,7 +40,7 @@ One of the main advantages of LibXSLT is that you have a generic stylesheet obje
 
   * input-callbacks($icb)
 
-    Enable the callbacks in `$icb` only for this stylesheet. `$icb` should be a `LibXML::InputCallback` object. This will call `init_callbacks` and `cleanup_callbacks` automatically during transformation.
+    Enable the callbacks in `$icb` only for this stylesheet. `$icb` should be a [LibXML::InputCallback](https://libxml-raku.github.io/LibXML-raku/InputCallback) object. This will call `init_callbacks` and `cleanup_callbacks` automatically during transformation.
 
 Transform Parameters
 ====================

@@ -237,7 +237,7 @@ under the same conditions as C<output-method>.
 input-callbacks($icb)
 
 Enable the callbacks in C<$icb> only for this stylesheet. C<$icb>
-should be a C<LibXML::InputCallback> object. This will call
+should be a L<LibXML::InputCallback> object. This will call
 C<init_callbacks> and C<cleanup_callbacks> automatically during
 transformation.
 
