@@ -5,8 +5,9 @@ unit class LibXSLT::Document
     is LibXML::Document;
 
 use LibXML;
-use LibXML::Native::Defs :$CLIB;
-use LibXSLT::Native;
+use LibXML::Raw;
+use LibXML::Raw::Defs :$CLIB;
+use LibXSLT::Raw;
 use LibXSLT::Stylesheet;
 has LibXSLT::Stylesheet $.stylesheet is required;
 use NativeCall;
@@ -20,7 +21,7 @@ our role Xslt {
         sub free(Pointer) is native($CLIB) {*}
 
         with self {
-            xsltSaveResultToString($ptr, $len, $.native, $.stylesheet.native);
+            xsltSaveResultToString($ptr, $len, $.raw, $.stylesheet.raw);
             $buf .= allocate($len);
             memcpy($buf, $ptr, $len);
             free($ptr);

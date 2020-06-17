@@ -2,13 +2,13 @@ use v6;
 use LibXSLT::Document; # help older Rakudos
 
 use LibXSLT::Stylesheet;
-unit class LibXSLT:ver<0.0.6>
+unit class LibXSLT:ver<0.1.0>
     is LibXSLT::Stylesheet;
 
 use LibXSLT::Config;
-use LibXSLT::Native;
-use LibXSLT::Native::Defs :$XSLT;
-use LibXML::Native;
+use LibXSLT::Raw;
+use LibXSLT::Raw::Defs :$XSLT;
+use LibXML::Raw;
 use LibXML::XPath::Context :get-value;
 use LibXML::Types :NCName, :QName;
 use LibXML::ErrorHandling :MsgArg, :&unmarshal-varargs;
@@ -285,7 +285,7 @@ This module requires the libxslt native library to be installed. Please follow t
 
 =head1 VERSION
 
-0.0.5
+0.1.0
 
 =head1 LICENSE
 

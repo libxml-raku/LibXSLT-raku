@@ -1,11 +1,11 @@
-unit module LibXSLT::Native;
+unit module LibXSLT::Raw;
 
-use LibXML::Native;
-use LibXML::Native::Dict;
-use LibXML::Native::HashTable;
-use LibXML::Native::Defs :Opaque, :xmlCharP, :$XML2;
+use LibXML::Raw;
+use LibXML::Raw::Dict;
+use LibXML::Raw::HashTable;
+use LibXML::Raw::Defs :Opaque, :xmlCharP, :$XML2;
 
-use LibXSLT::Native::Defs :$XSLT, :$EXSLT, :$BIND-XSLT;
+use LibXSLT::Raw::Defs :$XSLT, :$EXSLT, :$BIND-XSLT;
 use NativeCall;
 
 class xsltDecimalFormat is repr(Opaque) {}

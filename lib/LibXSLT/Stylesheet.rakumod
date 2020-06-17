@@ -1,13 +1,13 @@
 unit class LibXSLT::Stylesheet;
 
-use LibXSLT::Native;
+use LibXSLT::Raw;
 use LibXSLT::TransformContext;
 
 use LibXML::Config;
 use LibXML::Document :HTML;
 use LibXML::PI;
-use LibXML::Native;
-use LibXML::Native::Defs :CLIB;
+use LibXML::Raw;
+use LibXML::Raw::Defs :CLIB;
 use LibXML::XPath::Context;
 use LibXML::ErrorHandling :&structured-error-cb, :&generic-error-cb;
 use LibXSLT::Security;
@@ -19,7 +19,7 @@ constant config = LibXML::Config;
 has LibXML::XPath::Context $!ctx handles<structured-error generic-error callback-error flush-errors park suppress-warnings suppress-errors>;
 has LibXSLT::Security $.security is rw;
 has $.input-callbacks is rw = config.input-callbacks;
-has xsltStylesheet $!native handles<output-method>;
+has xsltStylesheet $!raw handles<output-method>;
 has Hash %!extensions;
 
 method TWEAK(|c) {
@@ -27,13 +27,13 @@ method TWEAK(|c) {
 }
 
 submethod DESTROY {
-    .Free with $!native;
+    .Free with $!raw;
 }
 
 multi method input-callbacks is rw { $!input-callbacks }
 multi method input-callbacks($!input-callbacks) {}
 
-method native { $!native }
+method raw { $!raw }
 
 method register-transform('element', $URI, $name, &element) {
     %!extensions{$URI//''}{$name} = :&element;
@@ -67,7 +67,7 @@ proto method parse-stylesheet(|c) {
 
 method media-type {
     # this below is rather simplistic, but should work for most cases
-    $!native.media-type // do with $.output-method {
+    $!raw.media-type // do with $.output-method {
         when 'xml'|'html' { 'text/' ~ $_ }
         default { 'text/plain' }
     } // Str;
@@ -75,10 +75,10 @@ method media-type {
 
 multi method parse-stylesheet(LibXML::Document:D :$doc! --> LibXSLT::Stylesheet) {
     self!try: {
-        my $doc-copy = $doc.native.copy: :deep;
+        my $doc-copy = $doc.raw.copy: :deep;
         with xsltStylesheet::ParseDoc($doc-copy) {
-            .Free with $!native;
-            $!native = $_;
+            .Free with $!raw;
+            $!raw = $_;
         }
     }
     self;
@@ -87,8 +87,8 @@ multi method parse-stylesheet(LibXML::Document:D :$doc! --> LibXSLT::Stylesheet)
 multi method parse-stylesheet(Str:D() :$file! --> LibXSLT::Stylesheet) {
     self!try: {
         with xsltStylesheet::ParseFile($file) {
-            .Free with $!native;
-            $!native = $_;
+            .Free with $!raw;
+            $!raw = $_;
         }
     }
     self;
@@ -126,9 +126,9 @@ multi method transform(LibXML::Document:D :$doc!, Bool :$raw, *%params --> LibXM
     my CArray[Str] $params .= new(|%params.kv, Str);
     my xmlDoc $result;
     $ctx.try: {
-        $result = $!native.transform($doc.native, $ctx.native, $params);
+        $result = $!raw.transform($doc.raw, $ctx.raw, $params);
     }
-    (require LibXSLT::Document).new: :native($result), :stylesheet(self);
+    (require LibXSLT::Document).new: :raw($result), :stylesheet(self);
 }
 
 multi method transform(:$file!, |c --> LibXML::Document) {
@@ -146,9 +146,9 @@ proto method load-stylesheet-pi(|c) {
 
 multi method load-stylesheet-pi(LibXML::Document:D :$doc!) {
     self!try({
-        do with xsltStylesheet::LoadPI($doc.native) {
-            .Free with $!native;
-            $!native = $_;
+        do with xsltStylesheet::LoadPI($doc.raw) {
+            .Free with $!raw;
+            $!raw = $_;
         }
     }) // fail "unable to load a stylesheet for this document";
     self

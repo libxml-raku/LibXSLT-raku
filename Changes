@@ -1,4 +1,6 @@
-0.0.6
+0.1.0 2020-06-18
+    - Compatibility fixes for LibXML 0.5.0.
+0.0.6 2020-03-27
     - Renamed github organisation: p6-xml -> libxml-raku
 0.0.5 2019-11-03
     - [LibXML::Stylesheet] changed handling of transform() parameters; which

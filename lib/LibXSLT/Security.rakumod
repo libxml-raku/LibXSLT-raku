@@ -1,26 +1,26 @@
 unit class LibXSLT::Security;
 
-use LibXSLT::Native;
+use LibXSLT::Raw;
 use LibXSLT::Enums;
 use LibXML::ErrorHandling;
 use LibXML::Enums;
 
-has xsltSecurityPrefs $!native;
+has xsltSecurityPrefs $!raw;
 
 class X::LibXSLT::AdHoc is X::LibXML::AdHoc {
     method domain-num {XML_FROM_XSLT}
 }
 
 submethod TWEAK {
-    $!native .= new();
+    $!raw .= new();
 }
 
 submethod DESTROY {
-    .Free with $!native;
+    .Free with $!raw;
 }
 
 method !set-security-pref(Int() $pref, &func) {
-    $!native.Set($pref, -> $sec, $ctx, $val --> Int {
+    $!raw.Set($pref, -> $sec, $ctx, $val --> Int {
         my Int $rv = try { &func($*XML-CONTEXT, $val); } // 0;
         with $! {
             $*XML-CONTEXT.callback-error(X::LibXSLT::AdHoc.new(:error($_)));
@@ -56,23 +56,23 @@ method register-callbacks(*%callbacks) {
 }
 
 method allow(Str $thing) {
-    $!native.Allow($thing);
+    $!raw.Allow($thing);
 }
 
 method forbid(Str $thing) {
-    $!native.Forbid($thing);
+    $!raw.Forbid($thing);
 }
 
 method set-default {
-    with self { $!native.SetDefault(); } else { xsltSecurityPrefs.SetDefault(); }
+    with self { $!raw.SetDefault(); } else { xsltSecurityPrefs.SetDefault(); }
 }
 
 method set-context($ctx) {
-    $!native.SetContext(.native) with $ctx;
+    $!raw.SetContext(.raw) with $ctx;
 }
 
 method check-read($*XML-CONTEXT, Str $url) {
-    given $!native.CheckRead($*XML-CONTEXT.native, $url) {
+    given $!raw.CheckRead($*XML-CONTEXT.raw, $url) {
         when 1 { True }
         when 0 { False }
         default { fail "check-read failed with status: $_" }
@@ -80,7 +80,7 @@ method check-read($*XML-CONTEXT, Str $url) {
 }
 
 method check-write($*XML_CONTEXT, Str $url) {
-    given $!native.CheckWrite($*XML-CONTEXT.native, $url) {
+    given $!raw.CheckWrite($*XML-CONTEXT.raw, $url) {
         when 1 { True }
         when 0 { False }
         default { fail "check-write failed with status: $_" }

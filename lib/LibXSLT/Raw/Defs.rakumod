@@ -1,4 +1,4 @@
-unit module LibXSLT::Native::Defs;
+unit module LibXSLT::Raw::Defs;
 
 our $XSLT is export(:XSLT) = 'xslt';
 our $EXSLT is export(:EXSLT) = 'exslt';

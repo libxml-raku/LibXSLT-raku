@@ -1,6 +1,6 @@
 unit class LibXSLT::Config;
 
-use LibXSLT::Native;
+use LibXSLT::Raw;
 
 method have-exslt { ? xslt6_config_have_exslt(); }
 method config-version { Version.new: xslt6_config_version(); }
