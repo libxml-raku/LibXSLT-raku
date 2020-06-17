@@ -83,7 +83,7 @@ Each of the option methods returns its previous value, and can be called without
         </xsl:template>
         </xsl:stylesheet>
 
-    Parameters can be in whatever format you like. If you pass in a node-list it will be a [LibXML::Node::List](https://libxml-raku.github.io/LibXML-raku/Node/List) object in your Raku code, but ordinary values (strings, numbers and booleans) may be passed. Return values can be a node-list or a plain value - the code will just do the right thing. But only a single return value is supported (a list is not converted to a node-list).
+    Parameters can be in whatever format you like. If you pass in a node-list it will be a [LibXML::Node::List](LibXML::Node::List) object in your Raku code, but ordinary values (strings, numbers and booleans) may be passed. Return values can be a node-list or a plain value - the code will just do the right thing. But only a single return value is supported (a list is not converted to a node-list).
 
   * register-extension
 
@@ -147,7 +147,7 @@ The following methods are available on the LibXSLT class or object:
 
   * parse-stylesheet($stylesheet-doc)
 
-    `$stylesheet-doc` here is an [LibXML::Document](https://libxml-raku.github.io/LibXML-raku/Document) object (see [LibXML](https://libxml-raku.github.io/LibXML-raku)) representing an XSLT file. This method will return a [LibXSLT::Stylesheet](https://libxml-raku.github.io/LibXSLT-raku/Stylesheet) object. If the XSLT is invalid, an exception will be thrown, so wrap the call to parse_stylesheet in a try{} block to trap this.
+    `$stylesheet-doc` here is an [LibXML::Document](LibXML::Document) object (see [LibXML](LibXML)) representing an XSLT file. This method will return a [LibXSLT::Stylesheet](LibXSLT::Stylesheet) object. If the XSLT is invalid, an exception will be thrown, so wrap the call to parse_stylesheet in a try{} block to trap this.
 
     IMPORTANT: `$stylesheet-doc` should not contain CDATA sections, otherwise libxslt may misbehave. The best way to assure this is to load the stylesheet with `:!cdata` flag, e.g.
 
@@ -160,16 +160,16 @@ The following methods are available on the LibXSLT class or object:
 Input Callbacks
 ===============
 
-To define LibXSLT or LibXSLT::Stylesheet specific input callbacks, reuse the LibXML input callback API as described in [LibXML::InputCallback](https://libxml-raku.github.io/LibXML-raku/InputCallback).
+To define LibXSLT or LibXSLT::Stylesheet specific input callbacks, reuse the LibXML input callback API as described in [LibXML::InputCallback](LibXML::InputCallback).
 
   * input-callbacks = $icb
 
-    Enable the callbacks in `$icb` only for this LibXSLT object. `$icb` should be a [LibXML::InputCallback](https://libxml-raku.github.io/LibXML-raku/InputCallback) object. This will call `init_callbacks` and `cleanup_callbacks` automatically during parsing or transformation.
+    Enable the callbacks in `$icb` only for this LibXSLT object. `$icb` should be a [LibXML::InputCallback](LibXML::InputCallback) object. This will call `init_callbacks` and `cleanup_callbacks` automatically during parsing or transformation.
 
 Security Callbacks
 ==================
 
-To create security preferences for the transformation see [LibXSLT::Security](https://libxml-raku.github.io/LibXSLT-raku/Security). Once the security preferences have been defined you can apply them to an LibXSLT or LibXSLT::Stylesheet instance using the `security-callbacks()` method.
+To create security preferences for the transformation see [LibXSLT::Security](LibXSLT::Security). Once the security preferences have been defined you can apply them to an LibXSLT or LibXSLT::Stylesheet instance using the `security-callbacks()` method.
 
   * LibXSLT.have-exslt()
 
@@ -194,7 +194,7 @@ Mac OS X
 VERSION
 =======
 
-0.0.5
+0.1.0
 
 LICENSE
 =======
@@ -213,5 +213,5 @@ With thanks to: Matt Sergeant, Shane Corgatelli, Petr Pal's, Shlomi Fish, יוב
 SEE ALSO
 ========
 
-[LibXML](https://libxml-raku.github.io/LibXML-raku)
+[LibXML](LibXML)
 
