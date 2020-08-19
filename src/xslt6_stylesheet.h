@@ -6,7 +6,7 @@
 #include <libxslt/transform.h>
 
 DLLEXPORT xmlDocPtr
-xslt6_stylesheet_transform(xsltStylesheetPtr self, xmlDocPtr doc, xsltTransformContextPtr ctx, const char** xslt_params);
+xslt6_stylesheet_transform(xsltStylesheetPtr, xmlDocPtr, xsltTransformContextPtr, const char**);
 
 DLLEXPORT xmlChar*
 xslt6_stylesheet_media_type(xsltStylesheetPtr);

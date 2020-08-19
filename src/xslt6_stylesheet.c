@@ -50,19 +50,15 @@ xslt6_stylesheet_transform(xsltStylesheetPtr self, xmlDocPtr doc, xsltTransformC
 DLLEXPORT xmlChar*
 xslt6_stylesheet_media_type(xsltStylesheetPtr self) {
     xmlChar *mediaType;
-    xmlChar *method;
-    const char *rv;
 
     XSLT_GET_IMPORT_PTR(mediaType, self, mediaType);
-    rv = (char*) mediaType;
-    return xmlStrdup(rv);
+    return xmlStrdup(mediaType);
 }
 
 DLLEXPORT xmlChar*
 xslt6_stylesheet_output_method(xsltStylesheetPtr self) {
     xmlChar *method;
-    const char *rv;
+
     XSLT_GET_IMPORT_PTR(method, self, method);
-    rv = (char*) method;
-    return xmlStrdup(rv);
+    return xmlStrdup(method);
 }
