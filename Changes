@@ -1,3 +1,6 @@
+{{$NEXT}}
+    - documentation updates
+    - remove disused sources: LibXSLT::Debug and LibXSLT:_Options
 0.1.0 2020-06-18
     - Compatibility fixes for LibXML 0.5.0.
 0.0.6 2020-03-27
