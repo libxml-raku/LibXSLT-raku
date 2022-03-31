@@ -11,7 +11,7 @@ use LibXSLT::Raw::Defs :$XSLT;
 use LibXML::Raw;
 use LibXML::XPath::Context :get-value;
 use LibXML::Types :NCName, :QName;
-use LibXML::ErrorHandling :MsgArg, :&unmarshal-varargs;
+use LibXML::ErrorHandling :MsgArg, :&set-generic-error-handler, :&unmarshal-varargs;
 use Method::Also;
 use NativeCall;
 
@@ -33,16 +33,14 @@ method register-function(Str $url, QName:D $name, &func, |c) {
     );
 }
 
-sub set-debug-handler( &func (Str $fmt, Str $argt, Pointer[MsgArg] $argv), Pointer ) is native($XSLT) is symbol('xsltSetGenericDebugFunc') {*}
-
 method set-debug-callback(&func) {
-    set-debug-handler(
+    set-generic-error-handler(
         -> Str $msg, Str $fmt, Pointer[MsgArg] $argv {
-            CATCH { default { warn $_; $*XML-CONTEXT.callback-error: X::LibXML::XPath::AdHoc.new: :error($_) } }
+            CATCH { default { note $_; $*XML-CONTEXT.callback-error: X::LibXML::XPath::AdHoc.new: :error($_) } }
             my @args = unmarshal-varargs($fmt, $argv);
             &func($msg, @args);
         },
-        xml6_gbl_message_func
+        cglobal($XSLT, 'xsltSetGenericDebugFunc', Pointer)
     );
 }
 
