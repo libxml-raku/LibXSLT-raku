@@ -2,7 +2,7 @@ use v6;
 use LibXSLT::Document; # help older Rakudos
 
 use LibXSLT::Stylesheet;
-unit class LibXSLT:ver<0.1.1>
+unit class LibXSLT:ver<0.1.2>
     is LibXSLT::Stylesheet;
 
 use LibXSLT::Config;

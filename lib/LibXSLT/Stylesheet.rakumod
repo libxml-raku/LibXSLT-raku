@@ -11,7 +11,6 @@ use LibXML::Raw::Defs :CLIB;
 use LibXML::XPath::Context;
 use LibXML::ErrorHandling :&structured-error-cb, :&generic-error-cb;
 use LibXSLT::Security;
-use URI;
 use NativeCall;
 
 constant config = LibXML::Config;
