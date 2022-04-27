@@ -1,13 +1,12 @@
 use v6;
 use Test;
-plan 27;
+plan 26;
 
 use LibXSLT;
 use LibXML;
-use LibXML::ErrorHandling;
-LibXML::ErrorHandling.SetGenericErrorFunc(sub (|c) {});
-# TEST
-ok(1, ' TODO : Add test name');
+
+use LibXML::XPath::Context;
+LibXML::XPath::Context.SetGenericErrorFunc(sub (|c) {});
 
 my $bad_xsl1 = 'example/bad1.xsl';
 my $bad_xsl2 = 'example/bad2.xsl';
