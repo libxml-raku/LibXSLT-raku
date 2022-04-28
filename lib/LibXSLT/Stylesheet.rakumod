@@ -13,11 +13,9 @@ use LibXML::ErrorHandling :&structured-error-cb, :&generic-error-cb;
 use LibXSLT::Security;
 use NativeCall;
 
-constant config = LibXML::Config;
-
 has LibXML::XPath::Context $!ctx handles<structured-error generic-error callback-error flush-errors park suppress-warnings suppress-errors>;
 has LibXSLT::Security $.security is rw;
-has $.input-callbacks is rw = config.input-callbacks;
+has $.input-callbacks is rw = $!ctx.config.input-callbacks;
 has xsltStylesheet $!raw handles<output-method>;
 has Hash %!extensions;
 

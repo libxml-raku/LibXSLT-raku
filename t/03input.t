@@ -10,9 +10,6 @@ my LibXML $parser .= new();
 # TEST
 ok($parser, 'Parser was initted.');
 
-use LibXML::ErrorHandling;
-my $*XML-CONTEXT = LibXML::ErrorHandling.new;
-
 my $doc = $parser.parse: :string(q:to<EOT>);
 <xml>random contents</xml>
 EOT
