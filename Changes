@@ -1,4 +1,8 @@
 {{$NEXT}}
+    - Also LibXML 0.6.16 LibXML::Raw::CLib (memcpy and free) and
+      LibXML::Types &resolve-package method
+    - Add LibXSLT::Document::Xslt COERCE method to allow:
+      my LibXSLT::Document::Xslt() $xslt-doc = $stylesheet.transform(:$doc);
 
 0.1.2  2022-04-28T11:03:37+12:00
     - upgrade to LibXML 0.6.16 configuration changes

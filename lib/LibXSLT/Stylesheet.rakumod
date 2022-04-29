@@ -9,6 +9,7 @@ use LibXML::PI;
 use LibXML::Raw;
 use LibXML::XPath::Context;
 use LibXML::ErrorHandling :&structured-error-cb, :&generic-error-cb;
+use LibXML::Types :&resolve-package;
 use LibXSLT::Security;
 use NativeCall;
 
@@ -124,7 +125,7 @@ multi method transform(LibXML::Document:D :$doc!, Bool :$raw, *%params --> LibXM
     $ctx.try: {
         $result = $!raw.transform($doc.raw, $ctx.raw, $params);
     }
-    (require LibXSLT::Document).new: :raw($result), :stylesheet(self);
+    resolve-package("LibXSLT::Document").new: :raw($result), :stylesheet(self);
 }
 
 multi method transform(:$file!, |c --> LibXML::Document) {
