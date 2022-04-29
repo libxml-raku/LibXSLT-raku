@@ -26,7 +26,7 @@ ok($out1, ' TODO : Add test name');
 }
 
 if v1.1.27 <= LibXSLT.version <= v1.1.29 {
-    skip "tests broken on v1.1.27 <= LibXSLT <= v1.1.29", 4;
+    skip "tests broken on v1.1.27 <= LibXSLT <= v1.1.29", 3;
 }
 else {
     $source = $parser.parse: :file('example/2.xml');
