@@ -1,4 +1,6 @@
 {{$NEXT}}
+
+0.1.3  2022-04-30T10:11:25+12:00
     - Also LibXML 0.6.16 LibXML::Raw::CLib (memcpy and free) and
       LibXML::Types &resolve-package method
     - Add LibXSLT::Document::Xslt COERCE method to allow:

@@ -1,6 +1,6 @@
 use LibXSLT::Stylesheet;
 
-unit class LibXSLT:ver<0.1.2>
+unit class LibXSLT:ver<0.1.3>
     is LibXSLT::Stylesheet;
 
 use LibXSLT::Config;
