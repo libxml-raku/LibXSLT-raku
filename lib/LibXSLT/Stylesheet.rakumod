@@ -7,7 +7,6 @@ use LibXML::Config;
 use LibXML::Document :HTML;
 use LibXML::PI;
 use LibXML::Raw;
-use LibXML::Raw::Defs :CLIB;
 use LibXML::XPath::Context;
 use LibXML::ErrorHandling :&structured-error-cb, :&generic-error-cb;
 use LibXSLT::Security;
