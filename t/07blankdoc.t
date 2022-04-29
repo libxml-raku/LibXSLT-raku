@@ -1,26 +1,24 @@
 use v6;
 use Test;
-plan 5;
+plan 1;
 use LibXML;
+use LibXML::Document;
 use LibXML::InputCallback;
 use LibXSLT;
+use LibXSLT::Document;
+use LibXSLT::Stylesheet;
 
-my $parser = LibXML.new();
-my $xslt = LibXSLT.new();
+my LibXML:D $parser .= new;
+my LibXSLT:D $xslt .= new;
 
-# TEST
-ok($parser, 'parser was initted.');
-# TEST
-ok($xslt, 'xslt object was initted.');
-
-my $icb = LibXML::InputCallback.new();
+my LibXML::InputCallback:D $icb .= new();
 
 # registering callbacks
 $icb.register-callbacks( [ &match_cb, &open_cb,
                             &read_cb, &close_cb ] );
 
 
-my $source = $parser.parse: :string(q:to<EOT>), :URI</foo>;
+my LibXML::Document:D $source = $parser.parse: :string(q:to<EOT>), :URI</foo>;
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <document></document>
 EOT
@@ -44,21 +42,14 @@ Data: <xsl:value-of select="document('')/xsl:stylesheet/data:type"/><xsl:text>
 </xsl:stylesheet>
 EOT
 
-my $style = $parser.parse: :string($foodoc), :URI<foo>;
+my LibXML::Document:D $style = $parser.parse: :string($foodoc), :URI<foo>;
 
-# TEST
-ok($style, '$style is true');
-
-my $stylesheet = $xslt.parse-stylesheet(doc => $style);
-# my $stylesheet = $xslt.parse_stylesheet_file("example/document.xsl");
+my LibXSLT::Stylesheet:D $stylesheet = $xslt.parse-stylesheet(doc => $style);
 
 $stylesheet.suppress-warnings = True;
-my $results = $stylesheet.transform: :doc($source);
-# TEST
-ok($results, 'Results are true.');
-# TEST
-like($results.Str, /'typed data in stylesheet'/,
-    'found "typed data in stylesheet"');
+my LibXSLT::Document::Xslt:D() $results = $stylesheet.transform: :doc($source);
+like $results.Str, /'typed data in stylesheet'/,
+    'found "typed data in stylesheet"';
 
 ###############################################################
 # Callbacks - this is needed because with document('') now,

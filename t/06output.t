@@ -1,23 +1,23 @@
 use v6;
 use Test;
-plan 28;
+plan 14;
 
 use LibXSLT;
+use LibXSLT::Stylesheet;
 use LibXML;
+use LibXML::Document;
 
-my $parser = LibXML.new();
-my $xslt = LibXSLT.new();
+my LibXML:D $parser .= new;
+my LibXSLT:D $xslt .= new;
 
-my $source = $parser.parse: :string(q:to<EOF>);
+my LibXML::Document:D $source = $parser.parse: :string(q:to<EOF>);
 <?xml version="1.0"?>
 <foo/>
 EOF
 
-# TEST:$n=0;
-my @style_docs;
+my Str @style_docs;
 
 # XML
-# TEST:$n++;
 push @style_docs, "text/xml", q:to<EOF>;
 <?xml version="1.0"?>
 <xsl:stylesheet
@@ -35,7 +35,6 @@ push @style_docs, "text/xml", q:to<EOF>;
 EOF
 
 # HTML
-# TEST:$n++;
 push @style_docs, "text/html", q:to<EOF>;
 <?xml version="1.0"?>
 <xsl:stylesheet
@@ -53,7 +52,6 @@ push @style_docs, "text/html", q:to<EOF>;
 EOF
 
 # TEXT
-# TEST:$n++;
 push @style_docs, "text/plain", q:to<EOF>;
 <?xml version="1.0"?>
 <xsl:stylesheet
@@ -71,7 +69,6 @@ push @style_docs, "text/plain", q:to<EOF>;
 EOF
 
 # Default XML
-# TEST:$n++;
 push @style_docs, Str, q:to<EOF>;
 <?xml version="1.0"?>
 <xsl:stylesheet
@@ -87,7 +84,6 @@ push @style_docs, Str, q:to<EOF>;
 EOF
 
 # Default HTML (broken for now!)
-# TEST:$n++;
 push @style_docs, "text/html", q:to<EOF>;
 <?xml version="1.0"?>
 <xsl:stylesheet
@@ -111,7 +107,6 @@ push @style_docs, "text/html", q:to<EOF>;
 EOF
 
 # Text, other
-# TEST:$n++;
 push @style_docs, "text/rtf", q:to<EOF>;
 <?xml version="1.0"?>
 <xsl:stylesheet
@@ -129,7 +124,6 @@ push @style_docs, "text/rtf", q:to<EOF>;
 EOF
 
 # XML, other
-# TEST:$n++;
 push @style_docs, "text/vnd.wap.wml", q:to<EOF>;
 <?xml version="1.0"?>
 <xsl:stylesheet
@@ -146,22 +140,13 @@ push @style_docs, "text/vnd.wap.wml", q:to<EOF>;
 </xsl:stylesheet>
 EOF
 
-# TEST:$num_style_docs=$n;
-while (@style_docs) {
-    my ($media_type, $style_str) = splice(@style_docs, 0, 2);
+for @style_docs -> $media_type, $style_str {
+    my LibXML::Document:D $style = $parser.parse: :string($style_str);
 
-    my $style = $parser.parse: :string($style_str);
-    # TEST*$num_style_docs
-    ok($style, ' TODO : Add test name');
-
-    my $stylesheet = $xslt.parse-stylesheet(doc => $style);
-    # TEST*$num_style_docs
-    ok($stylesheet, ' TODO : Add test name');
+    my LibXSLT::Stylesheet:D $stylesheet = $xslt.parse-stylesheet(doc => $style);
 
     my $results = $stylesheet.transform: :doc($source);
-    # TEST*$num_style_docs
-    ok($results, ' TODO : Add test name');
+    ok $results;
 
-    # TEST*$num_style_docs
-    is-deeply($stylesheet.media-type, $media_type, "media type is {$media_type.perl}");
+    is-deeply $stylesheet.media-type, $media_type, "media type is {$media_type.raku}";
 }

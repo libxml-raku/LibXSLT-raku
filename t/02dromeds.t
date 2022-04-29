@@ -1,17 +1,15 @@
 use v6;
 use Test;
-plan 6;
+plan 1;
 
 use LibXSLT;
 use LibXSLT::Document;
 use LibXML;
+use LibXML::Document;
 
-my LibXML $parser .= new();
-# TEST
+my LibXML:D $parser .= new();
 
-ok($parser, ' TODO : Add test name');
-
-my $doc = $parser.parse: :string(q:to<EOT>);
+my LibXML::Document:D $doc = $parser.parse: :string(q:to<EOT>);
 <?xml version="1.0"?>
   <dromedaries>
     <species name="Camel">
@@ -29,12 +27,8 @@ my $doc = $parser.parse: :string(q:to<EOT>);
 </dromedaries>
 EOT
 
-# TEST
-
-ok($doc, ' TODO : Add test name');
-
-my LibXSLT $xslt .= new();
-my $style_doc = $parser.parse: :string(q:to<EOT>);
+my LibXSLT:D $xslt .= new();
+my LibXML::Document:D $style_doc = $parser.parse: :string(q:to<EOT>);
 <xsl:stylesheet version="1.0"
       xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
       xmlns:fo="http://www.w3.org/1999/XSL/Format">
@@ -67,24 +61,15 @@ my $style_doc = $parser.parse: :string(q:to<EOT>);
 </xsl:stylesheet>
 EOT
 
-# TEST
-ok($style_doc.defined, ' TODO : Add test name');
 
 # warn "Style_doc = \n", $style_doc->toString, "\n";
 
-my $stylesheet = $xslt.parse-stylesheet(doc => $style_doc);
+my LibXSLT::Stylesheet:D $stylesheet = $xslt.parse-stylesheet(doc => $style_doc);
 
-# TEST
-ok($stylesheet.defined && $stylesheet.raw.defined, ' TODO : Add test name');
-
-my LibXSLT::Document::Xslt $results = $stylesheet.transform(:$doc).Xslt;
-
-# TEST
-ok($results, ' TODO : Add test name');
+my LibXSLT::Document::Xslt:D() $results = $stylesheet.transform(:$doc);
 
 my $output = $results.Str;
 
-# TEST
-ok($output, ' TODO : Add test name');
+ok $output;
 
 # warn "Results:\n", $output, "\n";

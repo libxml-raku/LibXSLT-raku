@@ -1,15 +1,15 @@
 use v6;
 use Test;
-plan 5;
+plan 3;
 use LibXSLT;
 
 my $debug;
 # side-test on debugging
 LibXSLT.set-debug-callback(-> $fmt, |args { $debug++ });
 
-
-{
+subtest 'security', {
     use LibXML::Document;
+    use LibXSLT::Security;
     my LibXML::Document $doc .= parse: 'example/students.xml';
     my LibXSLT $xslt .= new;
     my LibXSLT::Security $scb .= new();
@@ -23,7 +23,7 @@ LibXSLT.set-debug-callback(-> $fmt, |args { $debug++ });
     dies-ok { $xslt.process: :$doc; }, 'read-file refusal on stylesheet processing';
 }
 
-{
+subtest 'no security', {
     use LibXML::Document;
     use LibXSLT::Stylesheet;
     my LibXML::Document $doc .= parse: 'example/students.xml';

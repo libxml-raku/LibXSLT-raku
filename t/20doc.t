@@ -8,18 +8,18 @@ subtest 'LibXSLT Synopsis' => {
   use LibXSLT;
   use LibXML::Document;
 
-  my LibXML::Document $doc .= parse(location => 'example/1.xml');
-  my LibXML::Document $xsl .= parse(location => 'example/1.xsl', :!cdata);
+  my LibXML::Document:D $doc .= parse(location => 'example/1.xml');
+  my LibXML::Document:D $xsl .= parse(location => 'example/1.xsl', :!cdata);
 
   my Str $result = LibXSLT.process: :$doc, :$xsl;
 
   # OO interface
   use LibXSLT::Document;
   use LibXSLT::Stylesheet;
-  my LibXSLT $xslt .= new();
+  my LibXSLT:D $xslt .= new();
 
-  my LibXSLT::Stylesheet $stylesheet = $xslt.parse-stylesheet($xsl);
-  my LibXSLT::Document::Xslt $results = $stylesheet.transform(:$doc).Xslt;
+  my LibXSLT::Stylesheet:D $stylesheet = $xslt.parse-stylesheet($xsl);
+  my LibXSLT::Document::Xslt() $results = $stylesheet.transform(:$doc);
   ok $results.Str;
 }
 
@@ -38,8 +38,8 @@ subtest 'LibXSLT Parse' => {
     plan 1;
     use LibXSLT::Stylesheet;
     use LibXML::Document ;
-    my LibXML::Document $stylesheet-doc .= parse(location=>"example/1.xsl", :!cdata);
-    my LibXSLT::Stylesheet $stylesheet .= parse-stylesheet($stylesheet-doc);
+    my LibXML::Document:D $stylesheet-doc .= parse(location=>"example/1.xsl", :!cdata);
+    my LibXSLT::Stylesheet:D $stylesheet .= parse-stylesheet($stylesheet-doc);
     pass;
 }
 
@@ -47,8 +47,8 @@ subtest 'LibXSLT Transform' => {
     plan 1;
     use LibXSLT::Stylesheet;
     use LibXML::Document ;
-    my LibXML::Document $stylesheet-doc .= parse(location=>"example/1.xsl", :!cdata);
-    my LibXSLT::Stylesheet $stylesheet .= parse-stylesheet($stylesheet-doc);
+    my LibXML::Document:D $stylesheet-doc .= parse(location=>"example/1.xsl", :!cdata);
+    my LibXSLT::Stylesheet:D $stylesheet .= parse-stylesheet($stylesheet-doc);
     pass;
 }
 

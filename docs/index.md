@@ -33,7 +33,7 @@ SYNOPSIS
     # get the stylesheet from a document's '<?xml-stylesheet ..>' processing-instruction
     $stylesheet .= load-stylesheet-pi(:$doc);
 
-    my LibXSLT::Document::Xslt $results = $stylesheet.transform(:$doc).Xslt;
+    my LibXSLT::Document::Xslt() $results = $stylesheet.transform(:$doc);
     say $results.Str;
 
 DESCRIPTION

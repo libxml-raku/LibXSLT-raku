@@ -1,22 +1,21 @@
 use v6;
 use Test;
-plan 6;
+plan 3;
 use LibXSLT;
+use LibXSLT::Config;
+use LibXSLT::Document;
 use LibXSLT::Raw::Defs :$BIND-XSLT;
 use NativeCall;
 use LibXML;
-sub have-exslt(--> int32) is native($BIND-XSLT) is symbol('xslt6_config_have_exslt') {*};
-##unless LibXSLT::Config.have-exslt {
-unless have-exslt() {
+use LibXML::Document;
+unless LibXSLT::Config.have-exslt {
     skip-rest "libexslt not supported in this libxml2 build";
     exit;
 }
 
-my $parser = LibXML.new();
-# TEST
-ok($parser, '$parser was initted.');
+my LibXML:D $parser .= new();
 
-my $doc = $parser.parse: :string(q:to<EOT>);
+my LibXML::Document:D $doc = $parser.parse: :string(q:to<EOT>);
 <?xml version="1.0"?>
 
 <doc>
@@ -24,11 +23,8 @@ my $doc = $parser.parse: :string(q:to<EOT>);
 </doc>
 EOT
 
-# TEST
-ok($doc, '$doc is true.');
-
-my $xslt = LibXSLT.new();
-my $style_doc = $parser.parse: :string(q:to<EOT>);
+my LibXSLT:D $xslt .= new;
+my LibXML::Document:D $style_doc = $parser.parse: :string(q:to<EOT>);
 <?xml version="1.0"?>
 <xsl:stylesheet version="1.0"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -47,25 +43,18 @@ my $style_doc = $parser.parse: :string(q:to<EOT>);
 </xsl:stylesheet>
 EOT
 
-# TEST
-
 ok($style_doc, '$style_doc is true.');
 
 # warn "Style_doc = \n", $style_doc.toString, "\n";
 
 my $stylesheet = $xslt.parse-stylesheet(doc => $style_doc);
 
-# TEST
 ok($stylesheet, '$stylesheet is true.');
 
-my $results = $stylesheet.transform(:$doc).Xslt;
-
-# TEST
-ok($results, '$results is true.');
+my LibXSLT::Document::Xslt:D() $results = $stylesheet.transform(:$doc);
 
 my $output = $results.Str;
 
-# TEST
-ok($output, '$output is true.');
+ok $output, '$output is true.';
 
 # warn "Results:\n", $output, "\n";

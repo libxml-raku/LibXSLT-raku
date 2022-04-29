@@ -2,15 +2,17 @@ use Test;
 plan 2;
 use LibXML;
 use LibXSLT;
+use LibXSLT::Document;
+use LibXSLT::Stylesheet;
 
-my $parser = LibXML.new();
-my $xslt = LibXSLT.new();
+my LibXML:D $parser .= new;
+my LibXSLT:D $xslt .= new;
 
 $parser.expand-entities = True;
 
-my $source = $parser.parse: :string(qq{<?xml version="1.0" encoding="UTF-8"?>
+my LibXML::Document:D $source = $parser.parse: :string(qq{<?xml version="1.0" encoding="UTF-8"?>
 <root>foo</root>});
-my $style = $parser.parse: :string('<?xml version="1.0" encoding="ISO-8859-1"?>
+my LibXML::Document:D $style = $parser.parse: :string('<?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE stylesheet [
 <!ENTITY ouml   "&#246;">
 ]>
@@ -28,14 +30,13 @@ my $style = $parser.parse: :string('<?xml version="1.0" encoding="ISO-8859-1"?>
 ');
 
 
-my $stylesheet = $xslt.parse-stylesheet(doc => $style);
+my LibXSLT::Stylesheet:D $stylesheet = $xslt.parse-stylesheet(doc => $style);
 
-my $results = $stylesheet.transform(doc => $source);
+my LibXSLT::Document::Xslt() $results = $stylesheet.transform(doc => $source);
 
 my $tostring = $results.Str;
-# TEST
-like($tostring, /fooöbar/, '.Str matches entity.');
+like $tostring, /fooöbar/, '.Str matches entity.';
 
-my $content = $results.Xslt.Str;
-like($content, /fooöbar/, 'xslt.Str matches entity.');
+my $content = $results.Str;
+like $content, /fooöbar/, 'xslt.Str matches entity.';
 

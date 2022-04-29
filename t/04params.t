@@ -1,15 +1,16 @@
 use v6;
 use Test;
-plan 8;
+plan 3;
 
 use LibXSLT;
+use LibXSLT::Document;
 use LibXSLT::Stylesheet :&xpath-to-string;
 use LibXML;
 
-my $parser = LibXML.new();
-my $xslt = LibXSLT.new();
+my LibXML:D $parser .= new;
+my LibXSLT:D $xslt .= new;
 
-my $source = $parser.parse: :string(q:to<EOF>);
+my LibXML::Document:D $source = $parser.parse: :string(q:to<EOF>);
 <?xml version="1.0" encoding="UTF-8" ?>
 <top>
 <next myid="next">NEXT</next>
@@ -17,11 +18,7 @@ my $source = $parser.parse: :string(q:to<EOF>);
 </top>
 EOF
 
-# TEST
-
-ok($source, ' TODO : Add test name');
-
-my $style = $parser.parse: :string(q:to<EOF>);
+my LibXML::Document:D $style = $parser.parse: :string(q:to<EOF>);
 <?xml version="1.0"?>
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -42,31 +39,19 @@ my $style = $parser.parse: :string(q:to<EOF>);
 </xsl:stylesheet>
 EOF
 
-# TEST
-ok($style, ' TODO : Add test name');
+my LibXSLT::Stylesheet:D $stylesheet = $xslt.parse-stylesheet(doc => $style);
 
-my $stylesheet = $xslt.parse-stylesheet(doc => $style);
-
-# TEST
-ok($stylesheet, ' TODO : Add test name');
-
-my $results = $stylesheet.transform(:doc($source),
+my LibXSLT::Document::Xslt:D() $results = $stylesheet.transform(:doc($source),
         incoming => 'INCOMINGTEXT',
         outgoing => 'OUTGOINGTEXT',
-        ).Xslt;
+        );
 
-# TEST
-ok($results, ' TODO : Add test name');
-
-# TEST
-ok($results.Str, ' TODO : Add test name');
+ok $results.Str;
 
 my %params =  xpath-to-string(str => 'TEXT', num => 42, bool => True, empty => Mu);
 is-deeply %params, %(str => "'TEXT'", num => '42', bool => 'true()', empty => "''");
 %params = xpath-to-string(empty => Mu);
-$results = $stylesheet.transform(:doc($source), :raw, |%params).Xslt;
-# TEST
-ok($results, ' TODO : Add test name');
-# TEST
-ok($results.Str, ' TODO : Add test name');
+$results = $stylesheet.transform(:doc($source), :raw, |%params);
+
+ok $results.Str;
 

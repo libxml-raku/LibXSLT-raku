@@ -1,27 +1,23 @@
 use v6;
 use Test;
-plan 20;
+plan 15;
 use LibXML;
+use LibXML::Document;
 use LibXML::InputCallback;
 use LibXSLT;
+use LibXSLT::Document;
+use LibXSLT::Stylesheet;
 
-my LibXML $parser .= new();
+
+my LibXML:D $parser .= new();
 # parser
-# TEST
 ok($parser, 'Parser was initted.');
 
-my $doc = $parser.parse: :string(q:to<EOT>);
+my LibXML::Document:D $doc = $parser.parse: :string(q:to<EOT>);
 <xml>random contents</xml>
 EOT
 
-# doc
-# TEST
-ok($doc, 'Doc was initted.');
-
-my LibXSLT $xslt .= new;
-# xslt
-# TEST
-ok($xslt, 'xslt was initted.');
+my LibXSLT:D $xslt .= new;
 
 my $stylsheetstring = q:to<EOT>;
 <xsl:stylesheet version="1.0"
@@ -41,9 +37,7 @@ my $stylsheetstring = q:to<EOT>;
 </xsl:stylesheet>
 EOT
 
-my $icb = LibXML::InputCallback.new();
-# TEST
-ok($icb, 'icb was initted.');
+my LibXML::InputCallback:D $icb .= new();
 
 # registering callbacks
 $icb.register-callbacks( [ &match_cb, &open_cb,
@@ -51,23 +45,16 @@ $icb.register-callbacks( [ &match_cb, &open_cb,
 
 $xslt.input-callbacks($icb);
 
-my $stylesheet = $xslt.parse-stylesheet: doc => $parser.parse: :string($stylsheetstring);
+my LibXSLT::Stylesheet:D $stylesheet = $xslt.parse-stylesheet: doc => $parser.parse: :string($stylsheetstring);
 # stylesheet
-# TEST
-ok($stylesheet, 'stylesheet is OK.');
 
 #$stylesheet.input-callbacks($icb);
 
 # warn "transforming\n";
-my $results = $stylesheet.transform: :$doc;
-# results
-# TEST
-ok($results, 'results is OK.');
-
-my $output = $results;
+my LibXSLT::Document:D $results = $stylesheet.transform: :$doc;
+my $output = $results.Str;
 # warn "output: $output\n";
-# TEST
-ok($output, 'output is OK.');
+ok $output, 'output is OK.';
 
 # test a dying close callback
 # callbacks can only be registered as a callback group
@@ -84,20 +71,15 @@ try {
 
 {
     my $E = $!;
-    # TEST
-    ok($E.defined, "Threw: $E");
+    ok $E.defined, "Threw: $E";
 }
 
 #
 # test callbacks for parse_stylesheet()
 #
 
-$xslt = Nil;
-$stylesheet = Nil;
-$icb = Nil;
-
-$xslt = LibXSLT.new();
-$icb = LibXML::InputCallback.new();
+$xslt .= new;
+$icb .= new;
 
 # registering callbacks
 $icb.register-callbacks( [ &match_cb, &stylesheet_open_cb,
@@ -127,7 +109,6 @@ EOT
 
 $stylesheet = $xslt.parse-stylesheet: doc => $parser.parse: :string($stylsheetstring);
 # stylesheet
-# TEST
 ok($stylesheet, 'stylesheet is OK - 2.');
 
 #
@@ -135,12 +116,8 @@ ok($stylesheet, 'stylesheet is OK - 2.');
 # This also verifies that all the previous callbacks were unregistered.
 #
 
-$xslt = Nil;
-$stylesheet = Nil;
-$icb = Nil;
-
-$xslt = LibXSLT.new();
-$icb = LibXML::InputCallback.new();
+$xslt .= new;
+$icb .= new;
 
 # registering callbacks
 $icb.register-callbacks( [ &match_cb, &stylesheet_open_cb,
@@ -162,18 +139,15 @@ EOT
 
 $stylesheet = $xslt.parse-stylesheet: doc => $parser.parse: :string($stylsheetstring);
 # stylesheet
-# TEST
 ok($stylesheet, 'stylesheet is OK - 3.');
 
 $stylesheet.suppress-warnings = True;
 $results = $stylesheet.transform: :$doc;
 # results
-# TEST
-ok($results, 'results is OK - 3.');
+ok $results.Str, 'results is OK - 3.';
 
 # no_match_count
-# TEST
-is($no_match_count, 1, 'match_cb called once if no match');
+is $no_match_count, 1, 'match_cb called once if no match';
 
 #
 # input callback functions
@@ -182,7 +156,6 @@ is($no_match_count, 1, 'match_cb called once if no match');
 sub match_cb($uri) {
     # match_cb
     if ($uri eq "foo.xml") {
-        # TEST*5
         ok(1, 'URI is OK in match_cb.');
         return 1;
     }
@@ -194,7 +167,6 @@ sub match_cb($uri) {
 }
 
 sub open_cb($uri) {
-    # TEST*2
     is($uri, 'foo.xml', 'URI is OK in open_cb.');
     my $str ="<foo>Text here</foo>";
     return $str.encode;
@@ -202,22 +174,19 @@ sub open_cb($uri) {
 
 sub dying_open_cb($uri) {
     # dying_open_cb: $uri
-    # TEST*2
-    is($uri, 'foo.xml', 'dying_open_cb');
+    is $uri, 'foo.xml', 'dying_open_cb';
     die "Test a die from open_cb";
 }
 
 sub stylesheet_open_cb($uri) {
-    # TEST
-    is($uri, 'foo.xml', 'stylesheet_open_cb uri compare.');
+    is $uri, 'foo.xml', 'stylesheet_open_cb uri compare.';
     my $str = '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"/>';
     return $str.encode;
 }
 
 sub close_cb($) {
     # warn("close\n");
-    # TEST*3
-    ok(1, 'close_cb()');
+    pass 'close_cb()';
 }
 
 sub read_cb($buf is rw, $n) {
