@@ -1,9 +1,14 @@
 use LibXML::Document;
 use LibXSLT;
+use LibXSLT::Config;
 use LibXSLT::Document;
 use LibXSLT::Stylesheet;
 
-sub MAIN(Str $doc-loc, Str :$xsl) {
+sub MAIN(Str $doc-loc, Str :$xsl, UInt :$maxvars, UInt :$maxdepth) {
+
+    LibXSLT::Config.max-vars  = $_ with $maxvars;
+    LibXSLT::Config.max-depth = $_ with $maxdepth;
+
     my LibXSLT $xslt .= new;
     my LibXML::Document $doc;
     my LibXSLT::Stylesheet $stylesheet;
@@ -36,7 +41,9 @@ xslt.raku - Run a simple XSLT transform
 xslt.raku [-xsl=<stylesheet>] <doc>
 
 Options:
-   --xsl         external stylesheet location
+   --xsl           external stylesheet location
+   --maxdepth=n   maximum depth for deeply recursive documents
+   --maxvars=m    maximum number of variables for complex documents
 
 =head1 DESCRIPTION
 

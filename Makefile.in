@@ -39,7 +39,7 @@ clean :
 realclean : clean
 	@rm -f Makefile
 
-doc : docs/index.md docs/Security.md docs/Stylesheet.md
+doc : docs/index.md docs/Security.md docs/Stylesheet.md docs/Config.md
 
 docs/index.md : lib/LibXSLT.rakumod
 	(\
@@ -53,7 +53,3 @@ docs/%.md : lib/LibXSLT/%.rakumod
 	raku -I . --doc=Markdown $< \
 	| TRAIL=LibXSLT/$* raku -p -n ../LibXML-raku/etc/resolve-links.raku \
         > $@
-
-docs/Security.md : lib/LibXSLT/Security.rakumod
-
-docs/Stylesheet.md : lib/LibXSLT/Stylesheet.rakumod
