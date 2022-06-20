@@ -1,6 +1,6 @@
 use LibXSLT::Stylesheet;
 
-unit class LibXSLT:ver<0.1.3>
+unit class LibXSLT:ver<0.1.4>
     is LibXSLT::Stylesheet;
 
 use LibXSLT::Config;
@@ -9,7 +9,7 @@ use LibXSLT::Raw::Defs :$XSLT;
 use LibXML::Raw;
 use LibXML::XPath::Context :get-value;
 use LibXML::Types :NCName, :QName;
-use LibXML::ErrorHandling :MsgArg, :&set-generic-error-handler, :&unmarshal-varargs;
+use LibXML::ErrorHandling;
 use Method::Also;
 use NativeCall;
 
@@ -32,10 +32,10 @@ method register-function(Str $url, QName:D $name, &func, |c) {
 }
 
 method set-debug-callback(&func) {
-    set-generic-error-handler(
-        -> Str $msg, Str $fmt, Pointer[MsgArg] $argv {
+    xml6_gbl::set-generic-error-handler(
+        -> Str $msg, Str $fmt, Pointer[xml6_gbl::MsgArg] $argv {
             CATCH { default { note $_; $*XML-CONTEXT.callback-error: X::LibXML::XPath::AdHoc.new: :error($_) } }
-            my @args = unmarshal-varargs($fmt, $argv);
+            my @args = xml6_gbl::scan-varargs($fmt, $argv);
             &func($msg, @args);
         },
         cglobal($XSLT, 'xsltSetGenericDebugFunc', Pointer)

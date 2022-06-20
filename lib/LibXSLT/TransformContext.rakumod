@@ -6,7 +6,7 @@ use LibXSLT::Security;
 use LibXSLT::ExtensionContext;
 
 use LibXML::Document;
-use LibXML::ErrorHandling :&set-generic-error-handler, :&structured-error-cb, :&generic-error-cb, :unmarshal-varargs, :MsgArg;
+use LibXML::ErrorHandling :&structured-error-cb, :&generic-error-cb;
 use LibXML::Raw;
 use LibXML::XPath::Context;
 
@@ -48,10 +48,10 @@ method register-transform($type, Str $URI, Str:D $name, &func) {
 }
 
 method SetGenericErrorFunc(&handler) {
-    set-generic-error-handler(
-        -> Str $msg, Str $fmt, Pointer[MsgArg] $argv {
+    xml6_gbl::set-generic-error-handler(
+        -> Str $msg, Str $fmt, Pointer[xml6_gbl::MsgArg] $argv {
             CATCH { default { note $_; $*XML-CONTEXT.callback-error: X::LibXML::XPath::AdHoc.new: :error($_) } }
-            my @args = unmarshal-varargs($fmt, $argv);
+            my @args = xml6_gbl::scan-varargs($fmt, $argv);
             &handler($msg, @args);
         },
         cglobal($XSLT, 'xsltSetGenericErrorFunc', Pointer)
