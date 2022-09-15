@@ -1,4 +1,6 @@
 {{$NEXT}}
+
+0.1.6  2022-09-16T07:37:43+12:00
     - Fix register-function method to work with LibXML 0.9.0+
      release.
 
