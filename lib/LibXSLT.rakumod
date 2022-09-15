@@ -7,7 +7,7 @@ use LibXSLT::Config;
 use LibXSLT::Raw;
 use LibXSLT::Raw::Defs :$XSLT;
 use LibXML::Raw;
-use LibXML::XPath::Context :get-value;
+use LibXML::XPath::Context;
 use LibXML::Types :NCName, :QName;
 use Method::Also;
 use NativeCall;
@@ -22,7 +22,7 @@ method register-function(Str $url, QName:D $name, &func, |c) {
         -> xmlXPathParserContext $ctxt, Int $n {
             CATCH { default { note $_; $*XML-CONTEXT.callback-error: X::LibXML::XPath::AdHoc.new: :error($_) } }
             my @params;
-            @params.unshift: get-value($ctxt.valuePop) for 0 ..^ $n;
+            @params.unshift: LibXML::XPath::Context.get-value($ctxt.valuePop) for 0 ..^ $n;
             my $ret = &func(|@params, |c) // '';
             my xmlXPathObject:D() $out = $*XML-CONTEXT.park($ret, :$ctxt);
             $ctxt.valuePush($_) for $out;

@@ -28,10 +28,10 @@ $(SRC)/xslt6_transform_ctx%O% : $(SRC)/xslt6_transform_ctx.c $(SRC)/xslt6_transf
 	%CC% -I $(SRC) -c %CCSHARED% %CCFLAGS% %CCOUT%$(SRC)/xslt6_transform_ctx%O% $(SRC)/xslt6_transform_ctx.c %LIB-CFLAGS% $(DBG)
 
 test : all
-	@prove -e"perl6 -I ." t
+	@prove -e"raku -I ." t
 
 loudtest : all
-	@prove -e"perl6 -I ." -v t
+	@prove -e"raku -I ." -v t
 
 clean :
 	@rm -f $(SRC)/xslt6_*%O% resources/libraries/*%LIB-NAME%
@@ -39,17 +39,22 @@ clean :
 realclean : clean
 	@rm -f Makefile
 
-doc : docs/index.md docs/Security.md docs/Stylesheet.md docs/Config.md
+Pod-To-Markdown-installed :
+	@raku -M Pod::To::Markdown -c
+
+doc : Pod-To-Markdown-installed docs/index.md docs/Security.md docs/Stylesheet.md docs/Config.md
 
 docs/index.md : lib/LibXSLT.rakumod
+	@raku -I . -c $<
 	(\
 	    echo '[![Actions Status]($(REPO)/workflows/test/badge.svg)]($(REPO)/actions)'; \
             echo '';\
-            perl6 -I . --doc=Markdown lib/LibXSLT.rakumod\
+            raku -I . --doc=Markdown $< \
             | TRAIL=LibXSLT/$* raku -p -n ../LibXML-raku/etc/resolve-links.raku \
         ) > docs/index.md
 
 docs/%.md : lib/LibXSLT/%.rakumod
+	@raku -I . -c $<
 	raku -I . --doc=Markdown $< \
 	| TRAIL=LibXSLT/$* raku -p -n ../LibXML-raku/etc/resolve-links.raku \
         > $@

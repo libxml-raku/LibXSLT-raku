@@ -7,7 +7,7 @@
     "LibraryMake"
   ],
   "depends": [
-    "LibXML:ver<0.7.10+>",
+    "LibXML:ver<0.9.0+>",
     "Method::Also"
   ],
   "description": "Interface to the GNOME libxslt library",
