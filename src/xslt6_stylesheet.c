@@ -21,7 +21,8 @@ xslt6_stylesheet_transform(xsltStylesheetPtr self, xmlDocPtr doc, xsltTransformC
     }
 
     real_dom = xsltApplyStylesheetUser(self, doc, xslt_params,
-					   NULL, NULL, ctx);
+                                       NULL, NULL, ctx);
+
     if (doc->intSubset != NULL &&
         doc->prev == NULL && doc->next == NULL) {
         xmlNodePtr cur = (xmlNodePtr) doc->intSubset;
@@ -32,18 +33,22 @@ xslt6_stylesheet_transform(xsltStylesheetPtr self, xmlDocPtr doc, xsltTransformC
         if (doc->children == dtd_next) doc->children = cur;
         if (doc->last == dtd_prev) doc->last = cur;
     }
-    if ((real_dom != NULL) && (ctx->state != XSLT_STATE_OK)) {
-        /* fatal error */
-        xmlFreeDoc(real_dom);
-        real_dom = NULL;
-    }
-    if (real_dom != NULL && real_dom->type == XML_HTML_DOCUMENT_NODE) {
-        if (self->method != NULL) {
-            xmlFree(self->method);
+
+    if (real_dom != NULL) {
+        if (ctx->state != XSLT_STATE_OK) {
+            /* fatal error */
+            xmlFreeDoc(real_dom);
+            real_dom = NULL;
         }
-        self->method = (xmlChar *) xmlMalloc(5);
-        strcpy((char *) self->method, "html");
+        else if (real_dom->type == XML_HTML_DOCUMENT_NODE) {
+            if (self->method != NULL) {
+                xmlFree(self->method);
+            }
+            self->method = (xmlChar *) xmlMalloc(5);
+            strcpy((char *) self->method, "html");
+        }
     }
+
     return real_dom;
 }
 

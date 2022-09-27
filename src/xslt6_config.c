@@ -3,11 +3,13 @@
 #include "libxslt/xsltconfig.h"
 
 DLLEXPORT int xslt6_config_have_exslt(void) {
+    return
 #ifdef XSLT6_HAVE_EXSLT
-    return 1;
+    1
 #else
-    return 0;
+    0
 #endif
+    ;
 }
 
 DLLEXPORT char* xslt6_config_version(void) {
