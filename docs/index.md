@@ -209,7 +209,7 @@ Copyright 2001-2009, AxKit.com Ltd.
 ACKNOWLEDGEMENTS
 ================
 
-This Raku module is based on the Perl 5 XML::LibXSLT module. The `process()` method has been adapted from the Perl 5 XML::LibXSL::Easy module.
+This Raku module is based on the Perl 5 XML::LibXSLT module. The `process()` method has been adapted from the Perl 5 XML::LibXSLT::Easy module.
 
 With thanks to: Matt Sergeant, Shane Corgatelli, Petr Pal's, Shlomi Fish, יובל קוג'מן (Yuval Kogman)
 
