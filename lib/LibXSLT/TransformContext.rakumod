@@ -49,10 +49,9 @@ method register-transform($type, Str $URI, Str:D $name, &func) {
 
 method SetGenericErrorFunc(&handler) {
     xml6_gbl::set-generic-error-handler(
-        -> Str $msg, Str $fmt, Pointer[xml6_gbl::MsgArg] $argv {
+        -> Str $msg {
             CATCH { default { note $_; $*XML-CONTEXT.callback-error: X::LibXML::XPath::AdHoc.new: :error($_) } }
-            my @args = xml6_gbl::scan-varargs($fmt, $argv);
-            &handler($msg, @args);
+            &handler($msg);
         },
         cglobal($XSLT, 'xsltSetGenericErrorFunc', Pointer)
     );
