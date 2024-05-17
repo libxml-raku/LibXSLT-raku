@@ -1,6 +1,7 @@
 SRC=src
 HOST=https://github.com
 REPO=$(HOST)/libxml-raku/LibXSLT-raku
+TEST_JOBS ?= 6
 
 all : lib
 
@@ -28,10 +29,10 @@ $(SRC)/xslt6_transform_ctx%O% : $(SRC)/xslt6_transform_ctx.c $(SRC)/xslt6_transf
 	%CC% -I $(SRC) -c %CCSHARED% %CCFLAGS% %CCOUT%$(SRC)/xslt6_transform_ctx%O% $(SRC)/xslt6_transform_ctx.c %LIB-CFLAGS% $(DBG)
 
 test : all
-	@prove -e"raku -I ." t
+	@prove6 -I . -j $(TEST_JOBS) t
 
 loudtest : all
-	@prove -e"raku -I ." -v t
+	@prove6 -I . -v t
 
 clean :
 	@rm -f $(SRC)/xslt6_*%O% resources/libraries/*%LIB-NAME%
