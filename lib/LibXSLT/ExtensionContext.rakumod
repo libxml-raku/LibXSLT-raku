@@ -17,6 +17,5 @@ has anyNode  $!insert-raw;
 has LibXML::Node $!insert;
 method insert-node { $!insert //= LibXML::Node.box($!insert-raw); }
 
-submethod TWEAK(anyNode :$!source-raw!, anyNode :$!insert-raw!, xsltElemPreComp:D :$!comp!, :$!style-raw) {
-    $!style-raw //= $!comp.inst;
+submethod TWEAK(anyNode :$!source-raw!, anyNode :$!insert-raw!, xsltElemPreComp:D :$!comp!, :$!style-raw = $!comp.inst) {
 }

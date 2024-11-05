@@ -59,7 +59,7 @@ class xsltSecurityPrefs is repr(Opaque) is export {
 class xsltDocument is repr(Opaque) is export {
 }
 
-class xsltStackElem is repr(Opaque) {
+class xsltStackElem is repr(Opaque) is export {
 }
 
 class xsltStylesheet is repr(Opaque) is export {

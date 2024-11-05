@@ -1,7 +1,7 @@
-use LibXSLT::Stylesheet;
+unit class LibXSLT:ver<0.1.7>;
 
-unit class LibXSLT:ver<0.1.7>
-    is LibXSLT::Stylesheet;
+use LibXSLT::Stylesheet;
+also is LibXSLT::Stylesheet;
 
 use LibXSLT::Config;
 use LibXSLT::Raw;

@@ -58,10 +58,6 @@ method !try(&action) {
     $rv;
 }
 
-proto method parse-stylesheet(|c) {
-    with self {return {*}} else { self.new.parse-stylesheet(|c) }
-}
-
 method media-type {
     # this below is rather simplistic, but should work for most cases
     $!raw.media-type // do with $.output-method {
@@ -70,7 +66,15 @@ method media-type {
     } // Str;
 }
 
-multi method parse-stylesheet(LibXML::Document:D :$doc! --> LibXSLT::Stylesheet) {
+multi method parse-stylesheet(::?CLASS:U: |c) is hidden-from-backtrace {
+    self.new.parse-stylesheet: |c;
+}
+
+multi method parse-stylesheet(LibXML::Document:D $doc) {
+    self.parse-stylesheet: :$doc;
+}
+
+multi method parse-stylesheet(::?CLASS:D: LibXML::Document:D :$doc! --> LibXSLT::Stylesheet) {
     self!try: {
         my $doc-copy = $doc.raw.copy: :deep;
         with xsltStylesheet::ParseDoc($doc-copy) {
@@ -81,7 +85,7 @@ multi method parse-stylesheet(LibXML::Document:D :$doc! --> LibXSLT::Stylesheet)
     self;
 }
 
-multi method parse-stylesheet(Str:D() :$file! --> LibXSLT::Stylesheet) {
+multi method parse-stylesheet(::?CLASS:D: Str:D() :$file! --> LibXSLT::Stylesheet) {
     self!try: {
         with xsltStylesheet::ParseFile($file) {
             .Free with $!raw;
@@ -89,10 +93,6 @@ multi method parse-stylesheet(Str:D() :$file! --> LibXSLT::Stylesheet) {
         }
     }
     self;
-}
-
-multi method parse-stylesheet(LibXML::Document:D $doc) {
-    self.parse-stylesheet: :$doc;
 }
 
 our sub xpath-to-string(*%xpath) is export(:xpath-to-string) {

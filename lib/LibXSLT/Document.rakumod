@@ -1,8 +1,7 @@
-use v6;
-use LibXML::Document;
+unit class LibXSLT::Document;
 
-unit class LibXSLT::Document
-    is LibXML::Document;
+use LibXML::Document;
+also is LibXML::Document;
 
 use LibXML;
 use LibXML::Raw;
@@ -31,8 +30,6 @@ our role Xslt {
     multi method COERCE(LibXSLT::Document:D $_) { .Xslt() }
 }
 
-method Xslt {
-    self ~~ Xslt
-        ?? self
-        !! (self does Xslt);
-}
+multi method Xslt(Xslt:) { self }
+multi method Xslt { self does Xslt }
+
