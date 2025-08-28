@@ -9,7 +9,7 @@ sub MAIN(Str $doc-loc, Str :$xsl, UInt :$maxvars, UInt :$maxdepth) {
     LibXSLT::Config.max-vars  = $_ with $maxvars;
     LibXSLT::Config.max-depth = $_ with $maxdepth;
 
-    my LibXSLT $xslt .= new;
+    my LibXSLT:D $xslt .= new;
     my LibXML::Document $doc;
     my LibXSLT::Stylesheet $stylesheet;
 
@@ -17,7 +17,11 @@ sub MAIN(Str $doc-loc, Str :$xsl, UInt :$maxvars, UInt :$maxdepth) {
         $stylesheet = $xslt.parse-stylesheet(:$file);
     }
     with $doc-loc -> $location {
-        $doc .= parse(location => $doc-loc);
+        $doc .= parse:
+            |($doc-loc eq '-'
+              ?? :string($*IN.slurp-rest)
+	      !! :location($doc-loc)
+             );
         $stylesheet //= LibXSLT::Stylesheet.load-stylesheet-pi(:$doc);
     }
 

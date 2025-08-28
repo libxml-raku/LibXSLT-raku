@@ -43,13 +43,11 @@ my LibXML::Document:D $style_doc = $parser.parse: :string(q:to<EOT>);
 </xsl:stylesheet>
 EOT
 
-ok($style_doc, '$style_doc is true.');
-
-# warn "Style_doc = \n", $style_doc.toString, "\n";
+ok $style_doc, '$style_doc is true.';
 
 my $stylesheet = $xslt.parse-stylesheet(doc => $style_doc);
 
-ok($stylesheet, '$stylesheet is true.');
+ok $stylesheet, '$stylesheet is true.';
 
 my LibXSLT::Document::Xslt:D() $results = $stylesheet.transform(:$doc);
 

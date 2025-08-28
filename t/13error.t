@@ -25,43 +25,37 @@ subtest 'parse stylesheet error', {
     my LibXML::Document:D $stylesheet = LibXML.parse: :file($bad_xsl1);
     dies-ok { $xslt.parse-stylesheet($stylesheet) };
 
-    dies-ok { LibXML.parse: :file($bad_xsl2) };
+    throws-like { LibXML.parse: :file($bad_xsl2) }, X::LibXML::Parser;
 }
 
 subtest 'parse stylesheet success', {
     my LibXML::Document:D $stylesheet = LibXML.parse: :file($good_xsl);
     my LibXSLT:D $parsed = $xslt.parse-stylesheet( $stylesheet );
-    dies-ok { $parsed.transform_file( $bad_xml ); };
+    throws-like { $parsed.transform: :file( $bad_xml ); }, X::LibXML::Parser;
 }
 
 subtest 'transform error', {
   my LibXML::Document:D $stylesheet = LibXML.new.parse: :file($nonfatal_xsl);
   my LibXSLT::Stylesheet:D $parsed = $xslt.parse-stylesheet( $stylesheet );
-  try { $parsed.transform: :file( $good_xml ); };
-  like $!.message, /'parser error : Non-fatal message.'/
-      or diag "unexpected error: $!";
+  throws-like { $parsed.transform: :file( $good_xml ); }, X::LibXML::Parser, :message(/'Non-fatal message.'/);
 }
 
 subtest 'document transform error', {
   my LibXML $parser .= new;
   my LibXML::Document:D $stylesheet = $parser.parse: :file($bad_xsl3);
   my LibXSLT::Stylesheet:D $parsed = $xslt.parse-stylesheet( $stylesheet );
-  try { $parsed.transform_file( $good_xml ); };
-  ok $!.defined;
+  throws-like { $parsed.transform :file( $good_xml ); }, X::LibXML::Parser;
   my LibXML::Document:D $dom = $parser.parse: :file( $good_xml );
-  try { $parsed.transform( $dom ); };
-  ok $!.defined;
+  throws-like { $parsed.transform( $dom ); }, X::LibXML::Parser;
 }
 
 subtest 'document transform fatal', {
   my LibXML $parser .= new;
   my LibXML::Document:D $stylesheet = $parser.parse: :file($fatal_xsl);
   my LibXSLT::Stylesheet:D $parsed = $xslt.parse-stylesheet( $stylesheet );
-  try { $parsed.transform_file( $good_xml ); };
-  ok $!.defined;
+  throws-like { $parsed.transform: :file( $good_xml ); }, X::LibXML::Parser;
   my LibXML::Document:D $dom = $parser.parse: :file( $good_xml );
-  try { $parsed.transform( $dom ); };
-  ok $!.defined;
+  throws-like { $parsed.transform( $dom ); }, X::LibXML::Parser;
 }
 
 subtest 'transform variable error', {
@@ -82,14 +76,5 @@ subtest 'transform variable error', {
 
     $xslt .= parse-stylesheet($style_doc);
 
-    my $results;
-    try {
-    $results = $xslt.transform($doc); };
-    my $E = $!;
-    ok $E.defined;
-
-    like $E.message,
-        rx:i/'unregistered variable foo'|"variable 'foo' has not been declared"/,
-        'Exception matches.';
-    like $E.message, /'element value-of'/, 'Exception matches "element value-of"' ;
+    throws-like { $xslt.transform($doc); }, X::LibXML::Parser, :message(rx:i/'unregistered variable foo'|"variable 'foo' has not been declared"/);
 }

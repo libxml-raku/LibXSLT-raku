@@ -61,15 +61,8 @@ my LibXML::Document:D $style_doc = $parser.parse: :string(q:to<EOT>);
 </xsl:stylesheet>
 EOT
 
-
-# warn "Style_doc = \n", $style_doc->toString, "\n";
-
 my LibXSLT::Stylesheet:D $stylesheet = $xslt.parse-stylesheet(doc => $style_doc);
-
 my LibXSLT::Document::Xslt:D() $results = $stylesheet.transform(:$doc);
 
-my $output = $results.Str;
+ok $results.Str;
 
-ok $output;
-
-# warn "Results:\n", $output, "\n";

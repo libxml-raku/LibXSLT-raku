@@ -8,7 +8,7 @@ use LibXSLT::Stylesheet;
 use LibXSLT::Document;
 
 {
-  # test for Perl #41542 - DTD subset disappeare
+  # test for Perl #41542 - DTD subset disappeared
   # in the source document after the transformation
   my LibXML:D $parser .= new();
   $parser.validation = True;

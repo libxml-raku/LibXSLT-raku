@@ -18,11 +18,11 @@ my LibXML::Document:D $source = $parser.parse: :file('example/1.xml');
 my ($out1, $out2);
 
 {
-my LibXML::Document:D $style = $parser.parse: :file('example/1.xsl');
-my LibXSLT::Stylesheet:D $stylesheet = $xslt.parse-stylesheet(doc => $style);
-my LibXSLT::Document::Xslt:D() $results = $stylesheet.transform($source);
-$out1 = $results.Str;
-ok($out1, ' TODO : Add test name');
+    my LibXML::Document:D $style = $parser.parse: :file('example/1.xsl');
+    my LibXSLT::Stylesheet:D $stylesheet = $xslt.parse-stylesheet(doc => $style);
+    my LibXSLT::Document::Xslt:D() $results = $stylesheet.transform($source);
+    $out1 = $results.Str;
+    $out1.&ok: 'example/1';
 }
 
 if v1.1.27 <= LibXSLT.version <= v1.1.29 {
@@ -36,7 +36,7 @@ else {
     is $stylesheet.media-type, 'text/html', 'meda-type';
     is $stylesheet.output-method, 'html', ' Test existence of output method';
     $out2 = $results.Str;
-    ok $out2;
+    $out2.&ok: 'example/2';
 }
 
 {
@@ -45,7 +45,7 @@ else {
   my LibXSLT::Document::Xslt:D() $results = $stylesheet.transform(:file<example/1.xml>);
   my $out = $results.Str;
   ok $out;
-  is $out1, $out;
+  is $out1, $out, 'example/1, :file option';
 }
 
 if v1.1.27 <= LibXSLT.version <= v1.1.29 {
@@ -57,5 +57,5 @@ else {
   my LibXSLT::Document::Xslt:D() $results = $stylesheet.transform(:file<example/2.xml>);
   my $out = $results.Str;
   ok $out;
-  is $out2, $out;
+  is $out2, $out, 'example/2, :file option';
 }

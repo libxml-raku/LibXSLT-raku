@@ -1,6 +1,6 @@
 use v6;
 use Test;
-plan 21;
+plan 22;
 use LibXSLT;
 use LibXSLT::Document;
 use LibXSLT::Security;
@@ -14,7 +14,6 @@ use NativeCall;
 sub have-exslt(--> int32) is native($BIND-XSLT) is symbol('xslt6_config_have_exslt') {*};
 
 my LibXML:D $parser .= new();
-print "# parser\n";
 my $stylsheetstring = q:to<EOT>;
 <xsl:stylesheet version="1.0"
       xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -48,13 +47,12 @@ my $stylsheetstring = q:to<EOT>;
 </xsl:stylesheet>
 EOT
 
-print "# xslt\n";
 my LibXSLT:D $xslt .= new();
 # We're using input callbacks so that we don't actually need real files while
 # testing the security callbacks
 my LibXML::InputCallback:D $icb .= new();
 
-print "# registering input callbacks\n";
+#print "# registering input callbacks\n";
 $icb.register-callbacks( [ &match-cb, &open-cb,
                            &read-cb, &close-cb ] );
 $xslt.input-callbacks($icb);
@@ -66,7 +64,7 @@ unless have-exslt() {
     exit;
 }
 
-print "# registering security callbacks\n";
+#print "# registering security callbacks\n";
 $scb.register-callback( read-file  => &read-file );
 $scb.register-callback( write-file => &write-file );
 $scb.register-callback( create-dir => &create_dir );
@@ -76,7 +74,7 @@ $scb.register-callback( write-net  => &write-net );
 $xslt.security = $scb;
 
 my LibXSLT::Stylesheet:D $stylesheet = $xslt.parse-stylesheet($parser.parse: :string($stylsheetstring));
-print "# stylesheet\n";
+#print "# stylesheet\n";
 
 # test local read
 # ---------------------------------------------------------------------------
@@ -86,27 +84,19 @@ my LibXML::Document:D $doc = $parser.parse: :string('<file>allow.xml</file>');
     my LibXSLT::TransformContext:D $ctx .= new: :$doc, :$stylesheet;
     ok $scb.check-read($ctx, 'allow.xml'), '.checkread() # allowed';
     nok $scb.check-read($ctx, 'deny.xml'), '.checkread() # !allowed';
-    try { $ctx.flush-errors }
+    throws-like { $ctx.flush-errors },  X::LibXML::Parser, :message(/'read for deny.xml refused'/), 'Exception gives read for deny.xml';
 }
 
 my LibXSLT::Document::Xslt:D() $results = $stylesheet.transform($doc);
-print "# local read results\n";
 
 my $output = $results.Str;
-#warn "output: $output\n";
-print "# local read output\n";
 like $output, /'foo: Text here'/, 'Output matches foo';
 
 # - test denied
 $doc = $parser.parse: :string('<file>deny.xml</file>');
-try {
+throws-like {
    $results = $stylesheet.transform($doc);
-};
-{
-    my $E = $!;
-    print "# local read denied\n";
-   like $E.message, /'read for deny.xml refused'/, 'Exception gives read for deny.xml';
-}
+}, X::LibXML::Parser, :message(/'read for deny.xml refused'/), 'Exception gives read for deny.xml';
 
 # test local write & create dir
 # ---------------------------------------------------------------------------
@@ -114,11 +104,8 @@ try {
 my $file = 't/allow.xml';
 $doc = $parser.parse: :string("<write>{$file}</write>");
 $results = $stylesheet.transform($doc);
-print "# local write (no create dir) results\n";
 
 $output = $results.Str;
-#warn "output: $output\n";
-print "# local write (no create dir) output\n";
 like $output, /'wrote: '$file/, 'Output matches wrote.';
 
 ok $file.IO.s;
@@ -128,14 +115,12 @@ unlink $file;
 $file = 't/newdir/allow.xml';
 $doc = $parser.parse: :string("<write>{$file}</write>");
 $results = $stylesheet.transform($doc);
-print "# local write (create dir) results\n";
 
 $output = $results.Str;
-#warn "output: $output\n";
-print "# local write (create dir) output\n";
+#print "# local write (create dir) output\n";
 like $output, /'wrote: '$file/, 'Output matches wrote';
 
-print "# local write (create dir) file exists\n";
+#print "# local write (create dir) file exists\n";
 ok $file.IO.s, 'File has non-zero size.';
 unlink $file;
 rmdir 't/newdir';
@@ -143,28 +128,20 @@ rmdir 't/newdir';
 # - test denied (no create dir)
 $file = 't/deny.xml';
 $doc = $parser.parse: :string("<write>{$file}</write>");
-try {
+throws-like {
    $results = $stylesheet.transform($doc);
-};
-print "# local write (no create dir) denied\n";
-{
-    my $E = $!;
-    like $E.message, /'write for '$file' refused'/, 'exception matches';
-}
+}, X::LibXML::Parser, :message(/'write for '$file' refused'/), 'exception matches';
+
 nok $file.IO.e, 'File does not exist.';
 # - test denied (create dir)
 
 
 $file = 't/baddir/allow.xml';
 $doc = $parser.parse: :string("<write>{$file}</write>");
-try {
+throws-like {
    $results = $stylesheet.transform($doc);
-};
-print "# local write (create dir) denied\n";
-{
-    my $E = $!;
-    like $E, /'creation for '$file' refused'/, 'creation for file refused';
-}
+}, X::LibXML::Parser, :message(/'creation for '$file' refused'/), 'creation for file refused';
+
 nok $file.IO.e, 'File does not exist - create dir.';
 
 # test net read
@@ -172,24 +149,16 @@ nok $file.IO.e, 'File does not exist - create dir.';
 # - test allowed
 $doc = $parser.parse: :string('<file>http://localhost/allow.xml</file>');
 $results = $stylesheet.transform($doc);
-print "# net read results\n";
 
 $output = $results.Str;
-#warn "output: $output\n";
-print "# net read output\n";
 like $output, /'foo: Text here'/, 'Output matches.';
 
 # - test denied
 $doc = $parser.parse: :string('<file>http://localhost/deny.xml</file>');
-try {
+throws-like {
    $results = $stylesheet.transform($doc).Str;
-};
-print "# net read denied\n";
-{
-    my $E = $!;
-    like $E, /'read for http://localhost/deny.xml refused'/,
-    'Exception read for refused.';
-}
+}, X::LibXML::Parser, :message(/'read for http://localhost/deny.xml refused'/),
+'Exception read for refused.';
 
 # test net write
 # ---------------------------------------------------------------------------
@@ -201,28 +170,18 @@ print "# net read denied\n";
     $listener.tap({.print("<blah/>\n"); .close });
     $file = "http://localhost:{$port}/allow.xml";
     $doc = $parser.parse: :string("<write>{$file}</write>");
-    try {
+    throws-like {
         $results = $stylesheet.transform($doc);
-    };
-    print "# net write allowed\n";
-    {
-        my $E = $!;
-        like $E, /'unable to save to '$file/,
-        'unable to save exception';
-    }
+    }, X::LibXML::Parser, :message(/'unable to save to '$file/),
+    'unable to save exception';
 }
 
 # - test denied
 $file = 'http://localhost/deny.xml';
 $doc = $parser.parse: :string("<write>{$file}</write>");
-try {
+throws-like {
    $results = $stylesheet.transform($doc);
-};
-print "# net write denied\n";
-{
-    my $E = $!;
-    like $E, /'write for '$file' refused'/, 'Exception write refused';
-}
+}, X::LibXML::Parser, :message(/'write for '$file' refused'/), 'Exception write refused';
 
 # test a dying security callback (and resetting the callback object through
 # the stylesheet interface).
@@ -233,16 +192,11 @@ $stylesheet.security = $scb2;
 
 # check if transform throws an exception
 $doc = $parser.parse: :string('<file>allow.xml</file>');
-print "# dying callback test\n";
-try {
+#print "# dying callback test\n";
+throws-like {
     $stylesheet.transform($doc);
-};
-{
-    my $E = $!;
-    like $E, /'Test die from security callback'/,
+}, X::LibXML::AdHoc, :message(/'Test die from security callback'/),
     'Exception Test die from security callback.';
-
-}
 
 done-testing();
 
@@ -251,12 +205,12 @@ done-testing();
 # Security preference callbacks
 #
 sub read-file($tctxt, $value) {
-   print "# security read-file: $value\n";
+   #print "# security read-file: $value\n";
    if $value eq 'allow.xml' {
-      print "# transform context\n";
+      #print "# transform context\n";
       # TEST*$read-file
       isa-ok $tctxt, "LibXSLT::TransformContext";
-      print "# stylesheet from transform context\n";
+      #print "# stylesheet from transform context\n";
       # TEST*$read-file
       isa-ok $tctxt.stylesheet, "LibXSLT::Stylesheet";
       return 1;
@@ -267,30 +221,30 @@ sub read-file($tctxt, $value) {
 }
 
 sub read-file-die($tctxt, $value) {
-   print "# security read-file-die: $value\n";
+   #print "# security read-file-die: $value\n";
    die "Test die from security callback";
 }
 
 sub write-file($tctxt, $value) {
-   print "# security write-file: $value\n";
+   #print "# security write-file: $value\n";
    $value ~~ /'allow.xml'|newdir|baddir/
        ?? 1 !! 0;
 }
 
 sub create_dir($tctxt, $value) {
-   print "# security create_dir: $value\n";
+   #print "# security create_dir: $value\n";
    $value ~~ /newdir/
        ?? 1 !! 0;
 }
 
 sub read-net($tctxt, $value) {
-   print "# security read-net: $value\n";
+   #print "# security read-net: $value\n";
    $value ~~ /'allow.xml'/
        ?? 1 !! 0;
 }
 
 sub write-net($tctxt, $value) {
-   print "# security write-net: $value\n";
+   #print "# security write-net: $value\n";
    $value ~~ /'allow.xml'/
        ?? 1 !! 0; 
 }
@@ -300,23 +254,19 @@ sub write-net($tctxt, $value) {
 # input callback functions (used so we don't have to have an actual file)
 #
 sub match-cb($uri) {
-    # print "# input match-cb: $uri\n";
     $uri ~~ /[allow|deny]'.xml'/
         ?? 1 !! 0;
 }
 
 sub open-cb($uri) {
-    # print "# input open-cb: $uri\n";
     my $str = "<foo>Text here</foo>";
     return $str.encode;
 }
 
 sub close-cb($) {
-    # print "# input close-cb\n";
 }
 
 sub read-cb($buf is rw, $n) {
-    # print "# read $n\n";
     my $rv = $buf.subbuf(0, $n);
     $buf .= subbuf(min($n, $buf.elems));
     return $rv;

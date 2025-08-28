@@ -14,8 +14,8 @@ my LibXSLT:D $xslt .= new;
 my LibXML::InputCallback:D $icb .= new();
 
 # registering callbacks
-$icb.register-callbacks( [ &match_cb, &open_cb,
-                            &read_cb, &close_cb ] );
+$icb.register-callbacks( [ &match-cb, &open-cb,
+                            &read-cb, &close-cb ] );
 
 
 my LibXML::Document:D $source = $parser.parse: :string(q:to<EOT>), :URI</foo>;
@@ -60,21 +60,21 @@ like $results.Str, /'typed data in stylesheet'/,
 # to $parser.parse: :string($foodoc, 'foo') gets a URI (second
 # param), otherwise it doesn't know what to fetch.
 
-sub match_cb($uri) {
+sub match-cb($uri) {
     if ($uri eq 'foo') {
         return 1;
     }
     return 0;
 }
 
-sub open_cb($uri) {
+sub open-cb($uri) {
     return $foodoc.encode;
 }
 
-sub close_cb($) {
+sub close-cb($) {
 }
 
-sub read_cb($buf is rw, $n) {
+sub read-cb($buf is rw, $n) {
     my $rv = $buf.subbuf(0, $n);
     $buf .= subbuf(min($n, $buf.elems));
     return $rv;
