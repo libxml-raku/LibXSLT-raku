@@ -57,7 +57,7 @@ method SetGenericErrorFunc(&handler) {
     );
 }
 
-method try(&action) {
+method try(&action) is hidden-from-backtrace {
     my $*XML-CONTEXT = self;
     $_ .= new without $*XML-CONTEXT;
 

@@ -16,7 +16,7 @@ use NativeCall;
 has LibXML::XPath::Context $!ctx handles<structured-error generic-error callback-error flush-errors park suppress-warnings suppress-errors>;
 has LibXSLT::Security $.security is rw;
 has $.input-callbacks is rw = $!ctx.config.input-callbacks;
-has xsltStylesheet $!raw handles<output-method>;
+has xsltStylesheet $.raw is built handles<output-method>;
 has Hash %!extensions;
 
 method TWEAK(|c) {
@@ -30,9 +30,7 @@ submethod DESTROY {
 multi method input-callbacks is rw { $!input-callbacks }
 multi method input-callbacks($!input-callbacks) {}
 
-method raw { $!raw }
-
-method register-transform('element', $URI, $name, &element) {
+method register-transform('element', Str $URI, Str:D $name, &element) {
     %!extensions{$URI//''}{$name} = :&element;
 }
 
@@ -117,7 +115,7 @@ our sub xpath-to-string(*%xpath) is export(:xpath-to-string) {
     }
 }
 
-multi method transform(LibXML::Document:D :$doc!, Bool :$raw, *%params --> LibXML::Document) {
+multi method transform(LibXML::Document:D :$doc!, Bool :$raw, *%params --> LibXML::Document) is hidden-from-backtrace {
     my LibXSLT::TransformContext $ctx .= new: :$doc, :stylesheet(self), :$!input-callbacks, :%!extensions, :$!security;
     %params = xpath-to-string(|%params) unless $raw;
     my CArray[Str] $params .= new(|%params.kv, Str);
