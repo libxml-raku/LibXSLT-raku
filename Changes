@@ -1,4 +1,6 @@
 {{$NEXT}}
+
+0.1.8  2026-02-22T09:27:57+13:00
     - Treat '-' as stdin in xslt.raku
     - Further fixes to error handling and associated tests.
 
