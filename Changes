@@ -1,4 +1,6 @@
 {{$NEXT}}
+    - Treat '-' as stdin in xslt.raku
+    - Further fixes to error handling and associated tests.
 
 0.1.7  2023-09-15T10:17:36+12:00
     - Fix generic error handling to work with LibXML 0.10.5+

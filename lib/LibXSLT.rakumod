@@ -1,4 +1,4 @@
-unit class LibXSLT:ver<0.1.7>;
+unit class LibXSLT:ver<0.1.8>;
 
 use LibXSLT::Stylesheet;
 also is LibXSLT::Stylesheet;
